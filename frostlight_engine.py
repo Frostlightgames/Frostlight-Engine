@@ -37,6 +37,8 @@ class Engine:
 
         # Integer and float variables go here
         self.fps = fps
+        self.delta_time = 1
+        self.last_time = time.time()
         self.window_depth = window_depth
 
         # String variables go here
@@ -47,6 +49,7 @@ class Engine:
 
         # List variables go here
         self.window_size = window_size
+        self.changed_window_size = self.window_size
 
         # Custom Variables go here
 
@@ -81,16 +84,35 @@ class Engine:
             
             # Set window variables
             self.clock = pygame.time.Clock()
-            self.win_size = [pygame.display.Info().current_w,int(pygame.display.Info().current_h)]
+            self.window_size = [int(pygame.display.Info().current_w),int(pygame.display.Info().current_h)]
             
             # Change window attributes
             pygame.display.set_caption(self.window_name)
             pygame.mouse.set_visible(self.mouse_visible)
 
     def __get_events__(self):
+        self.clock.tick(self.fps)
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 self.quit()
+
+            # Window events
+            elif event.type == pygame.WINDOWMOVED:
+                self.last_time = time.time()
+                self.delta_time = 1
+
+            elif event.type == pygame.VIDEORESIZE:
+                if not self.fullscreen:
+                    self.last_time = time.time()
+                    self.delta_time = 1
+                    self.changed_window_size = [event.w,event.h]
+                    self.__manage_window_resize__()
+    
+    def __manage_window_resize__(self):
+        if self.resizable: # Resizable window
+            self.win = pygame.display.set_mode(self.changed_window_size,pygame.RESIZABLE,vsync=self.vsync,depth=self.window_depth)
+        else: # Fixed size window
+            self.win = pygame.display.set_mode(self.changed_window_size,vsync=self.vsync,depth=self.window_depth)
 
     def update(self):
         pass
@@ -134,36 +156,36 @@ class Engine:
                 file.write("    def update(self):\n")
                 file.write("        super().update()\n")
                 file.write("\n")
-                file.write('        if self.gamestate == "intro":\n')
+                file.write('        if self.game_state == "intro":\n')
                 file.write("            pass\n")
                 file.write("\n")
-                file.write('        if self.gamestate == "menu":\n')
+                file.write('        if self.game_state == "menu":\n')
                 file.write("            pass\n")
                 file.write("\n")
-                file.write('        if self.gamestate == "game":\n')
+                file.write('        if self.game_state == "game":\n')
                 file.write("            pass\n")
                 file.write("\n")
-                file.write('        if self.gamestate == "credits":\n')
+                file.write('        if self.game_state == "credits":\n')
                 file.write("            pass\n")
                 file.write("\n")
                 file.write("    def draw(self):\n")
                 file.write("        super().draw()\n")
                 file.write("\n")
-                file.write('        if self.gamestate == "intro":\n')
+                file.write('        if self.game_state == "intro":\n')
                 file.write("            pass\n")
                 file.write("\n")
-                file.write('        if self.gamestate == "menu":\n')
+                file.write('        if self.game_state == "menu":\n')
                 file.write("            pass\n")
                 file.write("\n")
-                file.write('        if self.gamestate == "game":\n')
+                file.write('        if self.game_state == "game":\n')
                 file.write("            pass\n")
                 file.write("\n")
-                file.write('        if self.gamestate == "credits":\n')
+                file.write('        if self.game_state == "credits":\n')
                 file.write("            pass\n")
                 file.write("\n")
                 file.write('if __name__ == "__main__":\n')
-                file.write("    game = Game\n")
-                file.write("    Game.run()\n")
+                file.write("    game = Game()\n")
+                file.write("    game.run()\n")
             files_created += 1
         else:
             Engine.log("Skipping creation of main file, already exist.")
