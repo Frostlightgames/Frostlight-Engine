@@ -40,6 +40,8 @@ class Engine:
     KEY_ARROW_RIGHT = [pygame.K_RIGHT,KEYBOARD]
     KEY_ARROW_UP = [pygame.K_UP,KEYBOARD]
     KEY_ARROW_DOWN = [pygame.K_DOWN,KEYBOARD]
+    KEY_RETURN = [pygame.K_RETURN,KEYBOARD]
+    KEY_SPACE = [pygame.K_SPACE,KEYBOARD]
     MOUSE_CLICK_LEFT = [0,MOUSE]
     MOUSE_CLICK_MIDDLE = [1,MOUSE]
     MOUSE_CLICK_RIGHT = [2,MOUSE]
@@ -295,6 +297,7 @@ class Engine:
             self.mouse_right_released = False
             
             self._registered_input = {
+                "accept":[Engine.MOUSE_CLICK_LEFT,Engine.KEY_SPACE,Engine.KEY_RETURN],
                 "right":[Engine.KEY_D,Engine.KEY_ARROW_RIGHT],
                 "left":[Engine.KEY_A,Engine.KEY_ARROW_LEFT],
                 "up":[Engine.KEY_W,Engine.KEY_ARROW_UP],
@@ -308,10 +311,26 @@ class Engine:
 
         def get_input(self, name:str):
             keys = pygame.key.get_pressed()
+            mouse = [
+                self.mouse_left_clicked,
+                self.mouse_middle_clicked,
+                self.mouse_right_clicked,
+                self.mouse_left_pressed,
+                self.mouse_middle_pressed,
+                self.mouse_right_pressed,
+                self.mouse_left_released,
+                self.mouse_middle_released,
+                self.mouse_right_released,
+                ]
+            
             key_pressed = 0
             for key in self._registered_input[name]:
                 if key[1] == Engine.KEYBOARD:
                     if keys[key[0]]:
+                        key_pressed = 1
+                        break
+                elif key[1] == Engine.MOUSE:
+                    if mouse[key[0]]:
                         key_pressed = 1
                         break
             
