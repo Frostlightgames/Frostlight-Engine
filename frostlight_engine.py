@@ -42,6 +42,7 @@ class Engine:
     KEY_ARROW_DOWN = [pygame.K_DOWN,KEYBOARD]
     KEY_RETURN = [pygame.K_RETURN,KEYBOARD]
     KEY_SPACE = [pygame.K_SPACE,KEYBOARD]
+    KEY_ESCAPE = [pygame.K_ESCAPE,KEYBOARD]
     MOUSE_CLICK_LEFT = [0,MOUSE]
     MOUSE_CLICK_MIDDLE = [1,MOUSE]
     MOUSE_CLICK_RIGHT = [2,MOUSE]
@@ -143,12 +144,12 @@ class Engine:
 
         self.clock.tick(self.fps)
 
-        self.input.mouse_left_clicked = False
-        self.input.mouse_left_released = False
-        self.input.mouse_middle_clicked = False
-        self.input.mouse_middle_released = False
-        self.input.mouse_right_clicked = False
-        self.input.mouse_right_released = False
+        self.input._mouse_left_clicked = False
+        self.input._mouse_left_released = False
+        self.input._mouse_middle_clicked = False
+        self.input._mouse_middle_released = False
+        self.input._mouse_right_clicked = False
+        self.input._mouse_right_released = False
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 self.quit()
@@ -167,19 +168,19 @@ class Engine:
 
             if event.type == pygame.MOUSEBUTTONUP:
                 if event.button == 1:
-                    self.input.mouse_left_released = True
+                    self.input._mouse_left_released = True
                 if event.button == 2:
-                    self.input.mouse_middle_released = True
+                    self.input._mouse_middle_released = True
                 if event.button == 3:
-                    self.input.mouse_right_released = True
+                    self.input._mouse_right_released = True
 
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if event.button == 1:
-                    self.input.mouse_left_clicked = True
+                    self.input._mouse_left_clicked = True
                 if event.button == 2:
-                    self.input.mouse_middle_clicked = True
+                    self.input._mouse_middle_clicked = True
                 if event.button == 3:
-                    self.input.mouse_right_clicked = True
+                    self.input._mouse_right_clicked = True
     
     def __manage_window_resize__(self):
         if self.resizable: # Resizable window
@@ -207,6 +208,7 @@ class Engine:
 
     def get_fps(self):
         return int(min(self.clock.get_fps(),99999999))
+    
     def create_file_structure():
         directories_created = 0
         files_created = 0
@@ -286,18 +288,19 @@ class Engine:
     class _Input:
         def __init__(self) -> None:
             self.mouse_position = [0,0]
-            self.mouse_left_pressed = False
-            self.mouse_left_clicked = False
-            self.mouse_left_released = False
-            self.mouse_middle_pressed = False
-            self.mouse_middle_clicked = False
-            self.mouse_middle_released = False
-            self.mouse_right_pressed = False
-            self.mouse_right_clicked = False
-            self.mouse_right_released = False
+            self._mouse_left_pressed = False
+            self._mouse_left_clicked = False
+            self._mouse_left_released = False
+            self._mouse_middle_pressed = False
+            self._mouse_middle_clicked = False
+            self._mouse_middle_released = False
+            self._mouse_right_pressed = False
+            self._mouse_right_clicked = False
+            self._mouse_right_released = False
             
             self._registered_input = {
                 "accept":[Engine.MOUSE_CLICK_LEFT,Engine.KEY_SPACE,Engine.KEY_RETURN],
+                "cancel":[Engine.KEY_ESCAPE],
                 "right":[Engine.KEY_D,Engine.KEY_ARROW_RIGHT],
                 "left":[Engine.KEY_A,Engine.KEY_ARROW_LEFT],
                 "up":[Engine.KEY_W,Engine.KEY_ARROW_UP],
@@ -312,15 +315,15 @@ class Engine:
         def get_input(self, name:str):
             keys = pygame.key.get_pressed()
             mouse = [
-                self.mouse_left_clicked,
-                self.mouse_middle_clicked,
-                self.mouse_right_clicked,
-                self.mouse_left_pressed,
-                self.mouse_middle_pressed,
-                self.mouse_right_pressed,
-                self.mouse_left_released,
-                self.mouse_middle_released,
-                self.mouse_right_released,
+                self._mouse_left_clicked,
+                self._mouse_middle_clicked,
+                self._mouse_right_clicked,
+                self._mouse_left_pressed,
+                self._mouse_middle_pressed,
+                self._mouse_right_pressed,
+                self._mouse_left_released,
+                self._mouse_middle_released,
+                self._mouse_right_released,
                 ]
             
             key_pressed = 0
@@ -338,9 +341,9 @@ class Engine:
 
         def _update(self):
             pygame_mouse_pressed = pygame.mouse.get_pressed()
-            self.mouse_left_pressed = pygame_mouse_pressed[0]
-            self.mouse_middle_pressed = pygame_mouse_pressed[1]
-            self.mouse_right_pressed = pygame_mouse_pressed[2]
+            self._mouse_left_pressed = pygame_mouse_pressed[0]
+            self._mouse_middle_pressed = pygame_mouse_pressed[1]
+            self._mouse_right_pressed = pygame_mouse_pressed[2]
 
             self.mouse_position = pygame.mouse.get_pos()
 
