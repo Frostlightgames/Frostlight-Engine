@@ -4,6 +4,52 @@ import pygame
 import datetime
 
 class Engine:
+    
+    # Custom variables go here
+    KEYBOARD = 0
+    MOUSE = 1
+    JOYSTICK = 2
+    
+    KEY_A = [pygame.K_a,KEYBOARD]
+    KEY_B = [pygame.K_b,KEYBOARD]
+    KEY_C = [pygame.K_c,KEYBOARD]
+    KEY_D = [pygame.K_d,KEYBOARD]
+    KEY_E = [pygame.K_e,KEYBOARD]
+    KEY_F = [pygame.K_f,KEYBOARD]
+    KEY_G = [pygame.K_g,KEYBOARD]
+    KEY_H = [pygame.K_h,KEYBOARD]
+    KEY_I = [pygame.K_i,KEYBOARD]
+    KEY_J = [pygame.K_j,KEYBOARD]
+    KEY_K = [pygame.K_k,KEYBOARD]
+    KEY_L = [pygame.K_l,KEYBOARD]
+    KEY_M = [pygame.K_m,KEYBOARD]
+    KEY_N = [pygame.K_n,KEYBOARD]
+    KEY_O = [pygame.K_o,KEYBOARD]
+    KEY_P = [pygame.K_p,KEYBOARD]
+    KEY_Q = [pygame.K_q,KEYBOARD]
+    KEY_R = [pygame.K_r,KEYBOARD]
+    KEY_S = [pygame.K_s,KEYBOARD]
+    KEY_T = [pygame.K_t,KEYBOARD]
+    KEY_U = [pygame.K_u,KEYBOARD]
+    KEY_V = [pygame.K_v,KEYBOARD]
+    KEY_W = [pygame.K_w,KEYBOARD]
+    KEY_X = [pygame.K_x,KEYBOARD]
+    KEY_Y = [pygame.K_y,KEYBOARD]
+    KEY_Z = [pygame.K_z,KEYBOARD]
+    KEY_ARROW_LEFT = [pygame.K_LEFT,KEYBOARD]
+    KEY_ARROW_RIGHT = [pygame.K_RIGHT,KEYBOARD]
+    KEY_ARROW_UP = [pygame.K_UP,KEYBOARD]
+    KEY_ARROW_DOWN = [pygame.K_DOWN,KEYBOARD]
+    MOUSE_CLICK_LEFT = [0,MOUSE]
+    MOUSE_CLICK_MIDDLE = [1,MOUSE]
+    MOUSE_CLICK_RIGHT = [2,MOUSE]
+    MOUSE_PRESSED_LEFT = [3,MOUSE]
+    MOUSE_PRESSED_MIDDLE = [4,MOUSE]
+    MOUSE_PRESSED_RIGHT = [5,MOUSE]
+    MOUSE_UP_LEFT = [6,MOUSE]
+    MOUSE_UP_MIDDLE = [7,MOUSE]
+    MOUSE_UP_RIGHT = [8,MOUSE]
+
     def __init__(self,
                  fps:int=0,
                  fullscreen:bool=False,
@@ -51,7 +97,8 @@ class Engine:
         self.window_size = window_size
         self.changed_window_size = self.window_size
 
-        # Custom Variables go here
+        # Class variables go here
+        self.input = self._Input()
 
         self.__create_window__()
 
@@ -91,7 +138,15 @@ class Engine:
             pygame.mouse.set_visible(self.mouse_visible)
 
     def __get_events__(self):
+
         self.clock.tick(self.fps)
+
+        self.input.mouse_left_clicked = False
+        self.input.mouse_left_released = False
+        self.input.mouse_middle_clicked = False
+        self.input.mouse_middle_released = False
+        self.input.mouse_right_clicked = False
+        self.input.mouse_right_released = False
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 self.quit()
@@ -107,6 +162,22 @@ class Engine:
                     self.delta_time = 1
                     self.changed_window_size = [event.w,event.h]
                     self.__manage_window_resize__()
+
+            if event.type == pygame.MOUSEBUTTONUP:
+                if event.button == 1:
+                    self.input.mouse_left_released = True
+                if event.button == 2:
+                    self.input.mouse_middle_released = True
+                if event.button == 3:
+                    self.input.mouse_right_released = True
+
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                if event.button == 1:
+                    self.input.mouse_left_clicked = True
+                if event.button == 2:
+                    self.input.mouse_middle_clicked = True
+                if event.button == 3:
+                    self.input.mouse_right_clicked = True
     
     def __manage_window_resize__(self):
         if self.resizable: # Resizable window
@@ -115,7 +186,9 @@ class Engine:
             self.win = pygame.display.set_mode(self.changed_window_size,vsync=self.vsync,depth=self.window_depth)
 
     def update(self):
-        pass
+        self.input._update()
+        self.delta_time = time.time()-self.last_time
+        self.last_time = time.time()
 
     def draw(self):
         pass
@@ -130,10 +203,12 @@ class Engine:
     def quit(self):
         self.run_game = False
 
+    def get_fps(self):
+        return int(min(self.clock.get_fps(),99999999))
     def create_file_structure():
         directories_created = 0
         files_created = 0
-        directories_to_create = ["data","screenshots",os.path.join("data","classes"),os.path.join("data","sprites")]
+        directories_to_create = ["data","screenshots",os.path.join("data","classes"),os.path.join("data","saves"),os.path.join("data","sprites")]
 
         if not os.path.exists(os.path.join("data","log.txt")):
             files_created += 1
@@ -205,6 +280,50 @@ class Engine:
     def clear_log():
         with open(os.path.join("data","log.txt"),"w") as file:
             file.write("")
+
+    class _Input:
+        def __init__(self) -> None:
+            self.mouse_position = [0,0]
+            self.mouse_left_pressed = False
+            self.mouse_left_clicked = False
+            self.mouse_left_released = False
+            self.mouse_middle_pressed = False
+            self.mouse_middle_clicked = False
+            self.mouse_middle_released = False
+            self.mouse_right_pressed = False
+            self.mouse_right_clicked = False
+            self.mouse_right_released = False
+            
+            self._registered_input = {
+                "right":[Engine.KEY_D,Engine.KEY_ARROW_RIGHT],
+                "left":[Engine.KEY_A,Engine.KEY_ARROW_LEFT],
+                "up":[Engine.KEY_W,Engine.KEY_ARROW_UP],
+                "down":[Engine.KEY_S,Engine.KEY_ARROW_DOWN]
+            }
+
+        def register_input(self,name:str,key:int):
+            if name not in self._registered_input:
+                self._registered_input[name] = []
+            self._registered_input[name].append(key)
+
+        def get_input(self, name:str):
+            keys = pygame.key.get_pressed()
+            key_pressed = 0
+            for key in self._registered_input[name]:
+                if key[1] == Engine.KEYBOARD:
+                    if keys[key[0]]:
+                        key_pressed = 1
+                        break
+            
+            return key_pressed
+
+        def _update(self):
+            pygame_mouse_pressed = pygame.mouse.get_pressed()
+            self.mouse_left_pressed = pygame_mouse_pressed[0]
+            self.mouse_middle_pressed = pygame_mouse_pressed[1]
+            self.mouse_right_pressed = pygame_mouse_pressed[2]
+
+            self.mouse_position = pygame.mouse.get_pos()
 
 if __name__ == "__main__":
     Engine.create_file_structure()
