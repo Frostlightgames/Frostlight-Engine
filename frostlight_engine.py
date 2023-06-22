@@ -274,6 +274,12 @@ class Engine:
         else:
             Engine.log(f"Created game files structure with {files_created} files and {directories_created} directories")
 
+    def set_window_name(self,name:str):
+        pygame.display.set_caption(name)
+
+    def set_window_icon(self,path:list):
+        pygame.display.set_icon(pygame.image.load(os.path.join(*path)).convert_alpha())
+
     def log(text:str):
         with open(os.path.join("data","log.txt"),"+at") as file:
             if __name__ == "__main__":
@@ -284,6 +290,14 @@ class Engine:
     def clear_log():
         with open(os.path.join("data","log.txt"),"w") as file:
             file.write("")
+
+    def scale_rect(rect, amount) -> pygame.Rect:
+        c = rect.center
+        w = rect.width * amount
+        h = rect.height * amount
+        new = pygame.Rect(0,0,w,h)
+        new.center = c
+        return new
 
     class _Input:
         def __init__(self) -> None:
