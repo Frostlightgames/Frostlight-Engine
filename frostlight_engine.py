@@ -298,6 +298,10 @@ class Engine:
         new = pygame.Rect(0,0,w,h)
         new.center = c
         return new
+    
+    class _Network:
+        def __init__(self) -> None:
+            pass
 
     class _Input:
         def __init__(self) -> None:
