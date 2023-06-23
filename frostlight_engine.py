@@ -361,5 +361,9 @@ class Engine:
 
             self.mouse_position = pygame.mouse.get_pos()
 
+    class GUI:
+        def __init__(self) -> None:
+            pass
+
 if __name__ == "__main__":
     Engine.create_file_structure()
