@@ -3,6 +3,8 @@ import time
 import pygame
 import datetime
 
+pygame.init()
+
 class Engine:
     
     # Custom variables go here
@@ -52,6 +54,7 @@ class Engine:
     MOUSE_UP_LEFT = [6,MOUSE]
     MOUSE_UP_MIDDLE = [7,MOUSE]
     MOUSE_UP_RIGHT = [8,MOUSE]
+    GUI_ALIGN_CENTER = 0
 
     def __init__(self,
                  fps:int=0,
@@ -360,10 +363,244 @@ class Engine:
             self._mouse_right_pressed = pygame_mouse_pressed[2]
 
             self.mouse_position = pygame.mouse.get_pos()
-
-    class GUI:
+            
+    class Font:
         def __init__(self) -> None:
             pass
+        
+    class GUI():
+        def __init__(self) -> None:
+            super.__init__()
 
+        def textrect(font,text:str) -> pygame.Rect:
+            
+            # Returnes the  calculated rect size for a text
+            rendered_text = font.render(text,True,(0,0,0))
+            textrect = rendered_text.get_rect()
+            return textrect
+        
+        class Test:
+            def __init__(self) -> None:
+                super.__init__()
+            
+            def draw(self):
+                pygame.draw.rect(self.w)
+
+        class Text:
+            def __init__(self) -> None:
+                pass
+
+            def render(text:str,
+                       rect:pygame.Rect,
+                       color:list[int,int,int]=[255,255,255],
+                       font:pygame.font.Font=pygame.font.SysFont("Arial",18),
+                       text_align=None,
+                       surface:pygame.Surface=None):
+                       
+                if type(font) == pygame.font.Font:
+                    if text_align == None:
+                        text_align = Engine.GUI_ALIGN_CENTER
+                    if surface == None:
+                        surface = Engine.win
+                    text = font.render(text,True,color)
+                    textrect = text.get_rect()
+                    if text_align == 1:
+                        textrect.center = (rect[2]//2+rect[0],rect[3]//2+rect[1])
+                    elif text_align == 0:
+                        h = rect[0]+5
+                        textrect.center = (0,rect[3]//2+rect[1])
+                        textrect.update(h,textrect[1],textrect[2],textrect[3])
+                    surface.blit(text,textrect)
+                else:
+                    pass
+
+        class Button:
+            def __init__(self,
+                         surface:pygame.surface.Surface,
+                         font,txt:str,pos:tuple[int,int],
+                         size:tuple[int,int]=[0,0],
+                         color_button:pygame.color.Color=(255,255,255),
+                         color_hover:pygame.color.Color=(100,100,100),
+                         color_text:pygame.color.Color=(0,0,0),
+                         align_text:int=1,
+                         border:int=0,
+                         color_border:pygame.color.Color=(0,0,0),
+                         border_radius:int=-1) -> None:
+                self.win = surface
+                self.font = font
+                self.pos = pos
+                self.size = size
+                self.color_button = color_button
+                self.color_hover = color_hover
+                self.color_text = color_text
+                self.align_text = align_text
+                self.border = border
+                self.color_border = color_border
+                self.border_radius = border_radius
+                self.clicked = False
+                self.pressed = False
+                self.text = txt
+                self.txtrect = Engine.GUI.textrect(self.font,self.text)
+                
+                #button rect berechnen
+                if self.size == 0 or (self.size[0] == 0 and self.size[1] == 0):
+                    self.rect = pygame.Rect(self.pos[0],self.pos[1],(self.txtrect[2]/len(self.text))*(len(self.text)+2),self.txtrect[3]*1.2)
+                elif self.size[0] == 0:  
+                    self.rect = pygame.Rect(self.pos[0],self.pos[1],(self.txtrect[2]/len(self.text))*(len(self.text)+2),self.size[1])
+                elif self.size[1] == 0:
+                    self.rect = pygame.Rect(self.pos[0],self.pos[1],self.size[0],self.txtrect[3]*1.2)
+                else:
+                    self.rect = pygame.Rect(self.pos[0],self.pos[1],self.size[0],self.size[1])
+                
+                Engine.GUI.Text.render(self.text,self.rect,self.color_text,self.align_text)
+
+            def draw(self):
+                pygame.draw.rect(self.win,self.color_button,self.rect,0,self.border_radius)
+
+                self.txt.draw(self.text,self.rect,self.color_text,self.align_text)
+                if self.border > 0:
+                    pygame.draw.rect(self.win,self.color_border,self.rect,self.border,self.border_radius)
+
+            def update(self):
+                self.mouse = [pygame.mouse.get_pos()[0],pygame.mouse.get_pos()[1]]
+                self.press = pygame.mouse.get_pressed()[0]
+                self.click = pygame.mouse.get_pressed()[0]
+                self.clicked = False
+                if self.rect.collidepoint(self.mouse):
+                    pygame.draw.rect(self.win,self.color_hover,self.rect)
+                    if self.click:
+                        self.clicked = True
+                    
+                self.txt.draw(self.text,self.rect,self.color_text,self.align_text)
+                if self.border > 0:
+                    pygame.draw.rect(self.win,self.color_border,self.rect,self.border,self.border_radius)    
+        class DropDown:
+            def __init__(self,surface:pygame.surface.Surface,font,txt:str,pos:tuple[int,int],size:tuple[int,int],color_button:pygame.color.Color=(255,255,255),color_hover:pygame.color.Color=(100,100,100),color_text:pygame.color.Color=(0,0,0),align_text='c',border=0,color_border:pygame.color.Color=(0,0,0),border_radius=-1,align_dropdown='l',dropdown_border=0,dropdown_border_color:pygame.color.Color=(0,0,0)) -> None:
+                self.win = surface
+                self.font = font
+                self.pos = pos
+                self.size = size
+                self.txt = txt
+                self.color_button = color_button
+                self.color_hover = color_hover
+                self.color_text = color_text
+                self.align_text = align_text
+                self.border = border
+                self.border_radius = border_radius
+                self.color_border = color_border
+                self.align_dropdown = align_dropdown
+                self.dropdown_border = dropdown_border
+                self.dropdown_border_color = dropdown_border_color
+                self.button = self.button(self.win,self.font,self.txt,self.pos,self.size,self.color_button,self.color_hover,self.color_text,self.align_text,self.border,self.color_border,self.border_radius)
+                self.rect = self.button.rect
+                self.objects = []
+                self.active = False
+                self.objects_activ = False
+
+                if self.align_dropdown == 'rup':
+                    self.y = self.button.rect[1]
+                else:
+                    self.y = self.button.rect[1]+self.button.rect[3]
+
+            def load_objects(self):
+                pass
+
+            def add_object(self,text:str,dropdown:bool=False,color_button:pygame.color.Color=None,color_hover:pygame.color.Color=None,color_text:pygame.color.Color=None,color_border:pygame.color.Color=None,text_align='l',border=0,font=None,border_radius=-1,align_dropdown='l',dropdown_border=0,dropdown_border_color:pygame.color.Color=(0,0,0)):
+                
+                #berechnung für neues object
+                #append
+
+                
+                if font == None:
+                    font = self.font     
+                if color_button == None:
+                    color_button = self.color_button    
+                if color_hover == None:
+                    color_hover = self.color_hover
+                if color_text == None:
+                    color_text = self.color_text
+                if color_border == None:
+                    color_border = self.color_border
+
+                if len(self.objects) == 0:
+                    x = self.textrect(font,text)[2]*1.1
+                else:
+                    x = self.bigges_text_rect(self.objects,font,text)[2]*1.1
+
+                if dropdown:
+                    if self.align_dropdown.startswith('r'):
+                        self.objects.append(self.DropDown(self.win,font,text,(self.button.rect[0]+self.button.rect[2],self.y),(x,0),color_button,color_hover,color_text,text_align,border,color_border,align_dropdown='rup'))
+                    else:
+                        self.objects.append(self.DropDown(self.win,font,text,(self.button.rect[0],self.y),(x,0),color_button,color_hover,color_text,text_align,border,color_border))
+                else:
+                    if self.align_dropdown.startswith('r'):
+                        self.objects.append(self.Button(self.win,font,text,(self.button.rect[0]+self.button.rect[2],self.y),(x,0),color_button,color_hover,color_text,text_align,border,color_border))
+                    else:
+                        self.objects.append(self.Button(self.win,font,text,(self.button.rect[0],self.y),(x,0),color_button,color_hover,color_text,text_align,border,color_border))
+                
+                self.y += self.objects[len(self.objects)-1].rect[3]
+
+                x = 0
+                for o in self.objects:
+                    o.rect[2] = self.bigges_text_rect(self.objects,font)[2]*1.1
+                    x += o.rect[3]
+                self.DropDown_rect = pygame.Rect(self.objects[0].rect[0],self.objects[0].rect[1],self.objects[len(self.objects)-1].rect[2],x)
+
+            def draw_dropdown(self):
+                for btn in self.objects:
+                    btn.draw()
+            
+            def bigges_text_rect(self,text,font,new_object:str='') -> pygame.Rect:
+
+                # Retunes the biggest text rect in a list
+                x = 0
+                for i in range(len(text)):
+                    a = len(text[i])
+                    b = len(text[x])
+                    if a > b:
+                        x = i
+
+                if type(text[x]) == self.Button:
+                    if len(text[x].text) > len(new_object):
+                        t = self.textrect(font,text[x].text)
+                    else:
+                        t = self.textrect(font,new_object)
+                elif type(text[x]) == self.DropDown:
+                    if len(text[x].Button.text) > len(new_object):
+                        t = self.textrect(font,text[x].Button.text)
+                    else:
+                        t = self.textrect(font,new_object)
+                else:
+                    if len(text[x]) > len(new_object):
+                        t = self.textrect(font,text[x])
+                    else:
+                        t = self.textrect(font,new_object)
+                return t
+        
+            def draw(self):
+                self.button.draw()
+
+            def update(self):
+                self.mouse = [pygame.mouse.get_pos()[0],pygame.mouse.get_pos()[1]]
+                self.click = pygame.mouse.get_pressed()[0]
+                self.button.update()
+                if self.button.clicked:
+                    self.active = True
+                if self.active or self.objects_activ:
+                    for object in self.objects:
+                        if type(object) == self.DropDown:
+                            if object.active:
+                                self.objects_activ = True
+                            
+                    boolean = self.DropDown_rect.collidepoint(self.mouse) == False and self.click
+                    if boolean:
+                        self.active = False
+                        pygame.draw.rect(self.win,(255,0,255),self.DropDown_rect,1)
+                    self.draw_dropdown()
+                    for btn in self.objects:
+                        btn.update()
+
+                    if self.dropdown_border > 0:
+                        pygame.draw.rect(self.win,self.dropdown_border_color,self.DropDown_rect,self.dropdown_border)
 if __name__ == "__main__":
     Engine.create_file_structure()
