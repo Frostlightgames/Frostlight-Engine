@@ -437,7 +437,6 @@ class Engine:
                 super.init()
             
             def render(self):
-                self.
                 pygame.draw.rect(self.engine.win,(255,255,255),pygame.Rect(64,64,64,64))
 
         class Text(_GUI):
@@ -555,44 +554,27 @@ class Engine:
             def load_objects(self):
                 pass
 
-            def add_object(self,text:str,dropdown:bool=False,color_button:pygame.color.Color=None,color_hover:pygame.color.Color=None,color_text:pygame.color.Color=None,color_border:pygame.color.Color=None,text_align='l',border=0,font=None,border_radius=-1,align_dropdown='l',dropdown_border=0,dropdown_border_color:pygame.color.Color=(0,0,0)):
-                
+            def add_object(self,object):
                 #berechnung für neues object
                 #append
 
-                
-                if font == None:
-                    font = self.font     
-                if color_button == None:
-                    color_button = self.color_button    
-                if color_hover == None:
-                    color_hover = self.color_hover
-                if color_text == None:
-                    color_text = self.color_text
-                if color_border == None:
-                    color_border = self.color_border
-
                 if len(self.objects) == 0:
-                    x = self.textrect(font,text)[2]*1.1
+                    x = self.textrect(object.font,object.text)[2]*1.1
                 else:
-                    x = self.bigges_text_rect(self.objects,font,text)[2]*1.1
+                    x = self.bigges_text_rect(self.objects,object.font,object.text)[2]*1.1
 
-                if dropdown:
-                    if self.align_dropdown.startswith('r'):
-                        self.objects.append(self.DropDown(self.win,font,text,(self.button.rect[0]+self.button.rect[2],self.y),(x,0),color_button,color_hover,color_text,text_align,border,color_border,align_dropdown='rup'))
-                    else:
-                        self.objects.append(self.DropDown(self.win,font,text,(self.button.rect[0],self.y),(x,0),color_button,color_hover,color_text,text_align,border,color_border))
+                if self.align_dropdown.startswith('r'):
+                    object.rect=pygame.Rect(self.button.rect[0]+self.button.rect[2],self.y,x,object.rect[3])
                 else:
-                    if self.align_dropdown.startswith('r'):
-                        self.objects.append(self.Button(self.win,font,text,(self.button.rect[0]+self.button.rect[2],self.y),(x,0),color_button,color_hover,color_text,text_align,border,color_border))
-                    else:
-                        self.objects.append(self.Button(self.win,font,text,(self.button.rect[0],self.y),(x,0),color_button,color_hover,color_text,text_align,border,color_border))
+                    object.rect=pygame.Rect(self.button.rect[0],self.y,x,object.rect[3])
                 
                 self.y += self.objects[len(self.objects)-1].rect[3]
 
+                self.objects.append(object)
+
                 x = 0
                 for o in self.objects:
-                    o.rect[2] = self.bigges_text_rect(self.objects,font)[2]*1.1
+                    o.rect[2] = self.bigges_text_rect(self.objects,o.font)[2]*1.1
                     x += o.rect[3]
                 self.DropDown_rect = pygame.Rect(self.objects[0].rect[0],self.objects[0].rect[1],self.objects[len(self.objects)-1].rect[2],x)
 
