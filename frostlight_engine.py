@@ -418,6 +418,9 @@ class Engine:
             self.keys = pygame.key.get_pressed()
         
     class _GUI:
+        def __init__(self,engine) -> None:
+            self.engine = engine
+        
         def textrect(font,text:str) -> pygame.Rect:
             
             # Returns the  calculated rect size for a text
@@ -425,16 +428,16 @@ class Engine:
             text_rect = rendered_text.get_rect()
             return text_rect
         
-        class _GUI:
-            def __init__(self,engine) -> None:
-                self.engine = engine
+        class _GUIO:
+            def __init__(self):
+                self.engine = self.engine
 
-        class Test(_GUI):
-            def __init__(self, engine) -> None:
-                super().__init__(engine)
-
+        class Test(_GUIO):
+            def __init__(self) -> None:
+                super.init()
             
             def render(self):
+                self.
                 pygame.draw.rect(self.engine.win,(255,255,255),pygame.Rect(64,64,64,64))
 
         class Text(_GUI):
