@@ -54,6 +54,13 @@ class Engine:
     MOUSE_UP_RIGHT = [8,MOUSE]
     GUI_ALIGN_CENTER = 0
     GUI_ALIGN_LEFT = 1
+    GUI_ALIGN_RIGHT = 2
+    GUI_ALIGN_DOWN = 3
+    GUI_ALIGN_UP = 4
+    GUI_ALIGN_RIGHT_UP = 5
+    GUI_ALIGN_RIGHT_DOWN = 6
+    GUI_ALIGN_LEFT_UP = 5
+    GUI_ALIGN_LEFT_DOWN = 6
 
     def __init__(self,
                  fps:int=0,
@@ -211,6 +218,7 @@ class Engine:
             self.__get_events__()
             self.update()
             self.draw()
+            pygame.display.flip()
 
     def quit(self):
 
@@ -455,10 +463,10 @@ class Engine:
         class Button:
             def __init__(self,
                          engine,
-                         surface:pygame.surface.Surface,
                          font,
-                         text:str,pos:tuple[int,int],
-                         size:tuple[int,int]=[0,0],
+                         text:str="",
+                         pos:tuple[int,int]=[0,0],
+                         size:tuple[int,int]=[100,40],
                          color_button:pygame.color.Color=(55,55,55),
                          color_hover:pygame.color.Color=(100,100,100),
                          color_text:pygame.color.Color=(255,255,255),
@@ -484,21 +492,22 @@ class Engine:
                 self.txtrect = self.engine.gui.textrect(font,text)
                 
                 #button rect berechnen
-                if self.size == 0 or (self.size[0] == 0 and self.size[1] == 0):
-                    self.rect = pygame.Rect(self.pos[0],self.pos[1],(self.txtrect[2]/len(self.text))*(len(self.text)+2),self.txtrect[3]*1.2)
-                elif self.size[0] == 0:  
-                    self.rect = pygame.Rect(self.pos[0],self.pos[1],(self.txtrect[2]/len(self.text))*(len(self.text)+2),self.size[1])
-                elif self.size[1] == 0:
-                    self.rect = pygame.Rect(self.pos[0],self.pos[1],self.size[0],self.txtrect[3]*1.2)
+                if self.text == "":
+                    self.rect = pygame.Rect(self.pos[0],self.pos[1],self.size[0],self.size[1]) 
                 else:
-                    self.rect = pygame.Rect(self.pos[0],self.pos[1],self.size[0],self.size[1])
-                
-                self.engine.gui.Text.render(self.engine,self.text,self.rect,self.color_text,self.font,self.align_text,self.engine.win)
+                    if self.size == [100,40]:
+                        self.rect = pygame.Rect(self.pos[0],self.pos[1],(self.txtrect[2]/len(self.text))*(len(self.text)+2),self.txtrect[3]*1.2)
+                    elif self.size[0] == 100:  
+                        self.rect = pygame.Rect(self.pos[0],self.pos[1],(self.txtrect[2]/len(self.text))*(len(self.text)+2),self.size[1])
+                    elif self.size[1] == 40:
+                        self.rect = pygame.Rect(self.pos[0],self.pos[1],self.size[0],self.txtrect[3]*1.2)
+                    else:
+                        self.rect = pygame.Rect(self.pos[0],self.pos[1],self.size[0],self.size[1])
 
             def draw(self):
-                pygame.draw.rect(self.engine.win,self.color_button,self.rect,0,self.border_radius)
+                pygame.draw.rect(self.engine.win,self.color_button,self.rect,self.border,self.border_radius)
                 if self.hovered:
-                    pygame.draw.rect(self.engine.win,self.color_hover,self.rect)
+                    self.draw_hovered()
 
                 self.engine.gui.Text.render(self.engine,self.text,self.rect,self.color_text,self.font,self.align_text,self.engine.win)
                 if self.border > 0:
@@ -506,6 +515,9 @@ class Engine:
 
             def get_clicked(self) -> bool:
                 return self.clicked
+
+            def draw_hovered(self):
+                pygame.draw.rect(self.engine.win,self.color_hover,self.rect,0,self.border_radius)
 
             def update(self):
                 self.clicked = False
@@ -519,29 +531,27 @@ class Engine:
                         self.pressed = True
 
         class DropDown:
-            def __init__(self,surface:pygame.surface.Surface,font,txt:str,pos:tuple[int,int],size:tuple[int,int],color_button:pygame.color.Color=(255,255,255),color_hover:pygame.color.Color=(100,100,100),color_text:pygame.color.Color=(0,0,0),align_text='c',border=0,color_border:pygame.color.Color=(0,0,0),border_radius=-1,align_dropdown='l',dropdown_border=0,dropdown_border_color:pygame.color.Color=(0,0,0)) -> None:
-                self.win = surface
+            def __init__(self,
+                         engine,
+                         surface:pygame.surface.Surface,
+                         font,
+                         button,
+                         align_dropdown=1,
+                         dropdown_border=0,
+                         dropdown_border_color:pygame.color.Color=(0,0,0)) -> None:
+                self.engine = engine
                 self.font = font
-                self.pos = pos
-                self.size = size
-                self.txt = txt
-                self.color_button = color_button
-                self.color_hover = color_hover
-                self.color_text = color_text
-                self.align_text = align_text
-                self.border = border
-                self.border_radius = border_radius
-                self.color_border = color_border
                 self.align_dropdown = align_dropdown
                 self.dropdown_border = dropdown_border
                 self.dropdown_border_color = dropdown_border_color
-                self.button = self.button(self.win,self.font,self.txt,self.pos,self.size,self.color_button,self.color_hover,self.color_text,self.align_text,self.border,self.color_border,self.border_radius)
+                self.button = button
+                self.text = self.button.text
                 self.rect = self.button.rect
                 self.objects = []
                 self.active = False
                 self.objects_activ = False
 
-                if self.align_dropdown == 'rup':
+                if self.align_dropdown == Engine.GUI_ALIGN_RIGHT:
                     self.y = self.button.rect[1]
                 else:
                     self.y = self.button.rect[1]+self.button.rect[3]
@@ -550,22 +560,18 @@ class Engine:
                 pass
 
             def add_object(self,object):
-                #berechnung für neues object
-                #append
-
                 if len(self.objects) == 0:
-                    x = self.textrect(object.font,object.text)[2]*1.1
+                    x = self.engine.gui.textrect(object.font,object.text)[2]*1.1
                 else:
                     x = self.bigges_text_rect(self.objects,object.font,object.text)[2]*1.1
 
-                if self.align_dropdown.startswith('r'):
+                if self.align_dropdown == Engine.GUI_ALIGN_RIGHT or self.align_dropdown == Engine.GUI_ALIGN_RIGHT_DOWN:
                     object.rect=pygame.Rect(self.button.rect[0]+self.button.rect[2],self.y,x,object.rect[3])
                 else:
                     object.rect=pygame.Rect(self.button.rect[0],self.y,x,object.rect[3])
-                
-                self.y += self.objects[len(self.objects)-1].rect[3]
 
                 self.objects.append(object)
+                self.y += self.objects[len(self.objects)-1].rect[3]
 
                 x = 0
                 for o in self.objects:
@@ -576,58 +582,55 @@ class Engine:
             def draw_dropdown(self):
                 for btn in self.objects:
                     btn.draw()
+                pygame.draw.rect(self.engine.win,(255,0,255),self.DropDown_rect,1)
+                if self.dropdown_border > 0:
+                    pygame.draw.rect(self.engine.win,self.dropdown_border_color,self.DropDown_rect,self.dropdown_border)
             
             def bigges_text_rect(self,text,font,new_object:str='') -> pygame.Rect:
 
                 # Retunes the biggest text rect in a list
                 x = 0
-                for i in range(len(text)):
-                    a = len(text[i])
-                    b = len(text[x])
+                for i in range(len(text)):#
+                    a= len(text[i].text)
+                    b = len(text[x].text)
                     if a > b:
                         x = i
 
-                if type(text[x]) == self.Button:
                     if len(text[x].text) > len(new_object):
-                        t = self.textrect(font,text[x].text)
+                        t = self.engine.gui.textrect(font,text[x].text)
                     else:
-                        t = self.textrect(font,new_object)
-                elif type(text[x]) == self.DropDown:
-                    if len(text[x].Button.text) > len(new_object):
-                        t = self.textrect(font,text[x].Button.text)
-                    else:
-                        t = self.textrect(font,new_object)
-                else:
-                    if len(text[x]) > len(new_object):
-                        t = self.textrect(font,text[x])
-                    else:
-                        t = self.textrect(font,new_object)
+                        t = self.engine.gui.textrect(font,new_object)
                 return t
         
             def draw(self):
-                self.button.draw()
+                if self.active:
+                    print(2)
+                    self.button.hovered = True
+                    self.button.draw()
+                    self.draw_dropdown()
+                else:
+                    self.button.draw()
 
             def update(self):
-                self.mouse = [pygame.mouse.get_pos()[0],pygame.mouse.get_pos()[1]]
-                self.click = pygame.mouse.get_pressed()[0]
                 self.button.update()
-                if self.button.clicked:
-                    self.active = True
-                if self.active or self.objects_activ:
+                if self.engine.input._mouse_left_clicked:
+                    if self.button.clicked:
+                        self.active = not self.active
+                    elif not self.DropDown_rect.collidepoint(self.engine.input.mouse_position):
+                        self.active = False
+                if self.active:
+                    print(1)
                     for object in self.objects:
-                        if type(object) == self.DropDown:
+                        if type(object) == self:
                             if object.active:
                                 self.objects_activ = True
-                            
-                    boolean = self.DropDown_rect.collidepoint(self.mouse) == False and self.click
-                    if boolean:
-                        self.active = False
-                        pygame.draw.rect(self.win,(255,0,255),self.DropDown_rect,1)
+                    
+                    # if self.button.rect.collidepoint(self.engine.input.mouse_position) == False and self.DropDown_rect.collidepoint(self.engine.input.mouse_position)== False and self.engine.input._mouse_left_clicked:
+                    #     self.active = not self.active
+                        
                     self.draw_dropdown()
                     for btn in self.objects:
                         btn.update()
 
-                    if self.dropdown_border > 0:
-                        pygame.draw.rect(self.win,self.dropdown_border_color,self.DropDown_rect,self.dropdown_border)
 if __name__ == "__main__":
     Engine.create_file_structure()
