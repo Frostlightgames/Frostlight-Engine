@@ -53,6 +53,7 @@ class Engine:
     MOUSE_UP_MIDDLE = [7,MOUSE]
     MOUSE_UP_RIGHT = [8,MOUSE]
     GUI_ALIGN_CENTER = 0
+    GUI_ALIGN_LEFT = 1
 
     def __init__(self,
                  fps:int=0,
@@ -103,7 +104,7 @@ class Engine:
         self.changed_window_size = self.window_size
 
         # Class variables go here
-        self.input = self._Input(self)
+        self.input = self._Input()
         self.gui = self._GUI(self)
 
         self.__create_window__()
@@ -243,7 +244,7 @@ class Engine:
         # Creating main game file and write base game logic to it
         if not os.path.exists("main.py"):
             with open("main.py","+wt") as file:
-                file.write("from frostlight_engine import Engine\n")
+                file.write("from frostlight_engine import *\n")
                 file.write("\n")
                 file.write("class Game(Engine):\n")
                 file.write("    def __init__(self):\n")
@@ -421,41 +422,29 @@ class Engine:
         def __init__(self,engine) -> None:
             self.engine = engine
         
-        def textrect(font,text:str) -> pygame.Rect:
+        def textrect(self,font,text:str) -> pygame.Rect:
             
             # Returns the  calculated rect size for a text
             rendered_text = font.render(text,True,(0,0,0))
             text_rect = rendered_text.get_rect()
             return text_rect
         
-        class _GUIO:
-            def __init__(self):
-                self.engine = self.engine
-
-        class Test(_GUIO):
-            def __init__(self) -> None:
-                super.init()
-            
-            def render(self):
-                pygame.draw.rect(self.engine.win,(255,255,255),pygame.Rect(64,64,64,64))
-
-        class Text(_GUI):
-            def render(text:str,
+        class Text:
+            def render(engine,
+                       text:str,
                        rect:pygame.Rect,
                        color:list[int,int,int]=[255,255,255],
-                       font:pygame.font.Font=pygame.font.SysFont("Arial",18),
+                       font=None,
                        text_align=None,
                        surface:pygame.Surface=None):
+                
+                # Render Text
                 if type(font) == pygame.font.Font:
-                    if text_align == None:
-                        text_align = Engine.GUI_ALIGN_CENTER
-                    if surface == None:
-                        surface = Engine.win
                     text = font.render(text,True,color)
                     textrect = text.get_rect()
-                    if text_align == 1:
+                    if text_align == Engine.GUI_ALIGN_LEFT:
                         textrect.center = (rect[2]//2+rect[0],rect[3]//2+rect[1])
-                    elif text_align == 0:
+                    elif text_align == Engine.GUI_ALIGN_CENTER:
                         h = rect[0]+5
                         textrect.center = (0,rect[3]//2+rect[1])
                         textrect.update(h,textrect[1],textrect[2],textrect[3])
@@ -463,19 +452,21 @@ class Engine:
                 else:
                     pass
 
-        class Button(_GUI):
+        class Button:
             def __init__(self,
+                         engine,
                          surface:pygame.surface.Surface,
-                         font,txt:str,pos:tuple[int,int],
+                         font,
+                         text:str,pos:tuple[int,int],
                          size:tuple[int,int]=[0,0],
-                         color_button:pygame.color.Color=(255,255,255),
+                         color_button:pygame.color.Color=(55,55,55),
                          color_hover:pygame.color.Color=(100,100,100),
-                         color_text:pygame.color.Color=(0,0,0),
+                         color_text:pygame.color.Color=(255,255,255),
                          align_text:int=1,
                          border:int=0,
                          color_border:pygame.color.Color=(0,0,0),
                          border_radius:int=-1) -> None:
-                self.win = surface
+                self.engine = engine
                 self.font = font
                 self.pos = pos
                 self.size = size
@@ -488,8 +479,9 @@ class Engine:
                 self.border_radius = border_radius
                 self.clicked = False
                 self.pressed = False
-                self.text = txt
-                self.txtrect = Engine.GUI.textrect(self.font,self.text)
+                self.hovered = False
+                self.text = text
+                self.txtrect = self.engine.gui.textrect(font,text)
                 
                 #button rect berechnen
                 if self.size == 0 or (self.size[0] == 0 and self.size[1] == 0):
@@ -501,28 +493,31 @@ class Engine:
                 else:
                     self.rect = pygame.Rect(self.pos[0],self.pos[1],self.size[0],self.size[1])
                 
-                Engine.GUI.Text.render(self.text,self.rect,self.color_text,self.align_text)
+                self.engine.gui.Text.render(self.engine,self.text,self.rect,self.color_text,self.font,self.align_text,self.engine.win)
 
             def draw(self):
-                pygame.draw.rect(self.win,self.color_button,self.rect,0,self.border_radius)
+                pygame.draw.rect(self.engine.win,self.color_button,self.rect,0,self.border_radius)
+                if self.hovered:
+                    pygame.draw.rect(self.engine.win,self.color_hover,self.rect)
 
-                self.txt.draw(self.text,self.rect,self.color_text,self.align_text)
+                self.engine.gui.Text.render(self.engine,self.text,self.rect,self.color_text,self.font,self.align_text,self.engine.win)
                 if self.border > 0:
-                    pygame.draw.rect(self.win,self.color_border,self.rect,self.border,self.border_radius)
+                    pygame.draw.rect(self.engine.win,self.color_text,self.rect,self.border,self.border_radius)
+
+            def get_clicked(self) -> bool:
+                return self.clicked
 
             def update(self):
-                self.mouse = [pygame.mouse.get_pos()[0],pygame.mouse.get_pos()[1]]
-                self.press = pygame.mouse.get_pressed()[0]
-                self.click = pygame.mouse.get_pressed()[0]
                 self.clicked = False
-                if self.rect.collidepoint(self.mouse):
-                    pygame.draw.rect(self.win,self.color_hover,self.rect)
-                    if self.click:
+                self.hovered = False
+                self.pressed = False
+                if self.rect.collidepoint(self.engine.input.mouse_position):
+                    self.hovered = True
+                    if self.engine.input._mouse_left_clicked:
                         self.clicked = True
-                    
-                self.txt.draw(self.text,self.rect,self.color_text,self.align_text)
-                if self.border > 0:
-                    pygame.draw.rect(self.win,self.color_border,self.rect,self.border,self.border_radius)    
+                    if self.engine.input._mouse_left_pressed:
+                        self.pressed = True
+
         class DropDown:
             def __init__(self,surface:pygame.surface.Surface,font,txt:str,pos:tuple[int,int],size:tuple[int,int],color_button:pygame.color.Color=(255,255,255),color_hover:pygame.color.Color=(100,100,100),color_text:pygame.color.Color=(0,0,0),align_text='c',border=0,color_border:pygame.color.Color=(0,0,0),border_radius=-1,align_dropdown='l',dropdown_border=0,dropdown_border_color:pygame.color.Color=(0,0,0)) -> None:
                 self.win = surface
