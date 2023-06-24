@@ -604,7 +604,6 @@ class Engine:
         
             def draw(self):
                 if self.active:
-                    print(2)
                     self.button.hovered = True
                     self.button.draw()
                     self.draw_dropdown()
@@ -619,7 +618,6 @@ class Engine:
                     elif not self.DropDown_rect.collidepoint(self.engine.input.mouse_position):
                         self.active = False
                 if self.active:
-                    print(1)
                     for object in self.objects:
                         if type(object) == self:
                             if object.active:
