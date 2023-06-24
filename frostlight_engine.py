@@ -3,8 +3,6 @@ import time
 import pygame
 import datetime
 
-pygame.init()
-
 class Engine:
     
     # Custom variables go here
@@ -73,6 +71,7 @@ class Engine:
         
         # initialize all modules
         pygame.init()
+        pygame.font.init()
         pygame.joystick.init()
         if sounds:
             pygame.mixer.pre_init(44100,-16,2,512)
@@ -104,7 +103,8 @@ class Engine:
         self.changed_window_size = self.window_size
 
         # Class variables go here
-        self.input = self._Input()
+        self.input = self._Input(self)
+        self.gui = self._GUI(self)
 
         self.__create_window__()
 
@@ -145,19 +145,23 @@ class Engine:
 
     def __get_events__(self):
 
+        # Limits game fps
         self.clock.tick(self.fps)
 
+        # Resets mouse click variables
         self.input._mouse_left_clicked = False
         self.input._mouse_left_released = False
         self.input._mouse_middle_clicked = False
         self.input._mouse_middle_released = False
         self.input._mouse_right_clicked = False
         self.input._mouse_right_released = False
+        
+        # Gets pygame Events
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 self.quit()
 
-            # Window events
+            # Managing window events
             elif event.type == pygame.WINDOWMOVED:
                 self.last_time = time.time()
                 self.delta_time = 1
@@ -169,6 +173,7 @@ class Engine:
                     self.changed_window_size = [event.w,event.h]
                     self.__manage_window_resize__()
 
+            # Managing mouse events
             if event.type == pygame.MOUSEBUTTONUP:
                 if event.button == 1:
                     self.input._mouse_left_released = True
@@ -207,19 +212,27 @@ class Engine:
             self.draw()
 
     def quit(self):
+
+        # Ends game loop
         self.run_game = False
 
     def get_fps(self):
+
+        # Returns game fps as integer
         return int(min(self.clock.get_fps(),99999999))
     
     def create_file_structure():
+
+        # Logging Variables
         directories_created = 0
         files_created = 0
         directories_to_create = ["data","screenshots",os.path.join("data","classes"),os.path.join("data","saves"),os.path.join("data","sprites")]
 
+        # Creating logging file
         if not os.path.exists(os.path.join("data","log.txt")):
             files_created += 1
 
+        # Creating directories
         for directory in directories_to_create:
             try:
                 os.mkdir(directory)
@@ -227,6 +240,7 @@ class Engine:
             except FileExistsError:
                 Engine.log(f"Skipping creation of directory {directory}, it already exist.")
 
+        # Creating main game file and write base game logic to it
         if not os.path.exists("main.py"):
             with open("main.py","+wt") as file:
                 file.write("from frostlight_engine import Engine\n")
@@ -271,19 +285,26 @@ class Engine:
             files_created += 1
         else:
             Engine.log("Skipping creation of main file, already exist.")
-
+        
+        # Logging file creation
         if files_created == 0 and directories_created == 0:
             Engine.log("No new files and directories where created.")
         else:
             Engine.log(f"Created game files structure with {files_created} files and {directories_created} directories")
 
     def set_window_name(self,name:str):
+
+        # Set the caption of the main window
         pygame.display.set_caption(name)
 
     def set_window_icon(self,path:list):
+
+        # Setting the main windows icon
         pygame.display.set_icon(pygame.image.load(os.path.join(*path)).convert_alpha())
 
     def log(text:str):
+
+        # Logs as Engine if log comes from engine file else as game
         with open(os.path.join("data","log.txt"),"+at") as file:
             if __name__ == "__main__":
                 file.write(f"[Engine {datetime.datetime.now()}]: {text} \n")
@@ -291,6 +312,8 @@ class Engine:
                 file.write(f"[Game {datetime.datetime.now()}]: {text} \n")
     
     def clear_log():
+
+        # Clearing log by overwriting it
         with open(os.path.join("data","log.txt"),"w") as file:
             file.write("")
 
@@ -304,6 +327,8 @@ class Engine:
 
     class _Input:
         def __init__(self) -> None:
+
+            # All mouse related variables
             self.mouse_position = [0,0]
             self._mouse_left_pressed = False
             self._mouse_left_clicked = False
@@ -314,24 +339,8 @@ class Engine:
             self._mouse_right_pressed = False
             self._mouse_right_clicked = False
             self._mouse_right_released = False
-            
-            self._registered_input = {
-                "accept":[Engine.MOUSE_CLICK_LEFT,Engine.KEY_SPACE,Engine.KEY_RETURN],
-                "cancel":[Engine.KEY_ESCAPE],
-                "right":[Engine.KEY_D,Engine.KEY_ARROW_RIGHT],
-                "left":[Engine.KEY_A,Engine.KEY_ARROW_LEFT],
-                "up":[Engine.KEY_W,Engine.KEY_ARROW_UP],
-                "down":[Engine.KEY_S,Engine.KEY_ARROW_DOWN]
-            }
 
-        def register_input(self,name:str,key:int):
-            if name not in self._registered_input:
-                self._registered_input[name] = []
-            self._registered_input[name].append(key)
-
-        def get_input(self, name:str):
-            keys = pygame.key.get_pressed()
-            mouse = [
+            self.mouse = [
                 self._mouse_left_clicked,
                 self._mouse_middle_clicked,
                 self._mouse_right_clicked,
@@ -343,60 +352,98 @@ class Engine:
                 self._mouse_right_released,
                 ]
             
-            key_pressed = 0
+            # All keyboard related variables
+            self.keys = pygame.key.get_pressed()
+
+            # Registered keyboard events
+            self._registered_input = {
+                "accept":[Engine.MOUSE_CLICK_LEFT,Engine.KEY_SPACE,Engine.KEY_RETURN],
+                "cancel":[Engine.KEY_ESCAPE],
+                "right":[Engine.KEY_D,Engine.KEY_ARROW_RIGHT],
+                "left":[Engine.KEY_A,Engine.KEY_ARROW_LEFT],
+                "up":[Engine.KEY_W,Engine.KEY_ARROW_UP],
+                "down":[Engine.KEY_S,Engine.KEY_ARROW_DOWN]
+            }
+
+        def register_input(self,name:str,key:int):
+
+            # Checks if input_name exists and adds input_link
+            if name not in self._registered_input:
+                self._registered_input[name] = []
+            self._registered_input[name].append(key)
+
+        def get_input(self, name:str):
+            input_value = 0
+
+            # Checking each option for an input
             for key in self._registered_input[name]:
+                # Getting keyboard input value
                 if key[1] == Engine.KEYBOARD:
-                    if keys[key[0]]:
-                        key_pressed = 1
+                    if self.keys[key[0]]:
+                        input_value = 1
                         break
+
+                # Getting mouse input values
                 elif key[1] == Engine.MOUSE:
-                    if mouse[key[0]]:
-                        key_pressed = 1
+                    if self.mouse[key[0]]:
+                        input_value = 1
                         break
             
-            return key_pressed
+            # Return collected input value
+            return input_value
 
         def _update(self):
+
+            # Gets all mouse variables
             pygame_mouse_pressed = pygame.mouse.get_pressed()
             self._mouse_left_pressed = pygame_mouse_pressed[0]
             self._mouse_middle_pressed = pygame_mouse_pressed[1]
             self._mouse_right_pressed = pygame_mouse_pressed[2]
+            
+            self.mouse = [
+                self._mouse_left_clicked,
+                self._mouse_middle_clicked,
+                self._mouse_right_clicked,
+                self._mouse_left_pressed,
+                self._mouse_middle_pressed,
+                self._mouse_right_pressed,
+                self._mouse_left_released,
+                self._mouse_middle_released,
+                self._mouse_right_released,
+                ]
 
             self.mouse_position = pygame.mouse.get_pos()
-            
-    class Font:
-        def __init__(self) -> None:
-            pass
-        
-    class GUI():
-        def __init__(self) -> None:
-            super.__init__()
 
+            # Gets all keyboard variables
+            self.keys = pygame.key.get_pressed()
+        
+    class _GUI:
         def textrect(font,text:str) -> pygame.Rect:
             
-            # Returnes the  calculated rect size for a text
+            # Returns the  calculated rect size for a text
             rendered_text = font.render(text,True,(0,0,0))
-            textrect = rendered_text.get_rect()
-            return textrect
+            text_rect = rendered_text.get_rect()
+            return text_rect
         
-        class Test:
-            def __init__(self) -> None:
-                super.__init__()
+        class _GUI:
+            def __init__(self,engine) -> None:
+                self.engine = engine
+
+        class Test(_GUI):
+            def __init__(self, engine) -> None:
+                super().__init__(engine)
+
             
-            def draw(self):
-                pygame.draw.rect(self.w)
+            def render(self):
+                pygame.draw.rect(self.engine.win,(255,255,255),pygame.Rect(64,64,64,64))
 
-        class Text:
-            def __init__(self) -> None:
-                pass
-
+        class Text(_GUI):
             def render(text:str,
                        rect:pygame.Rect,
                        color:list[int,int,int]=[255,255,255],
                        font:pygame.font.Font=pygame.font.SysFont("Arial",18),
                        text_align=None,
                        surface:pygame.Surface=None):
-                       
                 if type(font) == pygame.font.Font:
                     if text_align == None:
                         text_align = Engine.GUI_ALIGN_CENTER
@@ -414,7 +461,7 @@ class Engine:
                 else:
                     pass
 
-        class Button:
+        class Button(_GUI):
             def __init__(self,
                          surface:pygame.surface.Surface,
                          font,txt:str,pos:tuple[int,int],
