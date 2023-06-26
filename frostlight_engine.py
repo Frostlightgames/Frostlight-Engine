@@ -428,7 +428,7 @@ class Engine:
                 except Exception:
                     self.package_lost += 1
 
-            def auth(self) -> bool:
+            def authenticate_client(self) -> bool:
                 try:
                     data = self.socket.recv(8)
                     if int.from_bytes(data[:1],"big") == 0x00:
@@ -452,6 +452,7 @@ class Engine:
                     return False
                 except Exception:
                     return False
+                
         class Client:
             def __init__(self,conn:socket.socket,aeskey,aesiv,protocol_version:int):
                 self.socket = conn
@@ -501,7 +502,7 @@ class Engine:
                 except Exception as e:
                     self.package_lost += 1
             
-            def auth(self) -> bool:
+            def auth_with_server(self) -> bool:
                 try:
                     package = 0x00.to_bytes(1,"big")+self.protocol_version.to_bytes(1,"big")
                     self.socket.send(package)
