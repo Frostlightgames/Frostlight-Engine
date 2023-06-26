@@ -303,10 +303,6 @@ class Engine:
         new = pygame.Rect(0,0,w,h)
         new.center = c
         return new
-    
-    class _Network:
-        def __init__(self) -> None:
-            pass
 
     class _Input:
         def __init__(self) -> None:
@@ -389,7 +385,7 @@ class Engine:
             private_key = key.export_key('PEM')
             return key, private_key
         
-        class Server:
+        class Client:
             def __init__(self,conn:socket.socket,rsakey:RSA.RsaKey,protocol_version:int):
                 self.socket = conn
                 self.aeskey = ""
@@ -454,7 +450,7 @@ class Engine:
                             if int.from_bytes(data[:1],"big") == 0x01:
                                 self.aeskey = data[1:17]
                                 self.aesiv = data[17:]
-                                package = Engine._Network.Datatypes.pack.byte(0x01)
+                                package = Engine._Network.Package.pack([0x01],"i")
                                 self.send(package)
                                 package_id,data = self.recv(16)
                                 if package_id == 0x02:
@@ -465,7 +461,7 @@ class Engine:
                 except Exception:
                     return False
                 
-        class Client:
+        class Server:
             def __init__(self,conn:socket.socket,aeskey,aesiv,protocol_version:int):
                 self.socket = conn
                 self.aeskey = aeskey
@@ -526,7 +522,7 @@ class Engine:
                         self.socket.send(package)
                         package_id,data = self.recv(16)
                         if package_id == 0x01:
-                            package = package = Engine._Network.Datatypes.pack.byte(0x02)
+                            package = package = Engine._Network.Package.pack([0x02],"i")
                             self.send(package)
                             self.connected = True
                             return True
@@ -582,8 +578,8 @@ class Engine:
                             raise OverflowError
                         package = b""
                         for letter in chunk:
-                            package += Engine._Network.Datatypes.pack.byte(ord(letter))
-                        result += Engine._Network.Datatypes.pack.byte(len(chunk))+package
+                            package += Engine._Network.Package.pack([ord(letter)],"i")
+                        result += Engine._Network.Package.pack([len(chunk)],"i")
 
 if __name__ == "__main__":
     Engine.create_file_structure()
