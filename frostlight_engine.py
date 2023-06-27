@@ -568,6 +568,8 @@ class Engine:
                         for letter in chunk:
                             package += Engine._Network.Package.pack([ord(letter)],"i")
                         result += Engine._Network.Package.pack([len(chunk)],"i")
+                
+                return result
 
 if __name__ == "__main__":
     Engine.create_file_structure()
