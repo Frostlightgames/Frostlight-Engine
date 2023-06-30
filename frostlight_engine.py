@@ -578,7 +578,6 @@ class Engine:
 
                 self.objects.append(object)
                 self.y += self.objects[len(self.objects)-1].rect[3]
-                print(object.rect,len(self.objects))
                 x = 0
                 for o in self.objects:
                     o.rect[2] = self.bigges_text_rect(self.objects,o.font)[2]*1.1
