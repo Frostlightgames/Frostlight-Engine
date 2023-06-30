@@ -533,7 +533,6 @@ class Engine:
         class DropDown:
             def __init__(self,
                          engine,
-                         surface:pygame.surface.Surface,
                          font,
                          button,
                          align_dropdown=1,
@@ -570,9 +569,16 @@ class Engine:
                 else:
                     object.rect=pygame.Rect(self.button.rect[0],self.y,x,object.rect[3])
 
+                if type(object) == Engine._GUI.DropDown:
+                    object.button.rect = object.rect
+                    if object.align_dropdown == Engine.GUI_ALIGN_RIGHT:
+                        object.y = object.button.rect[1]
+                    else:
+                        object.y = object.button.rect[1]+object.button.rect[3]
+
                 self.objects.append(object)
                 self.y += self.objects[len(self.objects)-1].rect[3]
-
+                print(object.rect,len(self.objects))
                 x = 0
                 for o in self.objects:
                     o.rect[2] = self.bigges_text_rect(self.objects,o.font)[2]*1.1
@@ -587,7 +593,6 @@ class Engine:
                     pygame.draw.rect(self.engine.win,self.dropdown_border_color,self.DropDown_rect,self.dropdown_border)
             
             def bigges_text_rect(self,text,font,new_object:str='') -> pygame.Rect:
-
                 # Retunes the biggest text rect in a list
                 x = 0
                 for i in range(len(text)):#
@@ -601,7 +606,7 @@ class Engine:
                     else:
                         t = self.engine.gui.textrect(font,new_object)
                 return t
-        
+
             def draw(self):
                 if self.active:
                     self.button.hovered = True
@@ -617,16 +622,13 @@ class Engine:
                         self.active = not self.active
                     elif not self.DropDown_rect.collidepoint(self.engine.input.mouse_position):
                         self.active = False
+
                 if self.active:
                     for object in self.objects:
                         if type(object) == self:
                             if object.active:
                                 self.objects_activ = True
-                    
-                    # if self.button.rect.collidepoint(self.engine.input.mouse_position) == False and self.DropDown_rect.collidepoint(self.engine.input.mouse_position)== False and self.engine.input._mouse_left_clicked:
-                    #     self.active = not self.active
-                        
-                    self.draw_dropdown()
+
                     for btn in self.objects:
                         btn.update()
 
