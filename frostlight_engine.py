@@ -616,18 +616,18 @@ class Engine:
 
             def update(self):
                 self.button.update()
+                self.objects_activ = False
+                for i in self.objects:
+                    if type(i) == type(self):
+                        self.objects_activ = i.active
                 if self.engine.input._mouse_left_clicked:
                     if self.button.clicked:
                         self.active = not self.active
-                    elif not self.DropDown_rect.collidepoint(self.engine.input.mouse_position):
-                        self.active = False
+                    elif not self.objects_activ:
+                        if not self.DropDown_rect.collidepoint(self.engine.input.mouse_position):
+                            self.active = False
 
                 if self.active:
-                    for object in self.objects:
-                        if type(object) == self:
-                            if object.active:
-                                self.objects_activ = True
-
                     for btn in self.objects:
                         btn.update()
 
