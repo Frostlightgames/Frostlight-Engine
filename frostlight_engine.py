@@ -2,11 +2,13 @@ import time
 import pygame
 import argparse
 from classes.functions import *
+from classes.input import Input
 from classes.logger import Logger
 from classes.window import Window
 
 class Engine:
     def __init__(self,
+                 color_depth:int=16,
                  fps:int=0,
                  fullscreen:bool=False,
                  game_version:str="1.0",
@@ -17,9 +19,8 @@ class Engine:
                  sounds:bool=True,
                  vsync:bool=False,
                  window_centered:bool=True,
-                 window_depth:int=16,
                  window_name:str="New Game",
-                 window_size:list=[1920,1080]):
+                 window_size:list=None):
         
         # initialize all modules
         pygame.init()
@@ -28,27 +29,19 @@ class Engine:
             pygame.mixer.pre_init(44100,-16,2,512)
 
         # Boolean variables go here
-        self.fullscreen = fullscreen
-        self.mouse_visible = mouse_visible
-        self.nowindow = nowindow
-        self.resizable = resizable
         self.run_game = True
         self.sounds = sounds
-        self.vsync = vsync
-        self.window_centered = window_centered
 
         # Integer and float variables go here
         self.fps = fps
         self.delta_time = 1
         self.last_time = time.time()
         self.version = 0.1
-        self.window_depth = window_depth
 
         # String variables go here
         self.game_state = "intro"
         self.game_version = game_version
         self.language = language
-        self.window_name = window_name
 
         # List variables go here
         self.display_update_rects = []
@@ -56,7 +49,8 @@ class Engine:
         # Object variables go here
         self.clock = pygame.time.Clock()
         self.logger = Logger()
-        self.window = Window()
+        self.input = Input()
+        self.window = Window(window_size,fullscreen,resizable,nowindow,window_centered,vsync,window_name,mouse_visible,color_depth)
 
         self.logger.info("All Engine variables were created")
 
