@@ -1,17 +1,12 @@
 import os
 import time
 import pygame
+import logging
+import argparse
 import datetime
 from classes.functions import *
+from classes.logger import Logger
 from classes.window import Window
-# import argparse
-
-# parser = argparse.ArgumentParser()
-
-# parser.add_argument("-b", "--build", action="store_true")
-
-# args = parser.parse_args()
-# print(args.build)
 
 class Engine:
     def __init__(self,
@@ -58,12 +53,32 @@ class Engine:
         self.language = language
         self.window_name = window_name
 
+        # List variables go here
+        self.display_update_rects = []
+
+        # Object variables go here
         self.clock = pygame.time.Clock()
-
+        self.logger = Logger()
         self.window = Window()
-        self.window.create()
 
+        self.logger.info("All Engine variables were created")
+
+        # Object processing go here
+        self.window.create()
         pygame.event.set_allowed([pygame.QUIT, pygame.WINDOWMOVED, pygame.VIDEORESIZE, pygame.KEYDOWN])
+
+
+    def scale_rect(rect:pygame.Rect, amount:float) -> pygame.Rect:
+        w = rect.width * amount
+        h = rect.height * amount
+        new = pygame.Rect(0,0,w,h)
+        return new
+    
+    def scale_sprite(sprite:pygame.Surface, amount:float) -> pygame.Rect:
+        w = sprite.get_width() * amount
+        h = sprite.get_height() * amount
+        new = pygame.transform.scale(sprite,(w,h)).convert_alpha()
+        return new
         
     def get_events(self):
         self.clock.tick(self.fps)
@@ -91,14 +106,29 @@ class Engine:
         self.last_time = time.time()
 
     def run(self):
-        log("Starting game")
+        self.logger.info("starting game")
         while self.run_game:
-            self.get_events()
-            self.update()
-            self.draw()
+            try:
+                self.get_events()
+                self.update()
+                self.draw()
+            except Exception as e:
+                self.logger.error(e)
 
     def quit(self):
         self.run_game = False
 
 if __name__ == "__main__":
+    # parser = argparse.ArgumentParser()
+    # parser.add_argument("-b", "--build", action="store_true")
+    # parser.add_argument("-n", "--name", action="store_true")
+    # args = parser.parse_args()
+    # if args.build:
+        
+    #     #Build game to exe
+    #     pass
+    # elif args.name:
+    #     pass
+
+    # Setup new Project
     create_file_structure()

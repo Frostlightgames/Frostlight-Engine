@@ -1,31 +1,3 @@
-import os
-import pygame
-import datetime
-
-def set_window_name(name:str):
-    pygame.display.set_caption(name)
-
-def set_window_icon(path:list):
-    pygame.display.set_icon(pygame.image.load(os.path.join(*path)).convert_alpha())
-
-def log(text:str):
-    with open(os.path.join("data","log.txt"),"+at") as file:
-        if __name__ == "__main__":
-            file.write(f"[Engine {datetime.datetime.now()}]: {text} \n")
-        else:
-            file.write(f"[Game {datetime.datetime.now()}]: {text} \n")
-
-def clear_log():
-    with open(os.path.join("data","log.txt"),"w") as file:
-        file.write("")
-
-def scale_rect(rect, amount) -> pygame.Rect:
-    c = rect.center
-    w = rect.width * amount
-    h = rect.height * amount
-    new = pygame.Rect(0,0,w,h)
-    new.center = c
-    return new
 
 def create_file_structure():
     directories_created = 0
