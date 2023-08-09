@@ -1,9 +1,6 @@
-import os
 import time
 import pygame
-import logging
 import argparse
-import datetime
 from classes.functions import *
 from classes.logger import Logger
 from classes.window import Window

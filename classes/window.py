@@ -4,7 +4,7 @@ import pygame
 class Window:
     def __init__(self,set_window_size=None,fullscreen=False,resizable=True,windowless=False,window_centered=True,vsync=False,window_name="Frostlight Engine",mouse_visible=True,color_depth=24) -> None:
         
-        # Variables
+        # Setting startup variables
         self.windowless = windowless
         self.window_centered = window_centered
         self.vsync = vsync
@@ -73,7 +73,11 @@ class Window:
         self.set_fullscreen(not(self.fullscreen))
 
     def set_name(self,name):
+
+        # Renaming the displayed window title
         pygame.display.set_caption(name)
 
     def get_fps(self,clock):
+
+        # Returning frames per second as integer
         return int(min(clock.get_fps(),99999999))
