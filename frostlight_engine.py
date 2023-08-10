@@ -110,16 +110,25 @@ class Engine:
         self.run_game = False
 
 if __name__ == "__main__":
-    # parser = argparse.ArgumentParser()
-    # parser.add_argument("-b", "--build", action="store_true")
-    # parser.add_argument("-n", "--name", action="store_true")
-    # args = parser.parse_args()
-    # if args.build:
-        
-    #     #Build game to exe
-    #     pass
-    # elif args.name:
-    #     pass
+    parser = argparse.ArgumentParser()
+    parser.add_argument("-p", "--pack", action="store_true")
+    parser.add_argument("-b", "--build", action="store_true")
+    parser.add_argument("-n", "--name", action="store_true")
+    args = parser.parse_args()
+    if args.pack:
 
-    # Setup new Project
-    create_file_structure()
+        # Pack Engine for release
+        pass
+    elif args.build:
+            
+        # Build game to EXE
+        pass
+        
+    elif args.name: 
+
+        # Setup new Project with name
+        pass
+    else:
+
+        # Setup new no name Project 
+        create_file_structure()

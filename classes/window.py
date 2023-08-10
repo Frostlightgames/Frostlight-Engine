@@ -27,18 +27,24 @@ class Window:
 
             # Create window
             display_size = [int(pygame.display.Info().current_w),int(pygame.display.Info().current_h)]
-            if self.fullscreen: # Fullscreen window
-                self.main_surface = pygame.display.set_mode(display_size,pygame.FULLSCREEN | pygame.DOUBLEBUF,vsync=self.vsync,depth=self.color_depth)
+            if self.fullscreen: 
+                
+                # Fullscreen window
+                self.main_surface = pygame.display.set_mode(display_size,pygame.HWSURFACE|pygame.DOUBLEBUF|pygame.FULLSCREEN,vsync=self.vsync,depth=self.color_depth)
             else:
 
                 # Calculate fitting window size
                 if self.window_size == None:
                     self.window_size = [display_size[0],display_size[1]*0.94]
 
-                if self.resizable: # Resizable window
+                if self.resizable:
+                    
+                    # Resizable window
                     self.main_surface = pygame.display.set_mode(self.window_size,pygame.HWSURFACE|pygame.DOUBLEBUF|pygame.RESIZABLE,vsync=self.vsync,depth=self.color_depth)
-                else: # Fixed size window
-                    self.main_surface = pygame.display.set_mode(self.window_size,vsync=self.vsync,depth=self.color_depth)
+                else: 
+                    
+                    # Fixed size window
+                    self.main_surface = pygame.display.set_mode(self.window_size,pygame.HWSURFACE|pygame.DOUBLEBUF|pygame.NOFRAME,vsync=self.vsync,depth=self.color_depth)
             
             # Change window attributes
             pygame.display.set_caption(self.window_name)
@@ -54,11 +60,11 @@ class Window:
         if self.resizable:
 
             # Resizable window 
-            self.main_surface = pygame.display.set_mode(self.window_size,pygame.RESIZABLE | pygame.DOUBLEBUF,vsync=self.vsync,depth=self.color_depth)
+            self.main_surface = pygame.display.set_mode(self.window_size,pygame.HWSURFACE|pygame.DOUBLEBUF|pygame.RESIZABLE,vsync=self.vsync,depth=self.color_depth)
         else: 
             
             # Fixed size window
-            self.main_surface = pygame.display.set_mode(self.window_size,vsync=self.vsync,depth=self.color_depth)
+            self.main_surface = pygame.display.set_mode(self.window_size,pygame.HWSURFACE|pygame.DOUBLEBUF|pygame.NOFRAME,vsync=self.vsync,depth=self.color_depth)
 
     def set_fullscreen(self,fullscreen:bool):
 
