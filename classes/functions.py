@@ -1,4 +1,4 @@
-
+import os
 def create_file_structure():
     directories_created = 0
     files_created = 0
@@ -12,7 +12,8 @@ def create_file_structure():
             os.mkdir(directory)
             directories_created += 1
         except FileExistsError:
-            log(f"Skipping creation of directory {directory}, it already exist.")
+            pass
+            # log(f"Skipping creation of directory {directory}, it already exist.")
 
     if not os.path.exists("main.py"):
         with open("main.py","+wt") as file:
@@ -56,10 +57,10 @@ def create_file_structure():
             file.write("    game = Game()\n")
             file.write("    game.run()\n")
         files_created += 1
-    else:
-        log("Skipping creation of main file, already exist.")
+    # else:
+    #     log("Skipping creation of main file, already exist.")
 
-    if files_created == 0 and directories_created == 0:
-        log("No new files and directories where created.")
-    else:
-        log(f"Created game files structure with {files_created} files and {directories_created} directories")
+    # if files_created == 0 and directories_created == 0:
+    #     log("No new files and directories where created.")
+    # else:
+    #     log(f"Created game files structure with {files_created} files and {directories_created} directories")

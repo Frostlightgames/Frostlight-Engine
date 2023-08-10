@@ -1,49 +1,15 @@
 import pygame
-from constances import *
+from classes.constances import *
 
 class Input:
-    def __init__(self) -> None:
-        self.joystick_dead_zone = 0.15
-        self.mouse_position = [0,0]
-        self.mouse_left_pressed = False
-        self.mouse_left_clicked = False
-        self.mouse_left_released = False
-        self.mouse_middle_pressed = False
-        self.mouse_middle_clicked = False
-        self.mouse_middle_released = False
-        self.mouse_right_pressed = False
-        self.mouse_right_clicked = False
-        self.mouse_right_released = False
+    def __init__(self,joystick_dead_zone:int=0.15) -> None:
+        self.mouse = self.Mouse()
 
+        self.joystick_dead_zone = joystick_dead_zone
         self.joystick_devices = []
-
-        self.joystick = [
-            0, # JOYSTICK_BUTTON_DOWN
-            0, # JOYSTICK_BUTTON_RIGHT
-            0, # JOYSTICK_BUTTON_UP
-            0, # JOYSTICK_BUTTON_LEFT
-            0, # JOYSTICK_DPAD_DOWN
-            0, # JOYSTICK_DPAD_RIGHT
-            0, # JOYSTICK_DPAD_UP
-            0, # JOYSTICK_DPAD_LEFT
-            0, # JOYSTICK_RIGHT_STICK_DOWN 
-            0, # JOYSTICK_RIGHT_STICK_RIGHT
-            0, # JOYSTICK_RIGHT_STICK_UP
-            0, # JOYSTICK_RIGHT_STICK_LEFT 
-            0, # JOYSTICK_LEFT_STICK_DOWN
-            0, # JOYSTICK_LEFT_STICK_RIGHT 
-            0, # JOYSTICK_LEFT_STICK_UP
-            0, # JOYSTICK_LEFT_STICK_LEFT
-            0, # JOYSTICK_BUTTON_OPTIONS 
-            0, # JOYSTICK_BUTTON_SHARE
-            0, # JOYSTICK_BUTTON_TRIGGER_R1
-            0, # JOYSTICK_BUTTON_TRIGGER_L1
-            0, # JOYSTICK_BUTTON_TRIGGER_R2
-            0, # JOYSTICK_BUTTON_TRIGGER_L2
-        ]
         
         for joystick in range(pygame.joystick.get_count()):
-            self.joystick_devices.append(pygame.joystick.Joystick(joystick))
+            self.joystick_devices.append(self.Joystick(pygame.joystick.Joystick(joystick)))
             
         self.registered_input = {
             "accept":[MOUSE_CLICK_LEFT,KEY_SPACE,KEY_RETURN,JOYSTICK_BUTTON_DOWN],
@@ -54,10 +20,16 @@ class Input:
             "down":[KEY_S,KEY_ARROW_DOWN,JOYSTICK_DPAD_DOWN,JOYSTICK_LEFT_STICK_DOWN]
         }
 
+    def clear(self,inputname:str):
+        del self.registered_input[inputname]
+
+    def remove(self,inputname:str,key:int):
+        self.registered_input[inputname].remove(key)
+
     def new(self,name:str,key:int):
-        if name not in self._registered_input:
-            self._registered_input[name] = []
-        self._registered_input[name].append(key)
+        if name not in self.registered_input:
+            self.registered_input[name] = []
+        self.registered_input[name].append(key)
 
     def get(self, name:str):
         keys = pygame.key.get_pressed()
@@ -89,8 +61,11 @@ class Input:
                     break
         
         return key_pressed
+    
+    def add_joystick(self,joystick:pygame.joystick.JoystickType):
+        pass
 
-    def _update(self,engine):
+    def update(self,engine):
         pygame_mouse_pressed = pygame.mouse.get_pressed()
         self._mouse_left_pressed = pygame_mouse_pressed[0]
         self._mouse_middle_pressed = pygame_mouse_pressed[1]
@@ -114,3 +89,71 @@ class Input:
             value = joystick.get_axis(3)
             if abs(value) > 0.15:
                 self.mouse[1] += value*1000*engine.delta_time
+
+    class Mouse:
+        def __init__(self) -> None:
+            self.position = [0,0]
+            self.left_pressed = False
+            self.left_clicked = False
+            self.left_released = False
+            self.middle_pressed = False
+            self.middle_clicked = False
+            self.middle_released = False
+            self.right_pressed = False
+            self.right_clicked = False
+            self.right_released = False
+
+        def update(self):
+            self.position = [pygame.mouse.get_pos()[0],pygame.mouse.get_pos()[1]]
+            mouse_pressed = pygame.mouse.get_pressed()
+            self.left_pressed = mouse_pressed[0]
+            self.middle_pressed = mouse_pressed[1]
+            self.right_pressed = mouse_pressed[2]
+
+    class Joystick:
+        def __init__(self,joystick:pygame.joystick.JoystickType) -> None:
+            self.name = joystick.get_name()
+            if self.name == "Xbox 360 Controller":
+                self.type = XBOX_360_CONTROLLER
+            elif self.name == "PS4 Controller":
+                self.type = PLAYSTATION_4_CONTROLLER
+            elif self.name == "Sony Interactive Entertainment Wireless Controller":
+                self.type = PLAYSTATION_5_CONTROLLER
+            elif self.name == "Nintendo Switch Pro Controller":
+                self.type = NINTENDO_SWITCH_PRO_CONTROLLER
+            elif self.name == "Nintendo Switch Joy-Con (L)":
+                self.type = NINTENDO_SWITCH_JOYCON_CONTROLLER_L
+            elif self.name == "Nintendo Switch Joy-Con (R)":
+                self.type = NINTENDO_SWITCH_JOYCON_CONTROLLER_R
+            elif self.name == "Nintendo Switch Joy-Con (L/R)":
+                self.type = NINTENDO_SWITCH_JOYCON_CONTROLLER_L_R
+            else:
+                self.type = XBOX_360_CONTROLLER
+            self.battery = joystick.get_power_level()
+            self.device_id = joystick.get_id()
+            self.instance_id = joystick.get_instance_id()
+            self.guid = joystick.get_guid()
+            self.inputs = [
+                [0,0,0], # JOYSTICK_BUTTON_DOWN
+                [0,0,0], # JOYSTICK_BUTTON_RIGHT
+                [0,0,0], # JOYSTICK_BUTTON_UP
+                [0,0,0], # JOYSTICK_BUTTON_LEFT
+                [0,0,0], # JOYSTICK_DPAD_DOWN
+                [0,0,0], # JOYSTICK_DPAD_RIGHT
+                [0,0,0], # JOYSTICK_DPAD_UP
+                [0,0,0], # JOYSTICK_DPAD_LEFT
+                [0,0,0], # JOYSTICK_BUTTON_SPEC_1 
+                [0,0,0], # JOYSTICK_BUTTON_SPEC_2
+                0.0, # JOYSTICK_RIGHT_STICK_DOWN 
+                0.0, # JOYSTICK_RIGHT_STICK_RIGHT
+                0.0, # JOYSTICK_RIGHT_STICK_UP
+                0.0, # JOYSTICK_RIGHT_STICK_LEFT 
+                0.0, # JOYSTICK_LEFT_STICK_DOWN
+                0.0, # JOYSTICK_LEFT_STICK_RIGHT 
+                0.0, # JOYSTICK_LEFT_STICK_UP
+                0.0, # JOYSTICK_LEFT_STICK_LEFT
+                0.0, # JOYSTICK_TRIGGER_R1
+                0.0, # JOYSTICK_TRIGGER_L1
+                0.0, # JOYSTICK_TRIGGER_R2
+                0.0 # JOYSTICK_TRIGGER_L2
+            ]
