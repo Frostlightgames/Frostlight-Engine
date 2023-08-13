@@ -2,7 +2,10 @@ import os
 import datetime
 
 class Logger:
-    def __init__(self,delete_old_logs:bool=False) -> None:
+    def __init__(self,engine,delete_old_logs:bool=False) -> None:
+
+        # Engine Variable
+        self.engine = engine
 
         # Setting starting variables
         self.logpath = os.path.join("data","log.txt")
@@ -15,6 +18,8 @@ class Logger:
 
             # Create empty file
             if not os.path.exists(os.path.join("data","log.txt")) or delete_old_logs:
+                if not os.path.exists("data"):
+                    os.mkdir("data")
                 with open(self.logpath,"+w") as file:
                     file.write("")
         except Exception as e:

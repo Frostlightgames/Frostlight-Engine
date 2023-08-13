@@ -2,10 +2,10 @@ import os
 import time
 import pygame
 import argparse
-from classes.functions import *
 from classes.input import Input
 from classes.logger import Logger
 from classes.window import Window
+from classes.builder import Builder
 
 class Engine:
     def __init__(self,
@@ -49,16 +49,14 @@ class Engine:
 
         # Object variables go here
         self.clock = pygame.time.Clock()
-        self.logger = Logger()
-        self.input = Input()
-        self.window = Window(window_size,fullscreen,resizable,nowindow,window_centered,vsync,window_name,mouse_visible,color_depth)
-
-        self.logger.info("All Engine variables were created")
+        self.builder = Builder(self)
+        self.logger = Logger(self)
+        self.input = Input(self)
+        self.window = Window(self,window_size,fullscreen,resizable,nowindow,window_centered,vsync,window_name,mouse_visible,color_depth)
 
         # Object processing go here
         self.window.create()
         pygame.event.set_allowed([pygame.QUIT, pygame.WINDOWMOVED, pygame.VIDEORESIZE, pygame.KEYDOWN])
-
 
     def scale_rect(rect:pygame.Rect, amount:float) -> pygame.Rect:
         w = rect.width * amount
@@ -93,17 +91,22 @@ class Engine:
                 if event.key == pygame.K_F11:
                     self.window.toggle_fullscreen()
 
-    def update(self):
+    def engine_update(self):
         self.delta_time = time.time()-self.last_time
         self.last_time = time.time()
+
+    def engine_draw(self):
+        pygame.display.update()
 
     def run(self):
         self.logger.info("Starting game...")
         while self.run_game:
             try:
                 self.get_events()
+                self.engine_update()
                 self.update()
                 self.draw()
+                self.engine_draw()
             except Exception as e:
                 self.logger.error(e)
 
@@ -129,8 +132,10 @@ if __name__ == "__main__":
     elif args.name: 
 
         # Setup new Project with name
-        pass
+        engine = Engine()
+        engine.builder.setup_game(args.name)
     else:
 
         # Setup new no name Project 
-        create_file_structure()
+        engine = Engine()
+        engine.builder.setup_game()

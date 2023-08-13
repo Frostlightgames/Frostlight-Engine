@@ -2,8 +2,11 @@ import os
 import pygame
 
 class Window:
-    def __init__(self,set_window_size=None,fullscreen=False,resizable=True,windowless=False,window_centered=True,vsync=False,window_name="Frostlight Engine",mouse_visible=True,color_depth=24) -> None:
+    def __init__(self,engine,set_window_size=None,fullscreen=False,resizable=True,windowless=False,window_centered=True,vsync=False,window_name="Frostlight Engine",mouse_visible=True,color_depth=24) -> None:
         
+        # Engine Variable
+        self.engine = engine
+
         # Setting startup variables
         self.windowless = windowless
         self.window_centered = window_centered
@@ -81,9 +84,14 @@ class Window:
     def set_name(self,name):
 
         # Renaming the displayed window title
-        pygame.display.set_caption(name)
+        pygame.display.set_caption(str(name))
 
-    def get_fps(self,clock):
+    def get_fps(self):
 
         # Returning frames per second as integer
-        return int(min(clock.get_fps(),99999999))
+        return int(min(self.engine.clock.get_fps(),99999999))
+    
+    def fill(self,color:list[int,int,int]):
+
+        # Fills the screen with a solid color
+        self.main_surface.fill(color)

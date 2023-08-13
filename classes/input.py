@@ -2,7 +2,10 @@ import pygame
 from classes.constances import *
 
 class Input:
-    def __init__(self,joystick_dead_zone:int=0.15) -> None:
+    def __init__(self,engine,joystick_dead_zone:int=0.15) -> None:
+        
+        self.engine = engine
+        
         self.mouse = self.Mouse()
 
         self.joystick_dead_zone = joystick_dead_zone
