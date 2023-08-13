@@ -98,7 +98,7 @@ class Engine:
         self.last_time = time.time()
 
     def run(self):
-        self.logger.info("starting game")
+        self.logger.info("Starting game...")
         while self.run_game:
             try:
                 self.get_events()
@@ -109,6 +109,7 @@ class Engine:
 
     def quit(self):
         self.run_game = False
+        self.logger.info("Closed game")
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()

@@ -2,7 +2,7 @@ import os
 import datetime
 
 class Logger:
-    def __init__(self) -> None:
+    def __init__(self,delete_old_logs:bool=False) -> None:
 
         # Setting starting variables
         self.logpath = os.path.join("data","log.txt")
@@ -14,13 +14,13 @@ class Logger:
         try:
 
             # Create empty file
-            if not os.path.exists(os.path.join("data","log.txt")):
+            if not os.path.exists(os.path.join("data","log.txt")) or delete_old_logs:
                 with open(self.logpath,"+w") as file:
                     file.write("")
         except Exception as e:
 
             # Creating logfile failed, printing instead
-            print(f"[Engine {datetime.datetime.now()()}]: Could not create logfile ({e})")
+            print(f"[Engine {datetime.datetime.now().strftime('%H:%M:%S:%f')[:-4]}]: Could not create logfile ({e})")
 
     # Different log variants
     def error(self,message:str):
@@ -33,7 +33,7 @@ class Logger:
         self.__log__("Info",str(message))
 
     def __log__(self,prefix:str,message:str):
-        caller = "Engin"
+        caller = "Engine"
         try:
             if self.last_logged_message == message:
 
@@ -44,7 +44,7 @@ class Logger:
                     # Writing to logfile: caller + time + repeating count + log type + message
                     with open(self.logpath,"+at") as file:
                         self.repeat_log_times += 1
-                        file.write(f"[{caller} {datetime.datetime.now()} x{self.repeat_log_times}]: {prefix} | {message}\n")
+                        file.write(f"[{caller} {datetime.datetime.now().strftime('%H:%M:%S:%f')[:-4]} x{self.repeat_log_times}]: {prefix} | {message}\n")
             else:
 
                 # Storing last message and timestamp
@@ -54,9 +54,9 @@ class Logger:
 
                 # Writing to logfile: caller + time + log type + message
                 with open(self.logpath,"+at") as file:
-                    file.write(f"[{caller} {datetime.datetime.now()}]: {prefix} | {message}\n")
+                    file.write(f"[{caller} {datetime.datetime.now().strftime('%H:%M:%S:%f')[:-4]}]: {prefix} | {message}\n")
         except Exception as e:
-            print(f"[Engine {datetime.datetime.now()}]: Could not log message ({message}) | ({e})")
+            print(f"[Engine {datetime.datetime.now().strftime('%H:%M:%S:%f')[:-4]}]: Could not log message ({message}) | ({e})")
 
     def clear(self):
 
@@ -71,4 +71,4 @@ class Logger:
         except Exception as e:
 
             # Clearing logfile failed, printing instead
-            print(f"[Engine {datetime.datetime.now()}]: Could not clear logfile ({e})")
+            print(f"[Engine {datetime.datetime.now().strftime('%H:%M:%S:%f')[:-4]}]: Could not clear logfile ({e})")
