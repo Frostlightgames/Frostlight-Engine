@@ -17,17 +17,19 @@ class Input:
         self.registered_input = {
             "accept":[MOUSE_CLICK_LEFT,KEY_SPACE,KEY_RETURN,JOYSTICK_BUTTON_DOWN],
             "cancel":[KEY_ESCAPE,KEY_BACKSPACE,JOYSTICK_BUTTON_RIGHT],
-            "right":[KEY_D,KEY_ARROW_RIGHT,JOYSTICK_DPAD_RIGHT,JOYSTICK_LEFT_STICK_RIGHT],
-            "left":[KEY_A,KEY_ARROW_LEFT,JOYSTICK_DPAD_LEFT,JOYSTICK_LEFT_STICK_LEFT],
-            "up":[KEY_W,KEY_ARROW_UP,JOYSTICK_DPAD_UP,JOYSTICK_LEFT_STICK_UP],
-            "down":[KEY_S,KEY_ARROW_DOWN,JOYSTICK_DPAD_DOWN,JOYSTICK_LEFT_STICK_DOWN]
+            "right":[KEY_D,KEY_L,KEY_ARROW_RIGHT,JOYSTICK_DPAD_RIGHT,JOYSTICK_LEFT_STICK_RIGHT],
+            "left":[KEY_A,KEY_J,KEY_ARROW_LEFT,JOYSTICK_DPAD_LEFT,JOYSTICK_LEFT_STICK_LEFT],
+            "up":[KEY_W,KEY_I,KEY_ARROW_UP,JOYSTICK_DPAD_UP,JOYSTICK_LEFT_STICK_UP],
+            "down":[KEY_S,KEY_K,KEY_ARROW_DOWN,JOYSTICK_DPAD_DOWN,JOYSTICK_LEFT_STICK_DOWN]
         }
 
-    def new(self,name:str,key:int,joystick_device_index:int=-1):
+    def new(self,name:str,key:list[int,int],joystick_device_index:int=-1):
         if name not in self.registered_input:
             self.registered_input[name] = []
-        content = None
-        self.registered_input[name].append(key)
+        if key[1] == JOYSTICK:
+            self.registered_input[name].append([key[0],key[1],joystick_device_index])
+        else:
+            self.registered_input[name].append(key)
 
     def remove(self,inputname:str):
         del self.registered_input[inputname]
@@ -64,7 +66,10 @@ class Input:
         return key_pressed
     
     def add_joystick(self,joystick:pygame.joystick.JoystickType):
-        pass
+        self.joystick_devices.append(self.Joystick(pygame.joystick.Joystick(joystick)))
+
+    def remove_joystick(self,device_id:int):
+        self.joystick_devices.pop(device_id)
 
     def update(self,engine):
         pygame_mouse_pressed = pygame.mouse.get_pressed()
