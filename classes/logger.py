@@ -1,4 +1,5 @@
 import os
+import sys
 import datetime
 
 class Logger:
@@ -29,7 +30,9 @@ class Logger:
 
     # Different log variants
     def error(self,message:str):
-        self.__log__("Error",str(message))
+        exc_type, exc_obj, exc_tb = sys.exc_info()
+        fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
+        self.__log__("Error",f"{message} in [{fname} line: {exc_tb.tb_lineno}]")
 
     def warning(self,message:str):
         self.__log__("Warning",str(message))

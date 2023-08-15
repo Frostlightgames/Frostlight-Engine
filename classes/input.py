@@ -23,16 +23,14 @@ class Input:
             "down":[KEY_S,KEY_ARROW_DOWN,JOYSTICK_DPAD_DOWN,JOYSTICK_LEFT_STICK_DOWN]
         }
 
-    def clear(self,inputname:str):
-        del self.registered_input[inputname]
-
-    def remove(self,inputname:str,key:int):
-        self.registered_input[inputname].remove(key)
-
-    def new(self,name:str,key:int):
+    def new(self,name:str,key:int,joystick_device_index:int=-1):
         if name not in self.registered_input:
             self.registered_input[name] = []
+        content = None
         self.registered_input[name].append(key)
+
+    def remove(self,inputname:str):
+        del self.registered_input[inputname]
 
     def get(self, name:str):
         keys = pygame.key.get_pressed()
