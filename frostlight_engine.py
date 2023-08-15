@@ -82,7 +82,7 @@ class Engine:
                 self.delta_time = 0
 
             elif event.type == pygame.VIDEORESIZE:
-                if not self.fullscreen:
+                if not self.window.fullscreen:
                     self.last_time = time.time()
                     self.delta_time = 0
                     self.window.resize([event.w,event.h])
