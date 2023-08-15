@@ -52,7 +52,7 @@ class Logger:
                     # Writing to logfile: caller + time + repeating count + log type + message
                     with open(self.logpath,"+at") as file:
                         self.repeat_log_times += 1
-                        file.write(f"[{caller} {datetime.datetime.now().strftime('%H:%M:%S:%f')[:-4]} x{self.repeat_log_times}]: {prefix} | {message}\n")
+                        file.write(f"[{caller} {datetime.datetime.now().strftime('%H:%M:%S:%f')[:-4]}]: {prefix} x{self.repeat_log_times} | {message}\n")
             else:
 
                 # Storing last message and timestamp

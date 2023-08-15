@@ -109,10 +109,10 @@ class Engine:
                 self.engine_draw()
             except Exception as e:
                 self.logger.error(e)
+        self.logger.info("Closed game")
 
     def quit(self):
         self.run_game = False
-        self.logger.info("Closed game")
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
