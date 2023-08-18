@@ -20,7 +20,8 @@ class Input:
             "right":[KEY_D,KEY_L,KEY_ARROW_RIGHT,JOYSTICK_DPAD_RIGHT,JOYSTICK_LEFT_STICK_RIGHT],
             "left":[KEY_A,KEY_J,KEY_ARROW_LEFT,JOYSTICK_DPAD_LEFT,JOYSTICK_LEFT_STICK_LEFT],
             "up":[KEY_W,KEY_I,KEY_ARROW_UP,JOYSTICK_DPAD_UP,JOYSTICK_LEFT_STICK_UP],
-            "down":[KEY_S,KEY_K,KEY_ARROW_DOWN,JOYSTICK_DPAD_DOWN,JOYSTICK_LEFT_STICK_DOWN]
+            "down":[KEY_S,KEY_K,KEY_ARROW_DOWN,JOYSTICK_DPAD_DOWN,JOYSTICK_LEFT_STICK_DOWN],
+            "screenshot":[KEY_P,KEY_F6]
         }
 
     def new(self,name:str,key:list[int,int],joystick_device_index:int=-1):
