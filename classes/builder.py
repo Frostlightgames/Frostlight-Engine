@@ -7,7 +7,7 @@ class Builder:
     def setup_game(self,name:str="New Game"):
         directories_created = 0
         files_created = 0
-        directories_to_create = ["data","screenshots",os.path.join("data","classes"),os.path.join("data","saves"),os.path.join("data","sprites")]
+        directories_to_create = ["data","screenshots","saves",os.path.join("data","classes"),os.path.join("data","sprites")]
 
         if not os.path.exists(os.path.join("data","log.txt")):
             files_created += 1
