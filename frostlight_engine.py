@@ -547,9 +547,8 @@ class Engine:
                 self.text = self.button.text
                 self.rect = self.button.rect
                 self.objects = []
-                self.objects_rect = []
                 self.active = False
-                self.objects_activ = False
+                self.objects_active = False
                 self.parent = None
 
                 if self.align_dropdown == Engine.GUI_ALIGN_RIGHT:
@@ -619,10 +618,7 @@ class Engine:
             def deactivate_parent(self):
                 self.active = False
                 if self.parent != None:
-                    for i in self.parent.objects:
-                        if type(i) == type(self):
-                            objects_activ = i.active
-                    if not self.parent.button.clicked and not self.parent.DropDown_rect.collidepoint(self.mouse_pos) and not objects_activ:
+                    if not self.parent.button.clicked and not self.parent.DropDown_rect.collidepoint(self.engine.input.mouse_position) and not self.parent.objects_active:
                         self.parent.deactivate_parent()
 
             def deactivate(self):
@@ -633,25 +629,23 @@ class Engine:
 
             def update(self):
                 self.button.update()
-                self.mouse_pos = self.engine.input.mouse_position
-                self.objects_activ = False
+                self.objects_active = False
                 for i in self.objects:
                     if type(i) == type(self):
-                        self.objects_activ = i.active
+                        self.objects_active = i.active
                 if self.engine.input._mouse_left_clicked:
                     if self.button.clicked:
                         if self.active:
                             self.deactivate()
                         else:
                             self.active = True
-                    elif not self.objects_activ:
-                        if not self.DropDown_rect.collidepoint(self.mouse_pos):
+                    elif not self.objects_active:
+                        if not self.DropDown_rect.collidepoint(self.engine.input.mouse_position):
                             self.deactivate_parent()
 
                 if self.active:
                     for btn in self.objects:
                         btn.update()
-            
         
 if __name__ == "__main__":
     Engine.create_file_structure()
