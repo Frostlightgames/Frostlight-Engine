@@ -618,7 +618,10 @@ class Engine:
             def deactivate_parent(self):
                 self.active = False
                 if self.parent != None:
-                    if not self.parent.button.clicked and not self.parent.DropDown_rect.collidepoint(self.engine.input.mouse_position) and not self.parent.objects_active:
+                    for i in self.parent.objects:
+                        if type(i) == type(self):
+                            objects_active = i.active
+                    if not self.parent.button.clicked and not self.parent.DropDown_rect.collidepoint(self.engine.input.mouse_position) and not objects_active:
                         self.parent.deactivate_parent()
 
             def deactivate(self):
