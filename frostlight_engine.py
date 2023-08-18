@@ -40,6 +40,7 @@ class Engine:
         self.version = 0.1
 
         # String variables go here
+        self.engine_version = "DEV 1.0"
         self.game_state = "intro"
         self.game_version = game_version
         self.language = language
@@ -99,7 +100,7 @@ class Engine:
         pygame.display.update()
 
     def run(self):
-        self.logger.info("Starting game...")
+        self.logger.info(f"Starting [Engine version {self.engine_version} | Game version {self.game_version}]")
         while self.run_game:
             try:
                 self.get_events()
