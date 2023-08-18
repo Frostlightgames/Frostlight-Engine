@@ -547,8 +547,10 @@ class Engine:
                 self.text = self.button.text
                 self.rect = self.button.rect
                 self.objects = []
+                self.objects_rect = []
                 self.active = False
                 self.objects_activ = False
+                self.parent = None
 
                 if self.align_dropdown == Engine.GUI_ALIGN_RIGHT:
                     self.y = self.button.rect[1]
@@ -575,6 +577,7 @@ class Engine:
                         object.y = object.button.rect[1]
                     else:
                         object.y = object.button.rect[1]+object.button.rect[3]
+                    object.parent = self
 
                 self.objects.append(object)
                 self.y += self.objects[len(self.objects)-1].rect[3]
@@ -587,7 +590,6 @@ class Engine:
             def draw_dropdown(self):
                 for btn in self.objects:
                     btn.draw()
-                pygame.draw.rect(self.engine.win,(255,0,255),self.DropDown_rect,1)
                 if self.dropdown_border > 0:
                     pygame.draw.rect(self.engine.win,self.dropdown_border_color,self.DropDown_rect,self.dropdown_border)
             
@@ -614,22 +616,42 @@ class Engine:
                 else:
                     self.button.draw()
 
+            def deactivate_parent(self):
+                self.active = False
+                if self.parent != None:
+                    for i in self.parent.objects:
+                        if type(i) == type(self):
+                            objects_activ = i.active
+                    if not self.parent.button.clicked and not self.parent.DropDown_rect.collidepoint(self.mouse_pos) and not objects_activ:
+                        self.parent.deactivate_parent()
+
+            def deactivate(self):
+                self.active = False
+                for i in self.objects:
+                    if type(i) == type(self):
+                        i.deactivate()
+
             def update(self):
                 self.button.update()
+                self.mouse_pos = self.engine.input.mouse_position
                 self.objects_activ = False
                 for i in self.objects:
                     if type(i) == type(self):
                         self.objects_activ = i.active
                 if self.engine.input._mouse_left_clicked:
                     if self.button.clicked:
-                        self.active = not self.active
+                        if self.active:
+                            self.deactivate()
+                        else:
+                            self.active = True
                     elif not self.objects_activ:
-                        if not self.DropDown_rect.collidepoint(self.engine.input.mouse_position):
-                            self.active = False
+                        if not self.DropDown_rect.collidepoint(self.mouse_pos):
+                            self.deactivate_parent()
 
                 if self.active:
                     for btn in self.objects:
                         btn.update()
-
+            
+        
 if __name__ == "__main__":
     Engine.create_file_structure()
