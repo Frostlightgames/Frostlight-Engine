@@ -547,35 +547,38 @@ class Engine:
                 self.text = self.button.text
                 self.rect = self.button.rect
                 self.objects = []
+                self.DropDown_rect = pygame.Rect(0,0,0,0)
                 self.active = False
                 self.objects_active = False
                 self.parent = None
 
                 if self.align_dropdown == Engine.GUI_ALIGN_RIGHT:
-                    self.y = self.button.rect[1]
+                    self.y = self.rect[1]
                 else:
-                    self.y = self.button.rect[1]+self.button.rect[3]
+                    self.y = self.rect[1]+self.rect[3]
 
             def load_objects(self):
                 pass
 
             def add_object(self,object):
+                # breite des DropDown Menüs wird berechnet
                 if len(self.objects) == 0:
                     x = self.engine.gui.textrect(object.font,object.text)[2]*1.1
                 else:
                     x = self.bigges_text_rect(self.objects,object.font,object.text)[2]*1.1
 
+                # Ausrichtung des DropDowns wird Berechnet
                 if self.align_dropdown == Engine.GUI_ALIGN_RIGHT or self.align_dropdown == Engine.GUI_ALIGN_RIGHT_DOWN:
-                    object.rect=pygame.Rect(self.button.rect[0]+self.button.rect[2],self.y,x,object.rect[3])
+                    object.rect=pygame.Rect(self.rect[0]+self.button.rect[2],self.y,x,object.rect[3])
                 else:
-                    object.rect=pygame.Rect(self.button.rect[0],self.y,x,object.rect[3])
+                    object.rect=pygame.Rect(self.rect[0],self.y,x,object.rect[3])
 
                 if type(object) == Engine._GUI.DropDown:
                     object.button.rect = object.rect
                     if object.align_dropdown == Engine.GUI_ALIGN_RIGHT:
-                        object.y = object.button.rect[1]
+                        object.y = object.rect[1]
                     else:
-                        object.y = object.button.rect[1]+object.button.rect[3]
+                        object.y = object.rect[1]+object.rect[3]
                     object.parent = self
 
                 self.objects.append(object)
@@ -635,20 +638,62 @@ class Engine:
                 self.objects_active = False
                 for i in self.objects:
                     if type(i) == type(self):
-                        self.objects_active = i.active
+                        if not self.objects_active:
+                            self.objects_active = i.active
+
                 if self.engine.input._mouse_left_clicked:
                     if self.button.clicked:
                         if self.active:
                             self.deactivate()
                         else:
                             self.active = True
-                    elif not self.objects_active:
-                        if not self.DropDown_rect.collidepoint(self.engine.input.mouse_position):
-                            self.deactivate_parent()
+                    elif self.active:
+                        if not self.objects_active:
+                            if not self.DropDown_rect.collidepoint(self.engine.input.mouse_position):
+                                self.deactivate_parent()
 
                 if self.active:
                     for btn in self.objects:
                         btn.update()
-        
+
+        class MainMenu():
+            def __init__(self,
+                         engine,
+                         font,
+                         color=(30,30,30),
+                         ) -> None:
+                self.engine = engine
+                self.font = font
+                self.pos = [0,0]
+                self.color = color
+                self.objects = []
+                self.objects_x = 0
+                self.rect = pygame.Rect(self.pos[0],self.pos[1],self.engine.window_size[0],20)
+
+            def add_object(self,object):
+                if object.rect[3] > self.rect[3]:
+                    self.rect[3] = object.rect[3]
+
+                object.rect = pygame.Rect(self.objects_x,self.rect[1],object.rect[2],self.rect[3])
+
+                if type(object) == Engine._GUI.DropDown:
+                    object.button.rect = object.rect
+                    if object.align_dropdown == Engine.GUI_ALIGN_RIGHT:
+                        object.y = object.rect[1]
+                    else:
+                        object.y = object.rect[1]+object.rect[3]
+
+                self.objects_x += object.rect[2]
+                self.objects.append(object)
+            
+            def update(self):
+                for i in self.objects:
+                    i.update()
+            
+            def draw(self):
+                pygame.draw.rect(self.engine.win,self.color,self.rect)
+                for i in self.objects:
+                    i.draw()
+
 if __name__ == "__main__":
     Engine.create_file_structure()
