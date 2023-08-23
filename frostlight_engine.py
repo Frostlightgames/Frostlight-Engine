@@ -659,11 +659,9 @@ class Engine:
         class MainMenu():
             def __init__(self,
                          engine,
-                         font,
                          color=(30,30,30),
                          ) -> None:
                 self.engine = engine
-                self.font = font
                 self.pos = [0,0]
                 self.color = color
                 self.objects = []
