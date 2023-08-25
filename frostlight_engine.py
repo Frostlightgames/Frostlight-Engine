@@ -534,16 +534,31 @@ class Engine:
             def __init__(self,
                          engine,
                          font,
-                         button,
+                         text:str="",
+                         pos:tuple[int,int]=[0,0],
+                         size:tuple[int,int]=[100,40],
+                         color_button:pygame.color.Color=(55,55,55),
+                         color_hover:pygame.color.Color=(100,100,100),
+                         color_text:pygame.color.Color=(255,255,255),
+                         align_text:int=1,
+                         border:int=0,
+                         color_border:pygame.color.Color=(0,0,0),
+                         border_radius:int=-1,
                          align_dropdown=1,
                          dropdown_border=0,
-                         dropdown_border_color:pygame.color.Color=(0,0,0)) -> None:
+                         dropdown_border_color:pygame.color.Color=(0,0,0),
+                         button=None) -> None:
                 self.engine = engine
                 self.font = font
                 self.align_dropdown = align_dropdown
                 self.dropdown_border = dropdown_border
                 self.dropdown_border_color = dropdown_border_color
-                self.button = button
+                if button == None:
+                    print("button")
+                    self.button = self.engine._GUI.Button(self.engine,self.font,text,pos,size,color_button,color_hover,color_text,align_text,border,color_border,border_radius)
+                else:
+                    self.button = button
+
                 self.text = self.button.text
                 self.rect = self.button.rect
                 self.objects = []
@@ -557,8 +572,15 @@ class Engine:
                 else:
                     self.y = self.rect[1]+self.rect[3]
 
-            def load_objects(self):
-                pass
+            def create_button_object(self,font,text:str="",pos:tuple[int,int]=[0,0],size:tuple[int,int]=[100,40],color_button:pygame.color.Color=(55,55,55),color_hover:pygame.color.Color=(100,100,100),color_text:pygame.color.Color=(255,255,255),align_text:int=1,border:int=0,color_border:pygame.color.Color=(0,0,0),border_radius:int=-1):
+                new_button = self.engine._GUI.Button(self.engine,font,text,pos,size,color_button,color_hover,color_text,align_text,border,color_border,border_radius)
+                self.add_object(new_button)
+                return new_button
+
+            def create_dropdown_object(self,text:str="",pos:tuple[int,int]=[0,0],size:tuple[int,int]=[100,40],color_button:pygame.color.Color=(55,55,55),color_hover:pygame.color.Color=(100,100,100),color_text:pygame.color.Color=(255,255,255),align_text:int=1,border:int=0,color_border:pygame.color.Color=(0,0,0),border_radius:int=-1,align_dropdown=1,dropdown_border=0,dropdown_border_color:pygame.color.Color=(0,0,0),button=None):
+                new_dropdown = self.engine._GUI.DropDown(self.engine,self.font,text,pos,size,color_button,color_hover,color_text,align_text,border,color_border,border_radius,align_dropdown,dropdown_border,dropdown_border_color,button)
+                self.add_object(new_dropdown)
+                return new_dropdown
 
             def add_object(self,object):
                 # breite des DropDown Menüs wird berechnet
