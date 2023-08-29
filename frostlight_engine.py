@@ -6,6 +6,7 @@ from classes.input import Input
 from classes.logger import Logger
 from classes.window import Window
 from classes.builder import Builder
+from classes.constances import *
 
 class Engine:
     def __init__(self,
@@ -73,6 +74,7 @@ class Engine:
         
     def get_events(self):
         self.clock.tick(self.fps)
+        self.input.update()
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 self.quit()
@@ -91,6 +93,22 @@ class Engine:
             elif event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_F11:
                     self.window.toggle_fullscreen()
+
+            elif event.type == pygame.MOUSEBUTTONDOWN:
+                if event.button == 1:
+                    self.input.mouse.left_clicked = True
+                elif event.button == 2:
+                    self.input.mouse.middle_clicked = True
+                elif event.button == 3:
+                    self.input.mouse.right_clicked = True
+
+            elif event.type == pygame.MOUSEBUTTONUP:
+                if event.button == 1:
+                    self.input.mouse.left_released = True
+                elif event.button == 2:
+                    self.input.mouse.middle_released = True
+                elif event.button == 3:
+                    self.input.mouse.right_released = True
 
     def engine_update(self):
         self.delta_time = time.time()-self.last_time

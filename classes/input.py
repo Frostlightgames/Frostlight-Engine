@@ -8,6 +8,8 @@ class Input:
         
         self.mouse = self.Mouse()
 
+        self.keys = pygame.key.get_pressed()
+        
         self.joystick_dead_zone = joystick_dead_zone
         self.joystick_devices = []
         
@@ -35,36 +37,23 @@ class Input:
     def remove(self,inputname:str):
         del self.registered_input[inputname]
 
-    def get(self, name:str):
-        keys = pygame.key.get_pressed()
-        mouse = [
-            self._mouse_left_clicked,
-            self._mouse_middle_clicked,
-            self._mouse_right_clicked,
-            self._mouse_left_pressed,
-            self._mouse_middle_pressed,
-            self._mouse_right_pressed,
-            self._mouse_left_released,
-            self._mouse_middle_released,
-            self._mouse_right_released,
-            ]
-        
-        key_pressed = 0
-        for key in self._registered_input[name]:
+    def get(self, name:str) -> int:
+        input_value = 0
+        for key in self.registered_input[name]:
             if key[1] == KEYBOARD:
-                if keys[key[0]]:
-                    key_pressed = 1
+                if self.keys[key[0]]:
+                    input_value = 1
                     break
             elif key[1] == MOUSE:
-                if mouse[key[0]]:
-                    key_pressed = 1
+                if self.mouse.get_button(key[0]):
+                    input_value = 1
                     break
             elif key[1] == JOYSTICK:
                 if self._joystick[key[0]] != 0:
-                    key_pressed = 1
+                    input_value = 1
                     break
         
-        return key_pressed
+        return input_value
     
     def add_joystick(self,joystick:pygame.joystick.JoystickType):
         self.joystick_devices.append(self.Joystick(pygame.joystick.Joystick(joystick)))
@@ -72,30 +61,9 @@ class Input:
     def remove_joystick(self,device_id:int):
         self.joystick_devices.pop(device_id)
 
-    def update(self,engine):
-        pygame_mouse_pressed = pygame.mouse.get_pressed()
-        self._mouse_left_pressed = pygame_mouse_pressed[0]
-        self._mouse_middle_pressed = pygame_mouse_pressed[1]
-        self._mouse_right_pressed = pygame_mouse_pressed[2]
-
-        self.mouse_position = list(pygame.mouse.get_pos())
-        if self.last_mouse_position != self.mouse_position:
-            self.mouse = self.mouse_position
-        self.last_mouse_position = self.mouse_position
-
-        for joystick in self.joystick_devices:
-            value = joystick.get_axis(0)
-            if abs(value) > 0.15:
-                self.mouse[0] += value*1000*engine.delta_time
-            value = joystick.get_axis(1)
-            if abs(value) > 0.15:
-                self.mouse[1] += value*1000*engine.delta_time
-            value = joystick.get_axis(2)
-            if abs(value) > 0.15:
-                self.mouse[0] += value*1000*engine.delta_time
-            value = joystick.get_axis(3)
-            if abs(value) > 0.15:
-                self.mouse[1] += value*1000*engine.delta_time
+    def update(self):
+        self.keys = pygame.key.get_pressed()
+        self.mouse.update()
 
     class Mouse:
         def __init__(self) -> None:
@@ -111,11 +79,32 @@ class Input:
             self.right_released = False
 
         def update(self):
+            self.left_clicked = False
+            self.left_released = False
+            self.middle_clicked = False
+            self.middle_released = False
+            self.right_clicked = False
+            self.right_released = False
             self.position = [pygame.mouse.get_pos()[0],pygame.mouse.get_pos()[1]]
             mouse_pressed = pygame.mouse.get_pressed()
             self.left_pressed = mouse_pressed[0]
             self.middle_pressed = mouse_pressed[1]
             self.right_pressed = mouse_pressed[2]
+
+        def get_button(self,button:int):
+            mouse = [self.left_clicked,
+                self.middle_clicked,
+                self.right_clicked,
+                self.left_pressed,
+                self.middle_pressed,
+                self.right_pressed,
+                self.left_released,
+                self.middle_released,
+                self.right_released]
+            return mouse[button]
+        
+        def get_pos(self):
+            return self.position
 
     class Joystick:
         def __init__(self,joystick:pygame.joystick.JoystickType) -> None:
