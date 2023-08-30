@@ -153,3 +153,20 @@ class Input:
                 0.0, # JOYSTICK_TRIGGER_R2
                 0.0 # JOYSTICK_TRIGGER_L2
             ]
+
+        def reset_buttons(self):
+            pass
+        
+        def handle_input_event(self,event:pygame.Event):
+            if event.type == pygame.JOYBUTTONDOWN:
+                button_index = event.button
+                self.inputs[button_index][0] = True
+                self.inputs[button_index][1] = True
+            
+            elif event.type == pygame.JOYBUTTONUP:
+                button_index = event.button
+                self.inputs[button_index][1] = False
+                self.inputs[button_index][2] = True
+
+            elif event.type == pygame.JOYAXISMOTION:
+                pass
