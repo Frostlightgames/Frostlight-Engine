@@ -26,42 +26,53 @@ class Input:
             "screenshot":[KEY_P,KEY_F6]
         }
 
-    def new(self,name:str,key:list[int,int],joystick_device_index:int=-1):
-        if name not in self.registered_input:
-            self.registered_input[name] = []
-        if key[1] == JOYSTICK:
-            self.registered_input[name].append([key[0],key[1],joystick_device_index])
-        else:
-            self.registered_input[name].append(key)
-
-    def remove(self,inputname:str):
-        del self.registered_input[inputname]
-
-    def get(self, name:str) -> int:
-        input_value = 0
+    def new(self,name:str,key:list[int,int]) -> bool:
+        try:
+            if name not in self.registered_input:
+                self.registered_input[name] = []
+            else:
+                self.registered_input[name].append(key)
+            return True
+        except:
+            return False
+        
+    def remove(self,inputname:str) -> bool:
+        try:
+            del self.registered_input[inputname]
+            return True
+        except:
+            return False
+        
+    def get(self, name:str,controller_index:int=0) -> int|float:
         for key in self.registered_input[name]:
             if key[1] == KEYBOARD:
                 if self.keys[key[0]]:
-                    input_value = 1
-                    break
+                    return 1
             elif key[1] == MOUSE:
                 if self.mouse.get_button(key[0]):
-                    input_value = 1
-                    break
+                    return 1
             elif key[1] == JOYSTICK:
-                if self._joystick[key[0]] != 0:
-                    input_value = 1
-                    break
-        
-        return input_value
+                input_value = self.joystick_devices[controller_index].get_input(key)
+                if input_value != 0 and input_value != 0.0:
+                    return input_value
+
+        return 0
     
-    def add_joystick(self,joystick:pygame.joystick.JoystickType):
-        self.joystick_devices.append(self.Joystick(pygame.joystick.Joystick(joystick)))
-
-    def remove_joystick(self,device_id:int):
-        self.joystick_devices.pop(device_id)
-
-    def update(self):
+    def add_joystick(self,joystick:pygame.joystick.JoystickType) -> bool:
+        try:
+            self.joystick_devices.append(self.Joystick(pygame.joystick.Joystick(joystick)))
+            return True
+        except:
+            return False
+        
+    def remove_joystick(self,controller_index:int) -> bool:
+        try:
+            self.joystick_devices.pop(controller_index)
+            return True
+        except:
+            return False
+        
+    def update(self) -> None:
         self.keys = pygame.key.get_pressed()
         self.mouse.update()
 
@@ -78,7 +89,7 @@ class Input:
             self.right_clicked = False
             self.right_released = False
 
-        def update(self):
+        def update(self) -> None:
             self.left_clicked = False
             self.left_released = False
             self.middle_clicked = False
@@ -91,7 +102,7 @@ class Input:
             self.middle_pressed = mouse_pressed[1]
             self.right_pressed = mouse_pressed[2]
 
-        def get_button(self,button:int):
+        def get_button(self,button:int) -> bool:
             mouse = [self.left_clicked,
                 self.middle_clicked,
                 self.right_clicked,
@@ -103,7 +114,7 @@ class Input:
                 self.right_released]
             return mouse[button]
         
-        def get_pos(self):
+        def get_pos(self) -> list[int,int]:
             return self.position
 
     class Joystick:
@@ -130,16 +141,36 @@ class Input:
             self.instance_id = joystick.get_instance_id()
             self.guid = joystick.get_guid()
             self.inputs = [
-                [0,0,0], # JOYSTICK_BUTTON_DOWN
-                [0,0,0], # JOYSTICK_BUTTON_RIGHT
-                [0,0,0], # JOYSTICK_BUTTON_UP
-                [0,0,0], # JOYSTICK_BUTTON_LEFT
-                [0,0,0], # JOYSTICK_DPAD_DOWN
-                [0,0,0], # JOYSTICK_DPAD_RIGHT
-                [0,0,0], # JOYSTICK_DPAD_UP
-                [0,0,0], # JOYSTICK_DPAD_LEFT
-                [0,0,0], # JOYSTICK_BUTTON_SPEC_1 
-                [0,0,0], # JOYSTICK_BUTTON_SPEC_2
+                0, # JOYSTICK_BUTTON_DOWN DOWN
+                0, # JOYSTICK_BUTTON_DOWN PRESSED
+                0, # JOYSTICK_BUTTON_DOWN RELEASED
+                0, # JOYSTICK_BUTTON_RIGHT DOWN
+                0, # JOYSTICK_BUTTON_RIGHT PRESSED
+                0, # JOYSTICK_BUTTON_RIGHT RELEASED
+                0, # JOYSTICK_BUTTON_UP DOWN
+                0, # JOYSTICK_BUTTON_UP PRESSED
+                0, # JOYSTICK_BUTTON_UP RELEASED
+                0, # JOYSTICK_BUTTON_LEFT DOWN
+                0, # JOYSTICK_BUTTON_LEFT PRESSED
+                0, # JOYSTICK_BUTTON_LEFT RELEASED
+                0, # JOYSTICK_DPAD_DOWN DOWN
+                0, # JOYSTICK_DPAD_DOWN PRESSED
+                0, # JOYSTICK_DPAD_DOWN RELEASED
+                0, # JOYSTICK_DPAD_RIGHT DOWN
+                0, # JOYSTICK_DPAD_RIGHT PRESSED
+                0, # JOYSTICK_DPAD_RIGHT RELEASED
+                0, # JOYSTICK_DPAD_UP DOWN
+                0, # JOYSTICK_DPAD_UP PRESSED
+                0, # JOYSTICK_DPAD_UP RELEASED
+                0, # JOYSTICK_DPAD_LEFT DOWN
+                0, # JOYSTICK_DPAD_LEFT PRESSED
+                0, # JOYSTICK_DPAD_LEFT RELEASED
+                0, # JOYSTICK_BUTTON_SPEC_1 DOWN
+                0, # JOYSTICK_BUTTON_SPEC_1 PRESSED
+                0, # JOYSTICK_BUTTON_SPEC_1 RELEASED
+                0, # JOYSTICK_BUTTON_SPEC_2 DOWN
+                0, # JOYSTICK_BUTTON_SPEC_2 PRESSED
+                0, # JOYSTICK_BUTTON_SPEC_2 RELEASED
                 0.0, # JOYSTICK_RIGHT_STICK_DOWN 
                 0.0, # JOYSTICK_RIGHT_STICK_RIGHT
                 0.0, # JOYSTICK_RIGHT_STICK_UP
@@ -154,10 +185,10 @@ class Input:
                 0.0 # JOYSTICK_TRIGGER_L2
             ]
 
-        def reset_buttons(self):
-            pass
+        def get_input(self,button:int) -> int|float:
+            return self.inputs[button]
         
-        def handle_input_event(self,event:pygame.Event):
+        def handle_input_event(self,event:pygame.Event) -> None:
             if event.type == pygame.JOYBUTTONDOWN:
                 button_index = event.button
                 self.inputs[button_index][0] = True
