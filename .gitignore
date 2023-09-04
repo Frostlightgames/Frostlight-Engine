@@ -153,10 +153,10 @@ dmypy.json
 cython_debug/
 
 # Engine Files
-log.txt
 main.py
 data/
 screenshots/
+logs/
 
 # PyCharm
 #  JetBrains specific template is maintained in a separate JetBrains.gitignore that can
