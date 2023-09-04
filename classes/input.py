@@ -12,17 +12,21 @@ class Input:
         
         self.joystick_dead_zone = joystick_dead_zone
         self.joystick_devices = []
+
+        #d = [pygame.joystick.Joystick(x) for x in range(pygame.joystick.get_count())]
         
         for joystick in range(pygame.joystick.get_count()):
             self.joystick_devices.append(self.Joystick(pygame.joystick.Joystick(joystick)))
+
+        print(self.joystick_devices)
             
         self.registered_input = {
-            "accept":[MOUSE_CLICK_LEFT,KEY_SPACE,KEY_RETURN,JOYSTICK_BUTTON_DOWN],
-            "cancel":[KEY_ESCAPE,KEY_BACKSPACE,JOYSTICK_BUTTON_RIGHT],
-            "right":[KEY_D,KEY_L,KEY_ARROW_RIGHT,JOYSTICK_DPAD_RIGHT,JOYSTICK_LEFT_STICK_RIGHT],
-            "left":[KEY_A,KEY_J,KEY_ARROW_LEFT,JOYSTICK_DPAD_LEFT,JOYSTICK_LEFT_STICK_LEFT],
-            "up":[KEY_W,KEY_I,KEY_ARROW_UP,JOYSTICK_DPAD_UP,JOYSTICK_LEFT_STICK_UP],
-            "down":[KEY_S,KEY_K,KEY_ARROW_DOWN,JOYSTICK_DPAD_DOWN,JOYSTICK_LEFT_STICK_DOWN],
+            "accept":[MOUSE_CLICK_LEFT,KEY_SPACE,KEY_RETURN,JOYSTICK_BUTTON_DOWN_CLICKED],
+            "cancel":[KEY_ESCAPE,KEY_BACKSPACE,JOYSTICK_BUTTON_RIGHT_CLICKED],
+            "right":[KEY_D,KEY_L,KEY_ARROW_RIGHT,JOYSTICK_DPAD_RIGHT_PRESSED,JOYSTICK_LEFT_STICK_HORIZONTAL],
+            "left":[KEY_A,KEY_J,KEY_ARROW_LEFT,JOYSTICK_DPAD_LEFT_PRESSED,JOYSTICK_LEFT_STICK_HORIZONTAL],
+            "up":[KEY_W,KEY_I,KEY_ARROW_UP,JOYSTICK_DPAD_UP_PRESSED,JOYSTICK_LEFT_STICK_VERTICAL],
+            "down":[KEY_S,KEY_K,KEY_ARROW_DOWN,JOYSTICK_DPAD_DOWN_PRESSED,JOYSTICK_LEFT_STICK_VERTICAL],
             "screenshot":[KEY_P,KEY_F6]
         }
 
@@ -119,6 +123,7 @@ class Input:
 
     class Joystick:
         def __init__(self,joystick:pygame.joystick.JoystickType) -> None:
+            self.joystick = joystick
             self.name = joystick.get_name()
             if self.name == "Xbox 360 Controller":
                 self.type = XBOX_360_CONTROLLER
@@ -141,49 +146,57 @@ class Input:
             self.instance_id = joystick.get_instance_id()
             self.guid = joystick.get_guid()
             self.inputs = [
-                0, # JOYSTICK_BUTTON_DOWN DOWN
+                0, # JOYSTICK_BUTTON_DOWN CLICKED
                 0, # JOYSTICK_BUTTON_DOWN PRESSED
                 0, # JOYSTICK_BUTTON_DOWN RELEASED
-                0, # JOYSTICK_BUTTON_RIGHT DOWN
+                0, # JOYSTICK_BUTTON_RIGHT CLICKED
                 0, # JOYSTICK_BUTTON_RIGHT PRESSED
                 0, # JOYSTICK_BUTTON_RIGHT RELEASED
-                0, # JOYSTICK_BUTTON_UP DOWN
+                0, # JOYSTICK_BUTTON_UP CLICKED
                 0, # JOYSTICK_BUTTON_UP PRESSED
                 0, # JOYSTICK_BUTTON_UP RELEASED
-                0, # JOYSTICK_BUTTON_LEFT DOWN
+                0, # JOYSTICK_BUTTON_LEFT CLICKED
                 0, # JOYSTICK_BUTTON_LEFT PRESSED
                 0, # JOYSTICK_BUTTON_LEFT RELEASED
-                0, # JOYSTICK_DPAD_DOWN DOWN
+                0, # JOYSTICK_DPAD_DOWN CLICKED
                 0, # JOYSTICK_DPAD_DOWN PRESSED
                 0, # JOYSTICK_DPAD_DOWN RELEASED
-                0, # JOYSTICK_DPAD_RIGHT DOWN
+                0, # JOYSTICK_DPAD_RIGHT CLICKED
                 0, # JOYSTICK_DPAD_RIGHT PRESSED
                 0, # JOYSTICK_DPAD_RIGHT RELEASED
-                0, # JOYSTICK_DPAD_UP DOWN
+                0, # JOYSTICK_DPAD_UP CLICKED
                 0, # JOYSTICK_DPAD_UP PRESSED
                 0, # JOYSTICK_DPAD_UP RELEASED
-                0, # JOYSTICK_DPAD_LEFT DOWN
+                0, # JOYSTICK_DPAD_LEFT CLICKED
                 0, # JOYSTICK_DPAD_LEFT PRESSED
                 0, # JOYSTICK_DPAD_LEFT RELEASED
-                0, # JOYSTICK_BUTTON_SPEC_1 DOWN
+                0.0, # JOYSTICK_RIGHT_STICK_VERTICAL 
+                0.0, # JOYSTICK_RIGHT_STICK_HORIZONTAL
+                0, # JOYSTICK_RIGHT_STICK_CLICKED
+                0, # JOYSTICK_RIGHT_STICK_PRESSED 
+                0, # JOYSTICK_RIGHT_STICK_RELEASED
+                0.0, # JOYSTICK_LEFT_STICK_VERTICAL 
+                0.0, # JOYSTICK_LEFT_STICK_HORIZONTAL
+                0, # JOYSTICK_LEFT_STICK_CLICKED
+                0, # JOYSTICK_LEFT_STICK_PRESSED 
+                0, # JOYSTICK_LEFT_STICK_RELEASED
+                0, # JOYSTICK_BUTTON_SPEC_1 CLICKED
                 0, # JOYSTICK_BUTTON_SPEC_1 PRESSED
                 0, # JOYSTICK_BUTTON_SPEC_1 RELEASED
-                0, # JOYSTICK_BUTTON_SPEC_2 DOWN
+                0, # JOYSTICK_BUTTON_SPEC_2 CLICKED
                 0, # JOYSTICK_BUTTON_SPEC_2 PRESSED
                 0, # JOYSTICK_BUTTON_SPEC_2 RELEASED
-                0.0, # JOYSTICK_RIGHT_STICK_DOWN 
-                0.0, # JOYSTICK_RIGHT_STICK_RIGHT
-                0.0, # JOYSTICK_RIGHT_STICK_UP
-                0.0, # JOYSTICK_RIGHT_STICK_LEFT 
-                0.0, # JOYSTICK_LEFT_STICK_DOWN
-                0.0, # JOYSTICK_LEFT_STICK_RIGHT 
-                0.0, # JOYSTICK_LEFT_STICK_UP
-                0.0, # JOYSTICK_LEFT_STICK_LEFT
-                0.0, # JOYSTICK_TRIGGER_R1
-                0.0, # JOYSTICK_TRIGGER_L1
+                0, # JOYSTICK_RIGHT_BUMPER_CLICKED
+                0, # JOYSTICK_RIGHT_BUMPER_PRESSED 
+                0, # JOYSTICK_RIGHT_BUMPER_PRESSED 
+                0, # JOYSTICK_LEFT_BUMPER_CLICKED
+                0, # JOYSTICK_LEFT_BUMPER_PRESSED
+                0, # JOYSTICK_LEFT_BUMPER_PRESSED
                 0.0, # JOYSTICK_TRIGGER_R2
                 0.0 # JOYSTICK_TRIGGER_L2
             ]
+            print(self.device_id,self.guid)
+            joystick.init()
 
         def get_input(self,button:int) -> int|float:
             return self.inputs[button]
@@ -191,13 +204,16 @@ class Input:
         def handle_input_event(self,event:pygame.Event) -> None:
             if event.type == pygame.JOYBUTTONDOWN:
                 button_index = event.button
-                self.inputs[button_index][0] = True
-                self.inputs[button_index][1] = True
+                self.inputs[JOYSTICK_BUTTON_MAP[self.type][button_index][0]] = True
+                self.inputs[JOYSTICK_BUTTON_MAP[self.type][button_index][1]] = True
             
             elif event.type == pygame.JOYBUTTONUP:
                 button_index = event.button
-                self.inputs[button_index][1] = False
-                self.inputs[button_index][2] = True
+                self.inputs[JOYSTICK_BUTTON_MAP[self.type][button_index][1]] = False
+                self.inputs[JOYSTICK_BUTTON_MAP[self.type][button_index][2]] = True
 
             elif event.type == pygame.JOYAXISMOTION:
                 pass
+
+            elif event.type == pygame.JOYHATMOTION:
+                print(event)

@@ -58,7 +58,16 @@ class Engine:
 
         # Object processing go here
         self.window.create()
-        pygame.event.set_allowed([pygame.QUIT, pygame.WINDOWMOVED, pygame.VIDEORESIZE, pygame.KEYDOWN])
+        pygame.event.set_allowed([pygame.QUIT,
+                                  pygame.WINDOWMOVED, 
+                                  pygame.VIDEORESIZE, 
+                                  pygame.KEYDOWN, 
+                                  pygame.JOYBUTTONUP, 
+                                  pygame.JOYBUTTONDOWN, 
+                                  pygame.JOYAXISMOTION, 
+                                  pygame.JOYHATMOTION, 
+                                  pygame.JOYDEVICEADDED, 
+                                  pygame.JOYDEVICEREMOVED])
 
     def scale_rect(rect:pygame.Rect, amount:float) -> pygame.Rect:
         w = rect.width * amount
