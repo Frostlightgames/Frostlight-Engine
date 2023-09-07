@@ -195,7 +195,6 @@ class Input:
                 0.0, # JOYSTICK_TRIGGER_R2
                 0.0 # JOYSTICK_TRIGGER_L2
             ]
-            print(self.device_id,self.guid)
             joystick.init()
 
         def get_input(self,button:int) -> int|float:
