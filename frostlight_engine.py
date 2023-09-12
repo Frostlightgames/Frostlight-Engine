@@ -123,7 +123,53 @@ if __name__ == "__main__":
     if args.pack:
 
         # Pack Engine for release
-        pass
+        ordner_pfad = "./classes"
+        ausgabe_datei = "ausgabe.py"
+        main_datei = "frostlight_engine.py"
+        imports = []
+        # classes ordner durchsuchen und dateien einlesen
+        for ordnername, _, dateien in os.walk(ordner_pfad):
+            for datei in dateien:
+                if datei.endswith(".py"):
+                    datei_pfad = os.path.join(ordnername, datei)
+                    with open(datei_pfad, "r", encoding="utf-8") as datei_handle:
+                        datei_inhalt = datei_handle.read()
+                        for zeile in datei_inhalt.split("\n"):
+                            if zeile.strip().startswith("import ") or zeile.strip().startswith("from "):
+                                if not zeile.strip().startswith("from classes."):
+                                    imports.append(zeile.strip())
+
+        imports = sorted(set(imports))
+        # main datei einlesen
+        with open(main_datei, "r", encoding="utf-8") as main_handle:
+            main_inhalt = main_handle.read()
+
+            for zeile in main_inhalt.split("\n"):
+                if zeile.strip().startswith("import ") or zeile.strip().startswith("from "):
+                    if not zeile.strip().startswith("from classes."):
+                        imports.append(zeile.strip())
+
+        imports = sorted(set(imports))
+        # ausgabe datei erstellen und schreiben
+        with open(ausgabe_datei, "w", encoding="utf-8") as ausgabe_handle:
+            for importzeile in imports:
+                ausgabe_handle.write(f"{importzeile}\n")
+            ausgabe_handle.write("\n") 
+            for ordnername, _, dateien in os.walk(ordner_pfad):
+                for datei in dateien:
+                    if datei.endswith(".py"):
+                        datei_pfad = os.path.join(ordnername, datei)
+                        with open(datei_pfad, "r", encoding="utf-8") as datei_handle:
+                            datei_inhalt = datei_handle.read()
+                            for importzeile in imports:
+                                datei_inhalt = datei_inhalt.replace(importzeile, "")
+                            datei_inhalt = "\n".join(line for line in datei_inhalt.split("\n") if line.strip() and not line.strip().startswith("from classes."))
+                            ausgabe_handle.write(datei_inhalt.strip())
+                        ausgabe_handle.write("\n\n")
+
+            main_inhalt = "\n".join(line for line in main_inhalt.split("\n") if line.strip() and not line.strip().startswith("from classes.") and not line.strip().startswith("import "))
+            ausgabe_handle.write(main_inhalt)
+            
     elif args.build:
             
         # Build game to EXE
