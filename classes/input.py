@@ -13,12 +13,8 @@ class Input:
         self.joystick_dead_zone = joystick_dead_zone
         self.joystick_devices = []
 
-        #d = [pygame.joystick.Joystick(x) for x in range(pygame.joystick.get_count())]
-        
         for joystick in range(pygame.joystick.get_count()):
             self.joystick_devices.append(self.Joystick(pygame.joystick.Joystick(joystick)))
-
-        print(self.joystick_devices)
             
         self.registered_input = {
             "accept":[MOUSE_CLICK_LEFT,KEY_SPACE,KEY_RETURN,JOYSTICK_BUTTON_DOWN_CLICKED],
@@ -56,7 +52,16 @@ class Input:
                 if self.mouse.get_button(key[0]):
                     return 1
             elif key[1] == JOYSTICK:
-                input_value = self.joystick_devices[controller_index].get_input(key)
+                if controller_index == -1:
+                    for i in range(self.joystick_devices):
+                        input_value = self.joystick_devices[controller_index].get_input(key)
+                        if input_value != 0 and input_value != 0.0:
+                            return input_value
+                else:
+                    if controller_index < len(self.joystick_devices)-1:
+                        input_value = self.joystick_devices[controller_index].get_input(key)
+                    else:
+                        return 0
                 if input_value != 0 and input_value != 0.0:
                     return input_value
 
@@ -212,7 +217,7 @@ class Input:
                 self.inputs[JOYSTICK_BUTTON_MAP[self.type][button_index][2]] = True
 
             elif event.type == pygame.JOYAXISMOTION:
-                pass
+                pass    # axis event
 
             elif event.type == pygame.JOYHATMOTION:
-                print(event)
+                print(event)    # Xbox dpad hat event
