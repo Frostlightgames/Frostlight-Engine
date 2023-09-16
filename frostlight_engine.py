@@ -119,6 +119,24 @@ class Engine:
                 elif event.button == 3:
                     self.input.mouse.right_released = True
 
+            elif event.type == pygame.JOYBUTTONDOWN:
+                self.input.handle_joy_event(event)
+
+            elif event.type == pygame.JOYBUTTONUP:
+                self.input.handle_joy_event(event)
+
+            elif event.type == pygame.JOYAXISMOTION:
+                self.input.handle_joy_event(event)
+
+            elif event.type == pygame.JOYHATMOTION:
+                self.input.handle_joy_event(event)
+
+            elif event.type == pygame.JOYDEVICEADDED:
+                self.input.init_joysticks()
+
+            elif event.type == pygame.JOYDEVICEREMOVED:
+                self.input.init_joysticks()
+
     def engine_update(self):
         self.delta_time = time.time()-self.last_time
         self.last_time = time.time()

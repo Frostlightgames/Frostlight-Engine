@@ -12,9 +12,6 @@ class Input:
         
         self.joystick_dead_zone = joystick_dead_zone
         self.joystick_devices = []
-
-        for joystick in range(pygame.joystick.get_count()):
-            self.joystick_devices.append(self.Joystick(pygame.joystick.Joystick(joystick)))
             
         self.registered_input = {
             "accept":[MOUSE_CLICK_LEFT,KEY_SPACE,KEY_RETURN,JOYSTICK_BUTTON_DOWN_CLICKED],
@@ -29,7 +26,7 @@ class Input:
     def new(self,name:str,key:list[int,int]) -> bool:
         try:
             if name not in self.registered_input:
-                self.registered_input[name] = []
+                self.registered_input[name] = [key]
             else:
                 self.registered_input[name].append(key)
             return True
@@ -54,36 +51,50 @@ class Input:
             elif key[1] == JOYSTICK:
                 if controller_index == -1:
                     for i in range(self.joystick_devices):
-                        input_value = self.joystick_devices[controller_index].get_input(key)
+                        input_value = self.joystick_devices[controller_index].get_input(key[0])
                         if input_value != 0 and input_value != 0.0:
                             return input_value
                 else:
-                    if controller_index < len(self.joystick_devices)-1:
-                        input_value = self.joystick_devices[controller_index].get_input(key)
+                    if controller_index < len(self.joystick_devices):
+                        input_value = self.joystick_devices[controller_index].get_input(key[0])
                     else:
                         return 0
-                if input_value != 0 and input_value != 0.0:
+                if input_value != 0 or input_value != 0.0:
                     return input_value
 
         return 0
-    
-    def add_joystick(self,joystick:pygame.joystick.JoystickType) -> bool:
-        try:
-            self.joystick_devices.append(self.Joystick(pygame.joystick.Joystick(joystick)))
-            return True
-        except:
-            return False
-        
-    def remove_joystick(self,controller_index:int) -> bool:
-        try:
-            self.joystick_devices.pop(controller_index)
-            return True
-        except:
-            return False
         
     def update(self) -> None:
         self.keys = pygame.key.get_pressed()
         self.mouse.update()
+
+    def handle_joy_event(self,event:pygame.Event):
+        joy_index = event.joy
+        joy_type = self.joystick_devices[joy_index].type
+        if event.type == pygame.JOYBUTTONDOWN:
+            button_index = event.button
+            self.joystick_devices[joy_index].inputs[JOYSTICK_BUTTON_MAP[joy_type][button_index][0][0]] = 1
+            self.joystick_devices[joy_index].inputs[JOYSTICK_BUTTON_MAP[joy_type][button_index][1][0]] = 1
+
+        elif event.type == pygame.JOYBUTTONUP:
+            button_index = event.button
+            self.joystick_devices[joy_index].inputs[JOYSTICK_BUTTON_MAP[joy_type][button_index][1][0]] = 0
+            self.joystick_devices[joy_index].inputs[JOYSTICK_BUTTON_MAP[joy_type][button_index][2][0]] = 1
+
+        elif event.type == pygame.JOYAXISMOTION:
+            axis_index = event.axis
+            value = 0.0
+            if abs(event.value) > self.joystick_dead_zone:
+                value = max(min(event.value,1.0),-1.0)
+            self.joystick_devices[joy_index].inputs[JOYSTICK_AXIS_MAP[joy_type][axis_index][0]] = value
+
+        elif event.type == pygame.JOYHATMOTION:
+            print(event)    # Xbox dpad hat event
+
+    def init_joysticks(self) -> None:
+        self.joystick_devices = []
+        for joystick in range(pygame.joystick.get_count()):
+            self.joystick_devices.append(self.Joystick(pygame.joystick.Joystick(joystick)))
 
     class Mouse:
         def __init__(self) -> None:
@@ -125,6 +136,8 @@ class Input:
         
         def get_pos(self) -> list[int,int]:
             return self.position
+
+    # TODO reset joystick values
 
     class Joystick:
         def __init__(self,joystick:pygame.joystick.JoystickType) -> None:
@@ -200,24 +213,6 @@ class Input:
                 0.0, # JOYSTICK_TRIGGER_R2
                 0.0 # JOYSTICK_TRIGGER_L2
             ]
-            joystick.init()
 
         def get_input(self,button:int) -> int|float:
             return self.inputs[button]
-        
-        def handle_input_event(self,event:pygame.Event) -> None:
-            if event.type == pygame.JOYBUTTONDOWN:
-                button_index = event.button
-                self.inputs[JOYSTICK_BUTTON_MAP[self.type][button_index][0]] = True
-                self.inputs[JOYSTICK_BUTTON_MAP[self.type][button_index][1]] = True
-            
-            elif event.type == pygame.JOYBUTTONUP:
-                button_index = event.button
-                self.inputs[JOYSTICK_BUTTON_MAP[self.type][button_index][1]] = False
-                self.inputs[JOYSTICK_BUTTON_MAP[self.type][button_index][2]] = True
-
-            elif event.type == pygame.JOYAXISMOTION:
-                pass    # axis event
-
-            elif event.type == pygame.JOYHATMOTION:
-                print(event)    # Xbox dpad hat event
