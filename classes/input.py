@@ -67,6 +67,8 @@ class Input:
     def update(self) -> None:
         self.keys = pygame.key.get_pressed()
         self.mouse.update()
+        for joystick in self.joystick_devices:
+            joystick.reset()
 
     def handle_joy_event(self,event:pygame.Event):
         joy_index = event.joy
@@ -213,6 +215,36 @@ class Input:
                 0.0, # JOYSTICK_TRIGGER_R2
                 0.0 # JOYSTICK_TRIGGER_L2
             ]
+
+        def reset(self) -> None:
+            self.inputs[JOYSTICK_BUTTON_DOWN_CLICKED[0]] = 0
+            self.inputs[JOYSTICK_BUTTON_DOWN_RELEASED[0]] = 0
+            self.inputs[JOYSTICK_BUTTON_RIGHT_CLICKED[0]] = 0
+            self.inputs[JOYSTICK_BUTTON_RIGHT_RELEASED[0]] = 0
+            self.inputs[JOYSTICK_BUTTON_UP_CLICKED[0]] = 0
+            self.inputs[JOYSTICK_BUTTON_UP_RELEASED[0]] = 0
+            self.inputs[JOYSTICK_BUTTON_LEFT_CLICKED[0]] = 0
+            self.inputs[JOYSTICK_BUTTON_LEFT_RELEASED[0]] = 0
+            self.inputs[JOYSTICK_DPAD_DOWN_CLICKED[0]] = 0
+            self.inputs[JOYSTICK_DPAD_DOWN_RELEASED[0]] = 0
+            self.inputs[JOYSTICK_DPAD_RIGHT_CLICKED[0]] = 0
+            self.inputs[JOYSTICK_DPAD_RIGHT_RELEASED[0]] = 0
+            self.inputs[JOYSTICK_DPAD_UP_CLICKED[0]] = 0
+            self.inputs[JOYSTICK_DPAD_UP_RELEASED[0]] = 0
+            self.inputs[JOYSTICK_DPAD_LEFT_CLICKED[0]] = 0
+            self.inputs[JOYSTICK_DPAD_LEFT_RELEASED[0]] = 0
+            self.inputs[JOYSTICK_RIGHT_STICK_CLICKED[0]] = 0
+            self.inputs[JOYSTICK_RIGHT_STICK_RELEASED[0]] = 0
+            self.inputs[JOYSTICK_LEFT_STICK_CLICKED[0]] = 0
+            self.inputs[JOYSTICK_LEFT_STICK_RELEASED[0]] = 0
+            self.inputs[JOYSTICK_BUTTON_SPECIAL_1_CLICKED[0]] = 0
+            self.inputs[JOYSTICK_BUTTON_SPECIAL_1_RELEASED[0]] = 0
+            self.inputs[JOYSTICK_BUTTON_SPECIAL_2_CLICKED[0]] = 0
+            self.inputs[JOYSTICK_BUTTON_SPECIAL_2_RELEASED[0]] = 0
+            self.inputs[JOYSTICK_RIGHT_BUMPER_CLICKED[0]] = 0
+            self.inputs[JOYSTICK_RIGHT_BUMPER_RELEASED[0]] = 0
+            self.inputs[JOYSTICK_LEFT_BUMPER_CLICKED[0]] = 0
+            self.inputs[JOYSTICK_LEFT_BUMPER_RELEASED[0]] = 0
 
         def get_input(self,button:int) -> int|float:
             return self.inputs[button]
