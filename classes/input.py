@@ -1,3 +1,5 @@
+import os
+import json
 import pygame
 from classes.constances import *
 
@@ -5,6 +7,8 @@ class Input:
     def __init__(self,engine,joystick_dead_zone:int=0.15) -> None:
         
         self.engine = engine
+
+        self.save_path = os.path.join("data","saves","input.save")
         
         self.mouse = self.Mouse()
 
@@ -97,6 +101,24 @@ class Input:
         self.joystick_devices = []
         for joystick in range(pygame.joystick.get_count()):
             self.joystick_devices.append(self.Joystick(pygame.joystick.Joystick(joystick)))
+
+    def save(self):
+        try:
+            with open(self.save_path,"w+") as f:
+                json.dump(self.registered_input,f,indent=2)
+            return True
+        except:
+            return False
+
+    def load(self):
+        try:
+            with open(self.save_path,"r+") as f:
+                print(self.registered_input)
+                self.registered_input = json.load(f)
+                print(self.registered_input)
+            return True
+        except:
+            return False
 
     class Mouse:
         def __init__(self) -> None:
