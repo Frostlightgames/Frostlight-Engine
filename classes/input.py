@@ -113,9 +113,7 @@ class Input:
     def load(self):
         try:
             with open(self.save_path,"r+") as f:
-                print(self.registered_input)
                 self.registered_input = json.load(f)
-                print(self.registered_input)
             return True
         except:
             return False
