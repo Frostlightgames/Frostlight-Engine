@@ -155,6 +155,7 @@ cython_debug/
 # Engine Files
 log.txt
 main.py
+engine_export.py
 data/
 screenshots/
 
