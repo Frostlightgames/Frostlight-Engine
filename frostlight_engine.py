@@ -127,8 +127,29 @@ if __name__ == "__main__":
     elif args.build:
             
         # Build game to EXE
-        pass
-        
+        import PyInstaller.__main__
+        import subprocess
+        import shutil
+        import sys
+
+        subprocess.check_call([sys.executable, "-m", "pip", "install", "pyinstaller"])
+
+        PyInstaller.__main__.run([
+            'main.py',
+            '--onefile',
+            '--noconsole',
+            '--clean'
+        ])
+
+        if os.path.isfile("main.spec"):
+            os.remove("main.spec")
+
+        if os.path.isdir("build"):
+            shutil.rmtree("build")
+
+        if os.path.isdir("dist"):
+            os.rename("dist","export")
+
     elif args.name: 
 
         # Setup new Project with name
