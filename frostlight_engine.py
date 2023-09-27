@@ -153,6 +153,8 @@ if __name__ == "__main__":
             os.rename("dist","export")
 
         shutil.copytree("data",os.path.join("export","data"))
+        shutil.copytree("screenshots",os.path.join("export","screenshots"))
+        shutil.copytree("saves",os.path.join("export","saves"))
         shutil.make_archive("export","zip","export")
         shutil.rmtree("export")
 
