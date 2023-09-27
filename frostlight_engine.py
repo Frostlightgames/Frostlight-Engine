@@ -148,7 +148,13 @@ if __name__ == "__main__":
             shutil.rmtree("build")
 
         if os.path.isdir("dist"):
+            if os.path.isdir("export"):
+                shutil.rmtree("export")
             os.rename("dist","export")
+
+        shutil.copytree("data",os.path.join("export","data"))
+        shutil.make_archive("export","zip","export")
+        shutil.rmtree("export")
 
     elif args.name: 
 
