@@ -152,11 +152,15 @@ if __name__ == "__main__":
                 shutil.rmtree("export")
             os.rename("dist","export")
 
-        shutil.copytree("data",os.path.join("export","data"))
-        shutil.copytree("screenshots",os.path.join("export","screenshots"))
-        shutil.copytree("saves",os.path.join("export","saves"))
-        shutil.make_archive("export","zip","export")
-        shutil.rmtree("export")
+        if os.path.isdir("data"):
+            shutil.copytree("data",os.path.join("export","data"))
+        if os.path.isdir("screenshots"):
+            shutil.copytree("screenshots",os.path.join("export","screenshots"))
+        if os.path.isdir("saves"):
+            shutil.copytree("saves",os.path.join("export","saves"))
+        if os.path.isdir("export"):
+            shutil.make_archive("export","zip","export")
+            shutil.rmtree("export")
 
     elif args.name: 
 
