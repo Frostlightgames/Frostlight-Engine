@@ -127,40 +127,50 @@ if __name__ == "__main__":
     elif args.build:
             
         # Build game to EXE
-        import PyInstaller.__main__
+        
+        # Import Modules
         import subprocess
         import shutil
         import sys
 
-        subprocess.check_call([sys.executable, "-m", "pip", "install", "pyinstaller"])
+        # Install pyinstaller
+        try:
+            subprocess.check_call([sys.executable, "-m", "pip", "install", "pyinstaller"])
+            import PyInstaller.__main__
+        except:
+            print("Pyinstaller cannot be installed!")
+        else:
 
-        PyInstaller.__main__.run([
-            'main.py',
-            '--onefile',
-            '--noconsole',
-            '--clean'
-        ])
+            # Packing game in exe
+            PyInstaller.__main__.run([
+                'main.py',
+                '--onefile',
+                '--noconsole',
+                '--clean'
+            ])
 
-        if os.path.isfile("main.spec"):
-            os.remove("main.spec")
+            # Removing build files
+            if os.path.isfile("main.spec"):
+                os.remove("main.spec")
+            if os.path.isdir("build"):
+                shutil.rmtree("build")
+            if os.path.isdir("dist"):
+                if os.path.isdir("export"):
+                    shutil.rmtree("export")
+                os.rename("dist","export")
 
-        if os.path.isdir("build"):
-            shutil.rmtree("build")
+            # Create Export DIR
+            if os.path.isdir("data"):
+                shutil.copytree("data",os.path.join("export","data"))
+            if os.path.isdir("screenshots"):
+                shutil.copytree("screenshots",os.path.join("export","screenshots"))
+            if os.path.isdir("saves"):
+                shutil.copytree("saves",os.path.join("export","saves"))
 
-        if os.path.isdir("dist"):
+            # Zip Export
             if os.path.isdir("export"):
+                shutil.make_archive("export","zip","export")
                 shutil.rmtree("export")
-            os.rename("dist","export")
-
-        if os.path.isdir("data"):
-            shutil.copytree("data",os.path.join("export","data"))
-        if os.path.isdir("screenshots"):
-            shutil.copytree("screenshots",os.path.join("export","screenshots"))
-        if os.path.isdir("saves"):
-            shutil.copytree("saves",os.path.join("export","saves"))
-        if os.path.isdir("export"):
-            shutil.make_archive("export","zip","export")
-            shutil.rmtree("export")
 
     elif args.name: 
 
