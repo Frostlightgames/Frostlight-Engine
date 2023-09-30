@@ -9,7 +9,7 @@ class Logger:
         self.engine = engine
 
         # Setting starting variables
-        self.logpath = os.path.join("data","log.txt")
+        self.logpath = os.path.join("logs",f"{datetime.datetime.now().strftime('%H-%M-%S')}.log")
         self.last_logged_second = 0
         self.last_logged_message = ""
         self.repeat_log_times = 1
@@ -18,9 +18,9 @@ class Logger:
         try:
 
             # Create empty file
-            if not os.path.exists(os.path.join("data","log.txt")) or delete_old_logs:
-                if not os.path.exists("data"):
-                    os.mkdir("data")
+            if not os.path.exists(self.logpath) or delete_old_logs:
+                if not os.path.exists("logs"):
+                    os.mkdir("logs")
                 with open(self.logpath,"+w") as file:
                     file.write("")
         except Exception as e:
