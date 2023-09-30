@@ -54,7 +54,7 @@ class Input:
         except:
             return False
         
-    def get(self, name:str,controller_index:int=0) -> int|float:
+    def get(self, name:str,controller_index:int=-1) -> int|float:
 
         # Get input value from registered input
         for key in self.registered_input[name]:

@@ -33,6 +33,11 @@ Frostlight-Engine is an easy to use game framework for python that is based on p
       - [`set_name()`](#set_name)
       - [`get_fps()`](#get_fps)
     - [**Input Module**](#input-module)
+      - [`new()`](#new)
+      - [`get()`](#get)
+      - [`remove()`](#remove)
+      - [`save()`](#save)
+      - [`load()`](#load)
 
 ## **Getting Started**
 
@@ -238,3 +243,37 @@ Changes name attribute of the window.
 Dose not need any parameter and will return the games fps value.
 
 ### **Input Module**
+
+#### `new()`
+
+**Parameter:**
+
+- name : str
+- key : list[int,int]
+
+Registers a new input or adds new input to existing name.
+
+#### `get()`
+
+**Parameter:**
+
+- name : str
+- controller_index : int = 0
+  
+Returns the named input value. If controller index != -1 it will return the named input value for this controller index.
+
+#### `remove()`
+
+**Parameter:**
+
+- name : str
+
+Removes named input. It will return true on success else it will return false.
+
+#### `save()`
+
+Dose not need any parameter and will save the input configuration in `data/saves/input.save`. It will return true on success else it will return false.
+
+#### `load()`
+
+Dose not need any parameter and will load the input configuration in `data/saves/input.save`. It will return true on success else it will return false.
