@@ -8,22 +8,33 @@
 
 Frostlight-Engine is an easy to use game framework for python that is based on pygame. We plan on making an entire game engine some day.
 
-## Overview
+## **Overview**
 
 - [Frostlight-Engine](#frostlight-engine)
-  - [Overview](#overview)
-  - [Getting Started](#getting-started)
-  - [Dependencies](#dependencies)
-  - [Making a game](#making-a-game)
-  - [Example](#example)
+  - [**Overview**](#overview)
+  - [**Getting Started**](#getting-started)
+  - [**Dependencies**](#dependencies)
+  - [**Making a game**](#making-a-game)
+  - [**Example**](#example)
   - [**Documentation**](#documentation)
-    - [Project Structure](#project-structure)
-    - [Modules Overview](#modules-overview)
+    - [**Features**](#features)
+    - [**Project Structure**](#project-structure)
+    - [**Modules Overview**](#modules-overview)
       - [Window](#window)
       - [Input](#input)
       - [Logger](#logger)
+    - [**Window Module**](#window-module)
+      - [`create()`](#create)
+      - [`render()`](#render)
+      - [`fill()`](#fill)
+      - [`resize()`](#resize)
+      - [`set_fullscreen()`](#set_fullscreen)
+      - [`toggle_fullscreen()`](#toggle_fullscreen)
+      - [`set_name()`](#set_name)
+      - [`get_fps()`](#get_fps)
+    - [**Input Module**](#input-module)
 
-## Getting Started
+## **Getting Started**
 
 1. Install Python 3.9 or newer. <https://www.python.org/downloads/>
 2. Install pygame/pygame-ce 2.x <https://pypi.org/project/pygame/>
@@ -33,12 +44,12 @@ Frostlight-Engine is an easy to use game framework for python that is based on p
 pip install pygame | pip install pygame-ce
 ```
 
-## Dependencies
+## **Dependencies**
 
 - python 3.9 or newer
 - pygame 2.0 or newer
 
-## Making a game
+## **Making a game**
 
 Frostlight-Engine is a single-file framework, that helps you create games very fast and efficient. The game logic will be written in python. You can use any text editor you want. Frostlight-Engine provides some tool like window or input management to simplify the game making process.
 
@@ -51,7 +62,7 @@ python frostlight_engine.py
 
 In the `main.py` file you will write your main game logic. Your `Game` class will inherit from the `frostlight_engine.py` file to have all the framework functionality. To make your first little demo copy the example code into the `main.py` file.
 
-## Example
+## **Example**
 
 ```python
 from frostlight_engine import *
@@ -112,7 +123,7 @@ Your game will be compressed into a zip archive called `export.zip` that you can
 
 ## **Documentation**
 
-**Features** Frostlight-Engine provides:
+### **Features**
 
 - Window management
 - Input management
@@ -128,7 +139,7 @@ Your game will be compressed into a zip archive called `export.zip` that you can
 - EXE Converting
 - Automatic project setup
 
-### Project Structure
+### **Project Structure**
 
 ```txt
 📁game_name                 # your created root directory.
@@ -143,7 +154,7 @@ Your game will be compressed into a zip archive called `export.zip` that you can
     📃main.py               # your main game logic
 ```
 
-### Modules Overview
+### **Modules Overview**
 
 #### Window
 
@@ -171,5 +182,59 @@ Your game will be compressed into a zip archive called `export.zip` that you can
 - `info()`
 - `clear()`
 
+### **Window Module**
 
-[def]: #logger
+#### `create()`
+
+Dose not need any parameter and will be executed, every time the your game is starting.
+
+#### `render()`
+
+**Parameter:**
+
+- sprite : pygame.Surface
+- pos : list[int,int]
+
+Renders a sprite to the main surface.
+
+#### `fill()`
+
+**Parameter:**
+
+- color : list[int,int,int]
+
+Fills the main surface with a color.
+
+#### `resize()`
+
+**Parameter:**
+
+- new_window_size : list[int,int]
+
+Resizes the window to the new size.
+
+#### `set_fullscreen()`
+
+**Parameter:**
+
+- fullscreen : bool
+
+Changes fullscreen attribute of the window.
+
+#### `toggle_fullscreen()`
+
+Dose not need any parameter and will toggle the fullscreen attribute of the window.
+
+#### `set_name()`
+
+**Parameter:**
+
+- name : any
+
+Changes name attribute of the window.
+
+#### `get_fps()`
+
+Dose not need any parameter and will return the games fps value.
+
+### **Input Module**

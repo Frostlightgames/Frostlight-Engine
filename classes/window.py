@@ -58,7 +58,7 @@ class Window:
         # Renders sprite to main window
         self.main_surface.blit(sprite,pos)
 
-    def resize(self,new_window_size:list):
+    def resize(self,new_window_size:list[int,int]):
 
         # Resize window to specified size        
         self.window_size = new_window_size
