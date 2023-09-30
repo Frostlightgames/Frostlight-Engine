@@ -4,9 +4,9 @@ Frostlight-Engine is an easy to use game framework for python that is based on p
 
 ## Getting Started
 
-1. Install Python 3.9 or newer. <https://www.python.org/downloads/\>
-2. Install pygame/pygame-ce 2.x <https://pypi.org/project/pygame/\>
-3. Download the newest Frostlight-Engine version <https://github.com/Frostlightgames/Frostlight-Engine\>
+1. Install Python 3.9 or newer. <https://www.python.org/downloads/>
+2. Install pygame/pygame-ce 2.x <https://pypi.org/project/pygame/>
+3. Download the newest Frostlight-Engine version <https://github.com/Frostlightgames/Frostlight-Engine>
 
 ```cmd
 pip install pygame | pip install pygame-ce
