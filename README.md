@@ -107,7 +107,7 @@ Your game will be compressed into a zip archive called `export.zip` that you can
 - EXE Converting
 - Automatic project setup
 
-## Project Structure
+### Project Structure
 
 ```txt
 📁game_name                 # your created root directory.
@@ -122,9 +122,9 @@ Your game will be compressed into a zip archive called `export.zip` that you can
     📃main.py               # your main game logic
 ```
 
-## Modules Overview
+### Modules Overview
 
-### Window
+#### Window
 
 - `create()`
 - `render()`
@@ -135,7 +135,7 @@ Your game will be compressed into a zip archive called `export.zip` that you can
 - `set_name()`
 - `get_fps()`
 
-### Input
+#### Input
 
 - `new()`
 - `get()`
@@ -143,7 +143,7 @@ Your game will be compressed into a zip archive called `export.zip` that you can
 - `save()`
 - `load()`
 
-### Logger
+#### Logger
 
 - `error()`
 - `warning()`
