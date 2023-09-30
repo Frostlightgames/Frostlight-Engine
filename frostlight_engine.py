@@ -146,8 +146,10 @@ if __name__ == "__main__":
     elif args.build:
             
         # Build game to EXE
-        pass
-        
+        engine = Engine(nowindow=True)
+        engine.builder.setup_game()
+        engine.builder.create_exe()
+
     elif args.name: 
 
         # Setup new Project with name

@@ -7,7 +7,7 @@ class Builder:
     def setup_game(self,name:str="New Game"):
         directories_created = 0
         files_created = 0
-        directories_to_create = ["data","screenshots","saves",os.path.join("data","classes"),os.path.join("data","sprites")]
+        directories_to_create = ["data","screenshots","saves",os.path.join("data","classes"),os.path.join("data","saves"),os.path.join("data","sprites")]
 
         if not os.path.exists(os.path.join("data","log.txt")):
             files_created += 1
@@ -59,3 +59,49 @@ class Builder:
             self.engine.logger.info("No new files or directories where created.")
         else:
             self.engine.logger.info(f"Created game files structure with {files_created} files and {directories_created} directories")
+
+    def create_exe(self,name:str="game"):
+
+        # Import Modules
+        import subprocess
+        import shutil
+        import sys
+
+        # Install pyinstaller
+        try:
+            subprocess.check_call([sys.executable, "-m", "pip", "install", "pyinstaller"])
+            import PyInstaller.__main__
+        except:
+            print("Pyinstaller cannot be installed!")
+        else:
+
+            # Packing game in exe
+            PyInstaller.__main__.run([
+                'main.py',
+                '--onefile',
+                '--noconsole',
+                '--clean'
+            ])
+
+            # Removing build files
+            if os.path.isfile("main.spec"):
+                os.remove("main.spec")
+            if os.path.isdir("build"):
+                shutil.rmtree("build")
+            if os.path.isdir("dist"):
+                if os.path.isdir("export"):
+                    shutil.rmtree("export")
+                os.rename("dist","export")
+
+            # Create Export DIR
+            if os.path.isdir("data"):
+                shutil.copytree("data",os.path.join("export","data"))
+            if os.path.isdir("screenshots"):
+                shutil.copytree("screenshots",os.path.join("export","screenshots"))
+            if os.path.isdir("saves"):
+                shutil.copytree("saves",os.path.join("export","saves"))
+
+            # Zip Export
+            if os.path.isdir("export"):
+                shutil.make_archive("export","zip","export")
+                shutil.rmtree("export")

@@ -157,6 +157,8 @@ main.py
 data/
 screenshots/
 logs/
+export/
+export.zip
 
 # PyCharm
 #  JetBrains specific template is maintained in a separate JetBrains.gitignore that can
