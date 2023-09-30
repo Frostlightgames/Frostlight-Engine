@@ -68,22 +68,6 @@ class Engine:
                                   pygame.JOYHATMOTION, 
                                   pygame.JOYDEVICEADDED, 
                                   pygame.JOYDEVICEREMOVED])
-
-    def scale_rect(rect:pygame.Rect, amount:float) -> pygame.Rect:
-
-        # Scales rect by amount
-        w = rect.width * amount
-        h = rect.height * amount
-        new = pygame.Rect(0,0,w,h)
-        return new
-    
-    def scale_sprite(sprite:pygame.Surface, amount:float) -> pygame.Rect:
-        
-        # Scales sprite by amount
-        w = sprite.get_width() * amount
-        h = sprite.get_height() * amount
-        new = pygame.transform.scale(sprite,(w,h)).convert_alpha()
-        return new
         
     def get_events(self):
         self.clock.tick(self.fps)
