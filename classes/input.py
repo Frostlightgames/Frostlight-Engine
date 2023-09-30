@@ -74,7 +74,7 @@ class Input:
                 if controller_index == -1:
 
                     # Get value from not specified joystick
-                    for i in range(self.joystick_devices):
+                    for i in range(len(self.joystick_devices)):
                         input_value = self.joystick_devices[controller_index].get_input(key[0])
                         if input_value != 0 and input_value != 0.0:
                             return input_value
@@ -86,9 +86,9 @@ class Input:
                     else:
                         return 0
                 
-                # Filter joystick input value
-                if input_value != 0 or input_value != 0.0:
-                    return input_value
+                    # Filter joystick input value
+                    if input_value != 0 or input_value != 0.0:
+                        return input_value
 
         return 0
         

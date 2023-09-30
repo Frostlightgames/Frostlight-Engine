@@ -41,7 +41,7 @@ class Engine:
         self.version = 0.1
 
         # String variables go here
-        self.engine_version = "DEV 1.0"
+        self.engine_version = "1.0.1"
         self.game_state = "intro"
         self.game_version = game_version
         self.language = language
