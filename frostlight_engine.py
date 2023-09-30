@@ -58,7 +58,16 @@ class Engine:
 
         # Object processing go here
         self.window.create()
-        pygame.event.set_allowed([pygame.QUIT, pygame.WINDOWMOVED, pygame.VIDEORESIZE, pygame.KEYDOWN])
+        pygame.event.set_allowed([pygame.QUIT,
+                                  pygame.WINDOWMOVED, 
+                                  pygame.VIDEORESIZE, 
+                                  pygame.KEYDOWN, 
+                                  pygame.JOYBUTTONUP, 
+                                  pygame.JOYBUTTONDOWN, 
+                                  pygame.JOYAXISMOTION, 
+                                  pygame.JOYHATMOTION, 
+                                  pygame.JOYDEVICEADDED, 
+                                  pygame.JOYDEVICEREMOVED])
 
     def scale_rect(rect:pygame.Rect, amount:float) -> pygame.Rect:
         w = rect.width * amount
@@ -109,6 +118,24 @@ class Engine:
                     self.input.mouse.middle_released = True
                 elif event.button == 3:
                     self.input.mouse.right_released = True
+
+            elif event.type == pygame.JOYBUTTONDOWN:
+                self.input.handle_joy_event(event)
+
+            elif event.type == pygame.JOYBUTTONUP:
+                self.input.handle_joy_event(event)
+
+            elif event.type == pygame.JOYAXISMOTION:
+                self.input.handle_joy_event(event)
+
+            elif event.type == pygame.JOYHATMOTION:
+                self.input.handle_joy_event(event)
+
+            elif event.type == pygame.JOYDEVICEADDED:
+                self.input.init_joysticks()
+
+            elif event.type == pygame.JOYDEVICEREMOVED:
+                self.input.init_joysticks()
 
     def engine_update(self):
         self.delta_time = time.time()-self.last_time
