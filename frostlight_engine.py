@@ -83,7 +83,7 @@ class Engine:
         
     def get_events(self):
         self.clock.tick(self.fps)
-        self.input.update()
+        self.input.__update__()
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 self.quit()
@@ -120,22 +120,22 @@ class Engine:
                     self.input.mouse.right_released = True
 
             elif event.type == pygame.JOYBUTTONDOWN:
-                self.input.handle_joy_event(event)
+                self.input.__handle_joy_event__(event)
 
             elif event.type == pygame.JOYBUTTONUP:
-                self.input.handle_joy_event(event)
+                self.input.__handle_joy_event__(event)
 
             elif event.type == pygame.JOYAXISMOTION:
-                self.input.handle_joy_event(event)
+                self.input.__handle_joy_event__(event)
 
             elif event.type == pygame.JOYHATMOTION:
-                self.input.handle_joy_event(event)
+                self.input.__handle_joy_event__(event)
 
             elif event.type == pygame.JOYDEVICEADDED:
-                self.input.init_joysticks()
+                self.input.__init_joysticks__()
 
             elif event.type == pygame.JOYDEVICEREMOVED:
-                self.input.init_joysticks()
+                self.input.__init_joysticks__()
 
     def engine_update(self):
         self.delta_time = time.time()-self.last_time

@@ -7,7 +7,7 @@ class Builder:
     def setup_game(self,name:str="New Game"):
         directories_created = 0
         files_created = 0
-        directories_to_create = ["data","screenshots","saves",os.path.join("data","classes"),os.path.join("data","saves"),os.path.join("data","sprites")]
+        directories_to_create = ["data","screenshots",os.path.join("data","classes"),os.path.join("data","saves"),os.path.join("data","sprites")]
 
         if not os.path.exists(os.path.join("data","log.txt")):
             files_created += 1
@@ -98,8 +98,6 @@ class Builder:
                 shutil.copytree("data",os.path.join("export","data"))
             if os.path.isdir("screenshots"):
                 shutil.copytree("screenshots",os.path.join("export","screenshots"))
-            if os.path.isdir("saves"):
-                shutil.copytree("saves",os.path.join("export","saves"))
 
             # Zip Export
             if os.path.isdir("export"):

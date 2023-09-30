@@ -68,13 +68,13 @@ class Input:
 
         return 0
         
-    def update(self) -> None:
+    def __update__(self) -> None:
         self.keys = pygame.key.get_pressed()
         self.mouse.update()
         for joystick in self.joystick_devices:
             joystick.reset()
 
-    def handle_joy_event(self,event:pygame.Event):
+    def __handle_joy_event__(self,event:pygame.Event):
         joy_index = event.joy
         joy_type = self.joystick_devices[joy_index].type
         if event.type == pygame.JOYBUTTONDOWN:
@@ -99,7 +99,7 @@ class Input:
             # Xbox dpad hat event
             pass
 
-    def init_joysticks(self) -> None:
+    def __init_joysticks__(self) -> None:
         self.joystick_devices = []
         for joystick in range(pygame.joystick.get_count()):
             self.joystick_devices.append(self.Joystick(pygame.joystick.Joystick(joystick)))
