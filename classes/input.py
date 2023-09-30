@@ -159,8 +159,6 @@ class Input:
         def get_pos(self) -> list[int,int]:
             return self.position
 
-    # TODO reset joystick values
-
     class Joystick:
         def __init__(self,joystick:pygame.joystick.JoystickType) -> None:
             self.joystick = joystick
