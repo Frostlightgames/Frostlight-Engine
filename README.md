@@ -38,6 +38,10 @@ Frostlight-Engine is an easy to use game framework for python that is based on p
       - [`remove()`](#remove)
       - [`save()`](#save)
       - [`load()`](#load)
+    - [**Logger Module**](#logger-module)
+      - [`error()`](#error)
+      - [`warning()`](#warning)
+      - [`info()`](#info)
 
 ## **Getting Started**
 
@@ -277,3 +281,29 @@ Dose not need any parameter and will save the input configuration in `data/saves
 #### `load()`
 
 Dose not need any parameter and will load the input configuration in `data/saves/input.save`. It will return true on success else it will return false.
+
+### **Logger Module**
+
+#### `error()`
+
+**Parameter:**
+
+- message : str
+
+Will log an error message in the lated log file. It will return true on success else it will return false.
+
+#### `warning()`
+
+**Parameter:**
+
+- message : str
+
+Will log an warning message in the lated log file. It will return true on success else it will return false.
+
+#### `info()`
+
+**Parameter:**
+
+- message : str
+
+Will log an info message in the lated log file. It will return true on success else it will return false.
