@@ -65,18 +65,3 @@ class Logger:
                     file.write(f"[{caller} {datetime.datetime.now().strftime('%H:%M:%S:%f')[:-4]}]: {prefix} | {message}\n")
         except Exception as e:
             print(f"[Engine {datetime.datetime.now().strftime('%H:%M:%S:%f')[:-4]}]: Could not log message ({message}) | ({e})")
-
-    def clear(self):
-
-        # Trying to clear logfile
-        try:
-            # Replacing content of logfile with empty string
-            if not os.path.exists(os.path.join("data","log.txt")):
-                with open(self.logpath,"+w") as file:
-                    file.write("")
-                    file.close()
-                
-        except Exception as e:
-
-            # Clearing logfile failed, printing instead
-            print(f"[Engine {datetime.datetime.now().strftime('%H:%M:%S:%f')[:-4]}]: Could not clear logfile ({e})")

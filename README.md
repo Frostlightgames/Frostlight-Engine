@@ -1,10 +1,6 @@
 # Frostlight-Engine
 
-<div align="center">
-    <img src="https://img.shields.io/badge/python-blue" alt="python"/>
-    <img src="https://img.shields.io/badge/pygame-green" alt="pygame"/>
-    <img src="https://img.shields.io/badge/frostlightgames-blue" alt="frostlightgames"/>
-</div>
+![python](https://img.shields.io/badge/python-blue) ![pygame](https://img.shields.io/badge/pygame-green) ![frostlightgames](https://img.shields.io/badge/frostlightgames-blue)
 
 Frostlight-Engine is an easy to use game framework for python that is based on pygame. We plan on making an entire game engine some day.
 
@@ -47,7 +43,7 @@ Frostlight-Engine is an easy to use game framework for python that is based on p
 
 1. Install Python 3.9 or newer. <https://www.python.org/downloads/>
 2. Install pygame/pygame-ce 2.x <https://pypi.org/project/pygame/>
-3. Download the newest Frostlight-Engine version <https://github.com/Frostlightgames/Frostlight-Engine>
+3. Download the newest Frostlight-Engine version <https://github.com/Frostlightgames/Frostlight-Engine\>
 
 ```cmd
 pip install pygame | pip install pygame-ce
@@ -189,7 +185,6 @@ Your game will be compressed into a zip archive called `export.zip` that you can
 - `error()`
 - `warning()`
 - `info()`
-- `clear()`
 
 ### **Window Module**
 
@@ -202,7 +197,7 @@ Dose not need any parameter and will be executed, every time the your game is st
 **Parameter:**
 
 - sprite : pygame.Surface
-- pos : list[int,int]
+- pos : list\[int,int\]
 
 Renders a sprite to the main surface.
 
@@ -210,7 +205,7 @@ Renders a sprite to the main surface.
 
 **Parameter:**
 
-- color : list[int,int,int]
+- color : list\[int,int,int\]
 
 Fills the main surface with a color.
 
@@ -218,7 +213,7 @@ Fills the main surface with a color.
 
 **Parameter:**
 
-- new_window_size : list[int,int]
+- new_window_size : list\[int,int\]
 
 Resizes the window to the new size.
 
@@ -253,7 +248,7 @@ Dose not need any parameter and will return the games fps value.
 **Parameter:**
 
 - name : str
-- key : list[int,int]
+- key : list\[int,int\]
 
 Registers a new input or adds new input to existing name.
 
@@ -263,7 +258,7 @@ Registers a new input or adds new input to existing name.
 
 - name : str
 - controller_index : int = 0
-  
+
 Returns the named input value. If controller index != -1 it will return the named input value for this controller index.
 
 #### `remove()`
