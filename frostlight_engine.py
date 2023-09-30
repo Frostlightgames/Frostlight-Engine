@@ -193,7 +193,6 @@ if __name__ == "__main__":
 
         # Pack Engine for release
         engine = Engine(nowindow=True)
-        engine.builder.setup_game()
         engine.builder.pack_release()
 
     elif args.build:

@@ -110,14 +110,14 @@ class Builder:
 
     def pack_release(self):
         
-        # Relevent paths 
+        # Relevent paths
         class_path = "./classes"
         export_file = "engine_export.py"
         main_file = "frostlight_engine.py"
         imported_modules = []
         class_contents = []
 
-        # read class folder 
+        # Read class folder 
         for pathname, _, files in os.walk(class_path):
             for file in files:
                 if file.endswith(".py"):
@@ -126,30 +126,32 @@ class Builder:
                         content = f.read()
                         class_contents.append(content)
                         for line in content.split("\n"):
-                            if line.strip().startswith("import ") or line.strip().startswith("from "):
-                                if not line.strip().startswith("from classes."):
-                                    imported_modules.append(line.strip())
+                            line = line.strip()
+                            if (line.startswith("import ") or line.startswith("from "))  and not "PyInstaller.__main__" in line:
+                                if not line.startswith("from classes."):
+                                    imported_modules.append(line)
 
         imported_modules = sorted(set(imported_modules))
 
-        # read main file
+        # Read main file
         with open(main_file, "r", encoding="utf-8") as main_handle:
             main_content = main_handle.read()
             for line in main_content.split("\n"):
-                if line.strip().startswith("import ") or line.strip().startswith("from "):
-                    if not line.strip().startswith("from classes."):
-                        imported_modules.append(line.strip())
+                line = line.strip()
+                if line.startswith("import ") or line.startswith("from "):
+                    if not line.startswith("from classes."):
+                        imported_modules.append(line)
 
         imported_modules = sorted(set(imported_modules))
 
-        # creating export file
+        # Creating export file
         with open(export_file, "w", encoding="utf-8") as f:
             # write imports
             for importlines in imported_modules:
                 f.write(f"{importlines}\n")
             f.write("\n")
 
-            # write classes content
+            # Write classes content
             for content in class_contents:
                 for importlines in imported_modules:
                     content = content.replace(importlines, "")
@@ -157,6 +159,6 @@ class Builder:
                 f.write(content.strip())
                 f.write("\n\n")
 
-            # write main content
+            # Write main content
             main_content = "\n".join(line for line in main_content.split("\n") if not line.strip().startswith("from classes.") and not line.strip().startswith("import "))
             f.write(main_content)
