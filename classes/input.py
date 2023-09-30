@@ -95,7 +95,9 @@ class Input:
             self.joystick_devices[joy_index].inputs[JOYSTICK_AXIS_MAP[joy_type][axis_index][0]] = value
 
         elif event.type == pygame.JOYHATMOTION:
-            print(event)    # Xbox dpad hat event
+
+            # Xbox dpad hat event
+            pass
 
     def init_joysticks(self) -> None:
         self.joystick_devices = []
