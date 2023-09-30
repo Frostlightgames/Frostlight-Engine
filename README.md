@@ -1,5 +1,7 @@
 # Frostlight-Engine
 
+<https://img.shields.io/badge/python-blue>
+
 Frostlight-Engine is an easy to use game framework for python that is based on pygame. We plan on making an entire game engine some day.
 
 ## Overview
