@@ -54,10 +54,13 @@ class Window:
             pygame.mouse.set_visible(self.mouse_visible)
 
     def render(self,sprite:pygame.Surface,pos:list[int,int] | pygame.Rect):
+
+        # Renders sprite to main window
         self.main_surface.blit(sprite,pos)
 
     def resize(self,new_window_size:list):
-        
+
+        # Resize window to specified size        
         self.window_size = new_window_size
 
         if self.resizable:

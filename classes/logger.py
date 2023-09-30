@@ -5,7 +5,7 @@ import datetime
 class Logger:
     def __init__(self,engine,delete_old_logs:bool=False) -> None:
 
-        # Engine Variable
+        # Engine variable
         self.engine = engine
 
         # Setting starting variables

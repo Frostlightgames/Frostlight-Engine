@@ -6,17 +6,23 @@ from classes.constances import *
 class Input:
     def __init__(self,engine,joystick_dead_zone:int=0.15) -> None:
         
+        # Engine variable
         self.engine = engine
 
-        self.save_path = os.path.join("data","saves","input.save")
-        
+        # Mouse variables        
         self.mouse = self.Mouse()
 
+        # Keyboard variables
         self.keys = pygame.key.get_pressed()
         
+        # Joystick variables
         self.joystick_dead_zone = joystick_dead_zone
         self.joystick_devices = []
-            
+        
+        # Input variables
+
+        self.save_path = os.path.join("data","saves","input.save")
+
         self.registered_input = {
             "accept":[MOUSE_CLICK_LEFT,KEY_SPACE,KEY_RETURN,JOYSTICK_BUTTON_DOWN_CLICKED],
             "cancel":[KEY_ESCAPE,KEY_BACKSPACE,JOYSTICK_BUTTON_RIGHT_CLICKED],
@@ -28,6 +34,8 @@ class Input:
         }
 
     def new(self,name:str,key:list[int,int]) -> bool:
+
+        # Register/add new input
         try:
             if name not in self.registered_input:
                 self.registered_input[name] = [key]
@@ -38,6 +46,8 @@ class Input:
             return False
         
     def remove(self,inputname:str) -> bool:
+
+        # Remove registered input
         try:
             del self.registered_input[inputname]
             return True
@@ -45,51 +55,75 @@ class Input:
             return False
         
     def get(self, name:str,controller_index:int=0) -> int|float:
+
+        # Get input value from registered input
         for key in self.registered_input[name]:
+
+            # Keyboard values
             if key[1] == KEYBOARD:
                 if self.keys[key[0]]:
                     return 1
+                
+            # Mouse values
             elif key[1] == MOUSE:
                 if self.mouse.get_button(key[0]):
                     return 1
+                
+            # Joystick values
             elif key[1] == JOYSTICK:
                 if controller_index == -1:
+
+                    # Get value from not specified joystick
                     for i in range(self.joystick_devices):
                         input_value = self.joystick_devices[controller_index].get_input(key[0])
                         if input_value != 0 and input_value != 0.0:
                             return input_value
                 else:
+
+                    # Get value from specified joystick
                     if controller_index < len(self.joystick_devices):
                         input_value = self.joystick_devices[controller_index].get_input(key[0])
                     else:
                         return 0
+                
+                # Filter joystick input value
                 if input_value != 0 or input_value != 0.0:
                     return input_value
 
         return 0
         
     def __update__(self) -> None:
+
+        # Update all input devices
         self.keys = pygame.key.get_pressed()
         self.mouse.update()
         for joystick in self.joystick_devices:
             joystick.reset()
 
     def __handle_joy_event__(self,event:pygame.Event):
+
+        # joystick specification
         joy_index = event.joy
         joy_type = self.joystick_devices[joy_index].type
+        
+        # Handel joystick button click event
         if event.type == pygame.JOYBUTTONDOWN:
             button_index = event.button
             self.joystick_devices[joy_index].inputs[JOYSTICK_BUTTON_MAP[joy_type][button_index][0][0]] = 1
             self.joystick_devices[joy_index].inputs[JOYSTICK_BUTTON_MAP[joy_type][button_index][1][0]] = 1
 
+        # Handel joystick button release event
         elif event.type == pygame.JOYBUTTONUP:
             button_index = event.button
             self.joystick_devices[joy_index].inputs[JOYSTICK_BUTTON_MAP[joy_type][button_index][1][0]] = 0
             self.joystick_devices[joy_index].inputs[JOYSTICK_BUTTON_MAP[joy_type][button_index][2][0]] = 1
 
+        # Handel joystick axis movement event
         elif event.type == pygame.JOYAXISMOTION:
             axis_index = event.axis
             value = 0.0
+
+            # Detect deadzone
             if abs(event.value) > self.joystick_dead_zone:
                 value = max(min(event.value,1.0),-1.0)
             self.joystick_devices[joy_index].inputs[JOYSTICK_AXIS_MAP[joy_type][axis_index][0]] = value
@@ -100,11 +134,15 @@ class Input:
             pass
 
     def __init_joysticks__(self) -> None:
+
+        # Creates joystick device to be used
         self.joystick_devices = []
         for joystick in range(pygame.joystick.get_count()):
             self.joystick_devices.append(self.Joystick(pygame.joystick.Joystick(joystick)))
 
     def save(self):
+
+        # Save registered input in file
         try:
             with open(self.save_path,"w+") as f:
                 json.dump(self.registered_input,f,indent=2)
@@ -113,6 +151,8 @@ class Input:
             return False
 
     def load(self):
+
+        # Load registered input in file
         try:
             with open(self.save_path,"r+") as f:
                 self.registered_input = json.load(f)
@@ -122,6 +162,8 @@ class Input:
 
     class Mouse:
         def __init__(self) -> None:
+
+            # Mouse variables
             self.position = [0,0]
             self.left_pressed = False
             self.left_clicked = False
@@ -134,12 +176,16 @@ class Input:
             self.right_released = False
 
         def update(self) -> None:
+
+            # Reset mouse input values
             self.left_clicked = False
             self.left_released = False
             self.middle_clicked = False
             self.middle_released = False
             self.right_clicked = False
             self.right_released = False
+
+            # Get mouse values
             self.position = [pygame.mouse.get_pos()[0],pygame.mouse.get_pos()[1]]
             mouse_pressed = pygame.mouse.get_pressed()
             self.left_pressed = mouse_pressed[0]
@@ -147,6 +193,8 @@ class Input:
             self.right_pressed = mouse_pressed[2]
 
         def get_button(self,button:int) -> bool:
+
+            # Get mouse button 
             mouse = [self.left_clicked,
                 self.middle_clicked,
                 self.right_clicked,
@@ -156,13 +204,18 @@ class Input:
                 self.left_released,
                 self.middle_released,
                 self.right_released]
+            
             return mouse[button]
         
         def get_pos(self) -> list[int,int]:
+
+            # Getting mouse position
             return self.position
 
     class Joystick:
         def __init__(self,joystick:pygame.joystick.JoystickType) -> None:
+
+            # Joystick variables
             self.joystick = joystick
             self.name = joystick.get_name()
             if self.name == "Xbox 360 Controller":
@@ -237,6 +290,8 @@ class Input:
             ]
 
         def reset(self) -> None:
+
+            # Reset joystick button click and releas values
             self.inputs[JOYSTICK_BUTTON_DOWN_CLICKED[0]] = 0
             self.inputs[JOYSTICK_BUTTON_DOWN_RELEASED[0]] = 0
             self.inputs[JOYSTICK_BUTTON_RIGHT_CLICKED[0]] = 0
@@ -267,4 +322,6 @@ class Input:
             self.inputs[JOYSTICK_LEFT_BUMPER_RELEASED[0]] = 0
 
         def get_input(self,button:int) -> int|float:
+
+            # Get joystick button value
             return self.inputs[button]

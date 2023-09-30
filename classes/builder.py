@@ -2,16 +2,18 @@ import os
 
 class Builder:
     def __init__(self,engine) -> None:
+
+        # Engine variable
         self.engine = engine
 
     def setup_game(self,name:str="New Game"):
+
+        # Create engine tree
         directories_created = 0
         files_created = 0
         directories_to_create = ["data","screenshots",os.path.join("data","classes"),os.path.join("data","saves"),os.path.join("data","sprites")]
-
-        if not os.path.exists(os.path.join("data","log.txt")):
-            files_created += 1
-
+        
+        # Creating directories
         for directory in directories_to_create:
             try:
                 os.mkdir(directory)
@@ -19,6 +21,7 @@ class Builder:
             except FileExistsError:
                 self.engine.logger.warning(f"Skipping creation of directory {directory}, it already exist.")
 
+        # Create main code file
         if not os.path.exists("main.py"):
             with open("main.py","+wt") as file:
                 file.write("from frostlight_engine import *\n")
@@ -55,6 +58,7 @@ class Builder:
         else:
             self.engine.logger.warning("Skipping creation of main file, already exist.")
 
+        # Log creation process
         if files_created == 0 and directories_created == 0:
             self.engine.logger.info("No new files or directories where created.")
         else:
@@ -105,11 +109,13 @@ class Builder:
                 shutil.rmtree("export")
 
     def pack_release(self):
-
+        
+        # Relevent paths 
         class_path = "./classes"
         export_file = "engine_export.py"
         main_file = "frostlight_engine.py"
         imported_modules = []
+
         # read class folder 
         for pathname, _, files in os.walk(class_path):
             for file in files:
@@ -123,6 +129,7 @@ class Builder:
                                     imported_modules.append(line.strip())
 
         imported_modules = sorted(set(imported_modules))
+
         # read main file
         with open(main_file, "r", encoding="utf-8") as main_handle:
             main_content = main_handle.read()
@@ -133,6 +140,7 @@ class Builder:
                         imported_modules.append(line.strip())
 
         imported_modules = sorted(set(imported_modules))
+
         # creating export file
         with open(export_file, "w", encoding="utf-8") as f:
             for importzeile in imported_modules:

@@ -70,12 +70,16 @@ class Engine:
                                   pygame.JOYDEVICEREMOVED])
 
     def scale_rect(rect:pygame.Rect, amount:float) -> pygame.Rect:
+
+        # Scales rect by amount
         w = rect.width * amount
         h = rect.height * amount
         new = pygame.Rect(0,0,w,h)
         return new
     
     def scale_sprite(sprite:pygame.Surface, amount:float) -> pygame.Rect:
+        
+        # Scales sprite by amount
         w = sprite.get_width() * amount
         h = sprite.get_height() * amount
         new = pygame.transform.scale(sprite,(w,h)).convert_alpha()
@@ -99,10 +103,12 @@ class Engine:
                     self.delta_time = 0
                     self.window.resize([event.w,event.h])
 
+            # Keyboard events
             elif event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_F11:
                     self.window.toggle_fullscreen()
 
+            # Mouse events
             elif event.type == pygame.MOUSEBUTTONDOWN:
                 if event.button == 1:
                     self.input.mouse.left_clicked = True
@@ -119,6 +125,7 @@ class Engine:
                 elif event.button == 3:
                     self.input.mouse.right_released = True
 
+            # Joystick events
             elif event.type == pygame.JOYBUTTONDOWN:
                 self.input.__handle_joy_event__(event)
 
@@ -138,15 +145,23 @@ class Engine:
                 self.input.__init_joysticks__()
 
     def engine_update(self):
+
+        # Update that runs before normal update
         self.delta_time = time.time()-self.last_time
         self.last_time = time.time()
 
     def engine_draw(self):
+
+        # Draw that runs after normal draw
         pygame.display.update()
 
     def run(self):
+
+        # Starting game engine
         self.logger.info(f"Starting [Engine version {self.engine_version} | Game version {self.game_version}]")
         while self.run_game:
+
+            # Main loop
             try:
                 self.get_events()
                 self.engine_update()
@@ -154,18 +169,26 @@ class Engine:
                 self.draw()
                 self.engine_draw()
             except Exception as e:
+                
+                # Error logging and catching
                 self.logger.error(e)
+
+        # Ending game
         self.logger.info("Closed game")
 
     def quit(self):
         self.run_game = False
 
 if __name__ == "__main__":
+
+    # Parser arguments
     parser = argparse.ArgumentParser()
     parser.add_argument("-p", "--pack", action="store_true")
     parser.add_argument("-b", "--build", action="store_true")
     parser.add_argument("-n", "--name", action="store_true")
     args = parser.parse_args()
+
+
     if args.pack:
 
         # Pack Engine for release
@@ -185,6 +208,7 @@ if __name__ == "__main__":
         # Setup new Project with name
         engine = Engine()
         engine.builder.setup_game(args.name)
+        
     else:
 
         # Setup new no name Project 

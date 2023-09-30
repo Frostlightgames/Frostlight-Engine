@@ -155,11 +155,10 @@ cython_debug/
 # Engine Files
 main.py
 engine_export.py
+export.zip
 data/
 screenshots/
 logs/
-export/
-export.zip
 
 # PyCharm
 #  JetBrains specific template is maintained in a separate JetBrains.gitignore that can
