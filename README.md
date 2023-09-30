@@ -110,7 +110,6 @@ Your game will be compressed into a zip archive called `export.zip` that you can
 ## Project Structure
 
 ```txt
-## Project Structure
 📁game_name                 # your created root directory.
     📁data                  # store important game data
         📁classes           # to store your game classes like player and monsters
