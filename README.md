@@ -1,20 +1,27 @@
 # Frostlight-Engine
 
-<https://img.shields.io/badge/python-blue>
+<div align="center">
+    <img src="https://img.shields.io/badge/python-blue" alt="python"/>
+    <img src="https://img.shields.io/badge/pygame-green" alt="pygame"/>
+    <img src="https://img.shields.io/badge/frostlightgames-blue" alt="frostlightgames"/>
+</div>
 
 Frostlight-Engine is an easy to use game framework for python that is based on pygame. We plan on making an entire game engine some day.
 
 ## Overview
 
-- Getting Started
-- Dependencies
-- Making a game
-- Example
-- Documentation
-  - Modules Overview
-    - Window
-    - Input
-    - Logger
+- [Frostlight-Engine](#frostlight-engine)
+  - [Overview](#overview)
+  - [Getting Started](#getting-started)
+  - [Dependencies](#dependencies)
+  - [Making a game](#making-a-game)
+  - [Example](#example)
+  - [**Documentation**](#documentation)
+    - [Project Structure](#project-structure)
+    - [Modules Overview](#modules-overview)
+      - [Window](#window)
+      - [Input](#input)
+      - [Logger](#logger)
 
 ## Getting Started
 
@@ -163,3 +170,6 @@ Your game will be compressed into a zip archive called `export.zip` that you can
 - `warning()`
 - `info()`
 - `clear()`
+
+
+[def]: #logger
