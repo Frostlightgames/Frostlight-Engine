@@ -13,7 +13,7 @@ class Input:
         self.mouse = self.Mouse()
 
         # Keyboard variables
-        self.keys = pygame.key.get_pressed()
+        self.keys = [[0]*55,pygame.key.get_pressed(),[0]*55]
         
         # Joystick variables
         self.joystick_dead_zone = joystick_dead_zone
@@ -21,7 +21,7 @@ class Input:
         
         # Input variables
 
-        self.save_path = os.path.join("data","saves","input.save")
+        self.save_path = os.path.join("data","saves","input")
 
         self.registered_input = {
             "accept":[MOUSE_CLICK_LEFT,KEY_SPACE_CLICKED,KEY_RETURN_CLICKED,JOYSTICK_BUTTON_DOWN_CLICKED],
@@ -95,8 +95,8 @@ class Input:
     def __update__(self) -> None:
 
         # Update all input devices
-        self.keys = pygame.key.get_pressed()
-        self.mouse.update()
+        self.keys[1] = pygame.key.get_pressed()
+        self.mouse. update()
         for joystick in self.joystick_devices:
             joystick.reset()
 
