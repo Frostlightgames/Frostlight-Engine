@@ -23,7 +23,7 @@ class Engine:
                  window_centered:bool=True,
                  window_name:str="New Game",
                  window_size:list=None):
-        
+
         # initialize all modules
         pygame.init()
         pygame.joystick.init()
@@ -68,7 +68,7 @@ class Engine:
                                   pygame.JOYHATMOTION, 
                                   pygame.JOYDEVICEADDED, 
                                   pygame.JOYDEVICEREMOVED])
-        
+
     def get_events(self):
         self.clock.tick(self.fps)
         self.input.__update__()
@@ -172,7 +172,6 @@ if __name__ == "__main__":
     parser.add_argument("-n", "--name", action="store_true")
     args = parser.parse_args()
 
-
     if args.pack:
 
         # Pack Engine for release
@@ -180,7 +179,7 @@ if __name__ == "__main__":
         engine.builder.pack_release()
 
     elif args.build:
-            
+    
         # Build game to EXE
         engine = Engine(nowindow=True)
         engine.builder.setup_game()
@@ -191,7 +190,7 @@ if __name__ == "__main__":
         # Setup new Project with name
         engine = Engine()
         engine.builder.setup_game(args.name)
-        
+
     else:
 
         # Setup new no name Project 

@@ -13,7 +13,8 @@ class Input:
         self.mouse = self.Mouse()
 
         # Keyboard variables
-        self.keys = [[0]*55,pygame.key.get_pressed(),[0]*55]
+        self.keys = {}
+        self.reset_keys = []
         
         # Joystick variables
         self.joystick_dead_zone = joystick_dead_zone
@@ -24,23 +25,23 @@ class Input:
         self.save_path = os.path.join("data","saves","input")
 
         self.registered_input = {
-            "accept":[MOUSE_CLICK_LEFT,KEY_SPACE_CLICKED,KEY_RETURN_CLICKED,JOYSTICK_BUTTON_DOWN_CLICKED],
-            "cancel":[KEY_ESCAPE_CLICKED,KEY_BACKSPACE_CLICKED,JOYSTICK_BUTTON_RIGHT_CLICKED],
-            "right":[KEY_D_PRESSED,KEY_L_PRESSED,KEY_ARROW_RIGHT_PRESSED,JOYSTICK_DPAD_RIGHT_PRESSED,JOYSTICK_LEFT_STICK_HORIZONTAL],
-            "left":[KEY_A_PRESSED,KEY_J_PRESSED,KEY_ARROW_LEFT_PRESSED,JOYSTICK_DPAD_LEFT_PRESSED,JOYSTICK_LEFT_STICK_HORIZONTAL],
-            "up":[KEY_W_PRESSED,KEY_I_PRESSED,KEY_ARROW_UP_PRESSED,JOYSTICK_DPAD_UP_PRESSED,JOYSTICK_LEFT_STICK_VERTICAL],
-            "down":[KEY_S_PRESSED,KEY_K_PRESSED,KEY_ARROW_DOWN_PRESSED,JOYSTICK_DPAD_DOWN_PRESSED,JOYSTICK_LEFT_STICK_VERTICAL],
-            "screenshot":[KEY_P_CLICKED,KEY_F6_CLICKED]
+            "accept":[MOUSE_LEFTCLICK,KEY_SPACE,KEY_RETURN,JOYSTICK_BUTTON_DOWN_CLICKED],
+            "cancel":[KEY_ESCAPE,KEY_BACKSPACE,JOYSTICK_BUTTON_RIGHT_CLICKED],
+            "right":[KEY_D,KEY_L,KEY_ARROW_RIGHT,JOYSTICK_DPAD_RIGHT_PRESSED,JOYSTICK_LEFT_STICK_HORIZONTAL],
+            "left":[KEY_A,KEY_J,KEY_ARROW_LEFT,JOYSTICK_DPAD_LEFT_PRESSED,JOYSTICK_LEFT_STICK_HORIZONTAL],
+            "up":[KEY_W,KEY_I,KEY_ARROW_UP,JOYSTICK_DPAD_UP_PRESSED,JOYSTICK_LEFT_STICK_VERTICAL],
+            "down":[KEY_S,KEY_K,KEY_ARROW_DOWN,JOYSTICK_DPAD_DOWN_PRESSED,JOYSTICK_LEFT_STICK_VERTICAL],
+            "screenshot":[KEY_P,KEY_F6]
         }
 
-    def new(self,name:str,key:list[int,int]) -> bool:
+    def new(self,name:str,key:list[int,int],methode:int) -> bool:
 
         # Register/add new input
         try:
             if name not in self.registered_input:
-                self.registered_input[name] = [key]
+                self.registered_input[name] = [[key,methode]]
             else:
-                self.registered_input[name].append(key)
+                self.registered_input[name].append([key,methode])
             return True
         except:
             return False
@@ -95,10 +96,26 @@ class Input:
     def __update__(self) -> None:
 
         # Update all input devices
-        self.keys[1] = pygame.key.get_pressed()
-        self.mouse. update()
+        for key in self.reset_keys:
+            self.keys[key][0] = False
+            self.keys[key][2] = False
+
+        self.mouse.update()
+
         for joystick in self.joystick_devices:
             joystick.reset()
+
+    def __handle_mouse_event__(self,event:pygame.Event):
+
+        # Handel joystick button down event
+        if event.type == pygame.KEYDOWN:
+            self.keys[event.key] = [True,True,False]
+            self.reset_keys.append(event.key)
+
+        # Handel mouse button release event
+        elif event.type == pygame.KEYUP:
+            self.keys[event.key] = [False,False,True]
+            self.reset_keys.append(event.key)
 
     def __handle_joy_event__(self,event:pygame.Event):
 
