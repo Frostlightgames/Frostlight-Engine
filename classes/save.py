@@ -1,38 +1,44 @@
 import json
-from cryptography.fernet import Fernet
 
 class SaveManager():
-    def __init__(self,path,key="Frostlight") -> None:
+    def __init__(self,path,key) -> None:
         self.path = path
         self.key = key
-
-    def encrypt(self, data):
-        chipher = Fernet(self.key)
-        encrypted_data = chipher.encrypt(data.encode())
-        return encrypted_data
     
-    def decrypt(self, data):
-        chipher = Fernet(self.key)
-        decrypted_data = chipher.decrypt(data).decode()
-        return decrypted_data
+    def encrypt(self) -> bytes:
+        pass
+    
+    def decrypt(self) -> bytes:
+        pass
     
     def save(self,value,key):
+        self.decrypt()
         try:
-            with open(self.path, '+r') as file:
-                data = json.loads(self.decrypt(file.read()))
-        except (FileNotFoundError, json.JSONDecodeError):
+            with open(self.path, 'rb') as file:
+                data = json.load(file)
+        except FileNotFoundError:
             data = {}
 
         data[key] = value
-        json_string = json.dumps(data)
 
-        with open(self.path, 'w') as file:
-            file.write(self.encrypt(json_string))
-
+        with open(self.path, 'wb') as file:
+            json.dump(data, file, indent=4)
+        self.encrypt()
+    
     def load(self,key) -> any:
-        with open(self.path,"r") as file: 
-            data = json.load(file)
-            if key in data:
-                return data[key]
-            else:
-                return None
+        self.decrypt()
+        try:
+            with open(self.path, 'rb') as file:
+                data = json.load(file)
+                if key in data:
+                    self.encrypt()
+                    return data[key]
+                else:
+                    self.encrypt()
+                    return None
+        except (FileNotFoundError, json.JSONDecodeError):
+            self.encrypt()
+            return None
+        
+x = SaveManager('test.save',b"4XLvJ06F6OriXAYLUUjBzkS--AISlUp8P1V2b4QzKA0=")
+print(x.load('hu'))
