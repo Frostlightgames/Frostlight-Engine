@@ -11,6 +11,7 @@ class Input:
 
         # Mouse variables        
         self.mouse = self.Mouse()
+        self.reset_buttons = []
 
         # Keyboard variables
         self.keys = {}
@@ -61,17 +62,17 @@ class Input:
         for key in self.registered_input[name]:
 
             # Keyboard values
-            if key[1] == KEYBOARD:
-                if self.keys[key[0]]:
+            if key[0][1] == KEYBOARD:
+                if self.keys[key[0][0]][key[1]]:
                     return 1
                 
             # Mouse values
-            elif key[1] == MOUSE:
-                if self.mouse.get_button(key[0]):
+            elif key[0][1] == MOUSE:
+                if self.mouse.get_button(key[0][0])[key[1]]:
                     return 1
                 
             # Joystick values
-            elif key[1] == JOYSTICK:
+            elif key[0][1] == JOYSTICK:
                 if controller_index == -1:
 
                     # Get value from not specified joystick
@@ -105,7 +106,7 @@ class Input:
         for joystick in self.joystick_devices:
             joystick.reset()
 
-    def __handle_mouse_event__(self,event:pygame.Event):
+    def __handle_key_event__(self,event:pygame.Event):
 
         # Handel joystick button down event
         if event.type == pygame.KEYDOWN:
@@ -116,6 +117,15 @@ class Input:
         elif event.type == pygame.KEYUP:
             self.keys[event.key] = [False,False,True]
             self.reset_keys.append(event.key)
+
+    def __handle_mouse_event__(self,event:pygame.Event):
+        # Handel joystick button down event
+        if event.type == pygame.MOUSEBUTTONDOWN:
+            self.keys[event.button-1] = [True,True,False]
+
+        # Handel mouse button release event
+        elif event.type == pygame.MOUSEBUTTONUP:
+            self.keys[event.button-1] = [False,False,True]
 
     def __handle_joy_event__(self,event:pygame.Event):
 
@@ -162,7 +172,7 @@ class Input:
         # Save registered input in file
         try:
             with open(self.save_path,"w+") as f:
-                json.dump(self.registered_input,f,indent=2)
+                json.dump(self.registered_input,f)
             return True
         except:
             return False
@@ -182,47 +192,33 @@ class Input:
 
             # Mouse variables
             self.position = [0,0]
-            self.left_pressed = False
-            self.left_clicked = False
-            self.left_released = False
-            self.middle_pressed = False
-            self.middle_clicked = False
-            self.middle_released = False
-            self.right_pressed = False
-            self.right_clicked = False
-            self.right_released = False
+            self.buttons = [
+                [False,False,False],
+                [False,False,False],
+                [False,False,False]
+            ]
 
         def update(self) -> None:
 
             # Reset mouse input values
-            self.left_clicked = False
-            self.left_released = False
-            self.middle_clicked = False
-            self.middle_released = False
-            self.right_clicked = False
-            self.right_released = False
+            self.buttons[0][0] = False
+            self.buttons[0][2] = False
+            self.buttons[1][0] = False
+            self.buttons[1][2] = False
+            self.buttons[2][0] = False
+            self.buttons[2][2] = False
 
             # Get mouse values
             self.position = [pygame.mouse.get_pos()[0],pygame.mouse.get_pos()[1]]
             mouse_pressed = pygame.mouse.get_pressed()
-            self.left_pressed = mouse_pressed[0]
-            self.middle_pressed = mouse_pressed[1]
-            self.right_pressed = mouse_pressed[2]
+            self.buttons[0][1] = mouse_pressed[0]
+            self.buttons[1][1] = mouse_pressed[1]
+            self.buttons[2][1] = mouse_pressed[2]
 
         def get_button(self,button:int) -> bool:
 
-            # Get mouse button 
-            mouse = [self.left_clicked,
-                self.middle_clicked,
-                self.right_clicked,
-                self.left_pressed,
-                self.middle_pressed,
-                self.right_pressed,
-                self.left_released,
-                self.middle_released,
-                self.right_released]
-            
-            return mouse[button]
+            # Get mouse button             
+            return self.buttons[button]
         
         def get_pos(self) -> list[int,int]:
 

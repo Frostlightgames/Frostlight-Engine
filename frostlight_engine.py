@@ -41,7 +41,7 @@ class Engine:
         self.version = 0.1
 
         # String variables go here
-        self.engine_version = "1.0.1"
+        self.engine_version = "1.1.0 [DEV]"
         self.game_state = "intro"
         self.game_version = game_version
         self.language = language
@@ -61,7 +61,10 @@ class Engine:
         pygame.event.set_allowed([pygame.QUIT,
                                   pygame.WINDOWMOVED, 
                                   pygame.VIDEORESIZE, 
-                                  pygame.KEYDOWN, 
+                                  pygame.KEYDOWN,
+                                  pygame.KEYUP,
+                                  pygame.MOUSEBUTTONDOWN,
+                                  pygame.MOUSEBUTTONUP, 
                                   pygame.JOYBUTTONUP, 
                                   pygame.JOYBUTTONDOWN, 
                                   pygame.JOYAXISMOTION, 
@@ -94,20 +97,10 @@ class Engine:
 
             # Mouse events
             elif event.type == pygame.MOUSEBUTTONDOWN:
-                if event.button == 1:
-                    self.input.mouse.left_clicked = True
-                elif event.button == 2:
-                    self.input.mouse.middle_clicked = True
-                elif event.button == 3:
-                    self.input.mouse.right_clicked = True
+                self.input.__handle_mouse_event__(event)
 
             elif event.type == pygame.MOUSEBUTTONUP:
-                if event.button == 1:
-                    self.input.mouse.left_released = True
-                elif event.button == 2:
-                    self.input.mouse.middle_released = True
-                elif event.button == 3:
-                    self.input.mouse.right_released = True
+                self.input.__handle_mouse_event__(event)
 
             # Joystick events
             elif event.type == pygame.JOYBUTTONDOWN:
