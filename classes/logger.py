@@ -9,25 +9,26 @@ class Logger:
         self.engine = engine
 
         # Setting starting variables
-        self.logpath = os.path.join("logs",f"{datetime.datetime.now().strftime('%d-%m-%y %H-%M-%S')}.log")
+        self.logpath = os.path.join("logs",f"{datetime.datetime.now().strftime('%d.%m.%y %H-%M-%S')}.log")
         self.last_logged_second = 0
         self.last_logged_message = ""
         self.repeat_log_times = 1
-        self.time_format = "%d-%m-%y %H:%M:%S:%f"
+        self.time_format = "%d.%m.%y %H:%M:%S:%f"
 
-        # Trying to create logfile
-        try:
+        if self.engine.logging:
+            # Trying to create logfile
+            try:
 
-            # Create empty file
-            if not os.path.exists(self.logpath) or delete_old_logs:
-                if not os.path.exists("logs"):
-                    os.mkdir("logs")
-                with open(self.logpath,"+w") as file:
-                    file.write("")
-        except Exception as e:
+                # Create empty file
+                if not os.path.exists(self.logpath) or delete_old_logs:
+                    if not os.path.exists("logs"):
+                        os.mkdir("logs")
+                    with open(self.logpath,"+w") as file:
+                        file.write("")
+            except Exception as e:
 
-            # Creating logfile failed, printing instead
-            print(f"[Engine {datetime.datetime.now().strftime(self.time_format)[:-4]}]: Could not create logfile ({e})")
+                # Creating logfile failed, printing instead
+                print(f"[Engine {datetime.datetime.now().strftime(self.time_format)[:-4]}]: Could not create logfile ({e})")
 
     # Different log variants
     def error(self,message:str):

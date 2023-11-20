@@ -10,8 +10,8 @@ from classes.constances import *
 
 class Engine:
     def __init__(self,
+                 catch_error:bool=True,
                  color_depth:int=16,
-                 debug:bool=True,
                  fps:int=0,
                  fullscreen:bool=False,
                  game_version:str="1.0",
@@ -33,7 +33,7 @@ class Engine:
             pygame.mixer.pre_init(44100,-16,2,512)
 
         # Boolean variables go here
-        self.debug = debug
+        self.catch_error = catch_error
         self.logging = logging
         self.run_game = True
         self.sounds = sounds
@@ -147,16 +147,8 @@ class Engine:
 
         # Starting game engine
         self.logger.info(f"Starting [Engine version {self.engine_version} | Game version {self.game_version}]")
-        if self.debug:
-            while self.run_game:
-                
-                # Main loop
-                self.get_events()
-                self.engine_update()
-                self.update()
-                self.draw()
-                self.engine_draw()
-        else:
+        if self.catch_error:
+            print(1)
             while self.run_game:
 
                 # Main loop
@@ -167,10 +159,19 @@ class Engine:
                     self.draw()
                     self.engine_draw()
                 except Exception as e:
-                    
+
                     # Error logging and catching
                     self.logger.error(e)
-
+        else:
+            while self.run_game:
+                
+                # Main loop
+                self.get_events()
+                self.engine_update()
+                self.update()
+                self.draw()
+                self.engine_draw()
+            
         # Ending game
         self.logger.info("Closed game")
 
