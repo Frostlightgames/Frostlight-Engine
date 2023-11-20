@@ -26,12 +26,12 @@ class Input:
         self.save_path = os.path.join("data","saves","input")
 
         self.registered_input = {
-            "accept":[[MOUSE_LEFTCLICK,CLICKED],[KEY_SPACE,CLICKED],[KEY_RETURN,CLICKED],[JOYSTICK_BUTTON_DOWN_CLICKED,CLICKED]],
-            "cancel":[[KEY_ESCAPE,CLICKED],[KEY_BACKSPACE,CLICKED],[JOYSTICK_BUTTON_RIGHT_CLICKED,CLICKED]],
-            "right":[[KEY_D,PRESSED],[KEY_L,PRESSED],[KEY_ARROW_RIGHT,PRESSED],[JOYSTICK_DPAD_RIGHT_PRESSED,PRESSED],[JOYSTICK_LEFT_STICK_HORIZONTAL,PRESSED]],
-            "left":[[KEY_A,PRESSED],[KEY_J,PRESSED],[KEY_ARROW_LEFT,PRESSED],[JOYSTICK_DPAD_LEFT_PRESSED,PRESSED],[JOYSTICK_LEFT_STICK_HORIZONTAL,PRESSED]],
-            "up":[[KEY_W,PRESSED],[KEY_I,PRESSED],[KEY_ARROW_UP,PRESSED],[JOYSTICK_DPAD_UP_PRESSED,PRESSED],[JOYSTICK_LEFT_STICK_VERTICAL,PRESSED]],
-            "down":[[KEY_S,PRESSED],[KEY_K,PRESSED],[KEY_ARROW_DOWN,PRESSED],[JOYSTICK_DPAD_DOWN_PRESSED,PRESSED],[JOYSTICK_LEFT_STICK_VERTICAL,PRESSED]],
+            "accept":[[MOUSE_LEFTCLICK,CLICKED],[KEY_SPACE,CLICKED],[KEY_RETURN,CLICKED],[JOYSTICK_BUTTON_DOWN,CLICKED]],
+            "cancel":[[KEY_ESCAPE,CLICKED],[KEY_BACKSPACE,CLICKED],[JOYSTICK_BUTTON_RIGHT,CLICKED]],
+            "right":[[KEY_D,PRESSED],[KEY_L,PRESSED],[KEY_ARROW_RIGHT,PRESSED],[JOYSTICK_DPAD_RIGHT,PRESSED],[JOYSTICK_LEFT_STICK_HORIZONTAL,PRESSED]],
+            "left":[[KEY_A,PRESSED],[KEY_J,PRESSED],[KEY_ARROW_LEFT,PRESSED],[JOYSTICK_DPAD_LEFT,PRESSED],[JOYSTICK_LEFT_STICK_HORIZONTAL,PRESSED]],
+            "up":[[KEY_W,PRESSED],[KEY_I,PRESSED],[KEY_ARROW_UP,PRESSED],[JOYSTICK_DPAD_UP,PRESSED],[JOYSTICK_LEFT_STICK_VERTICAL,PRESSED]],
+            "down":[[KEY_S,PRESSED],[KEY_K,PRESSED],[KEY_ARROW_DOWN,PRESSED],[JOYSTICK_DPAD_DOWN,PRESSED],[JOYSTICK_LEFT_STICK_VERTICAL,PRESSED]],
             "screenshot":[[KEY_P,CLICKED],[KEY_F6,CLICKED]]
         }
 
@@ -253,51 +253,23 @@ class Input:
             self.guid = joystick.get_guid()
             self.inputs = [
                 0, # JOYSTICK_BUTTON_DOWN CLICKED
-                0, # JOYSTICK_BUTTON_DOWN PRESSED
-                0, # JOYSTICK_BUTTON_DOWN RELEASED
                 0, # JOYSTICK_BUTTON_RIGHT CLICKED
-                0, # JOYSTICK_BUTTON_RIGHT PRESSED
-                0, # JOYSTICK_BUTTON_RIGHT RELEASED
                 0, # JOYSTICK_BUTTON_UP CLICKED
-                0, # JOYSTICK_BUTTON_UP PRESSED
-                0, # JOYSTICK_BUTTON_UP RELEASED
                 0, # JOYSTICK_BUTTON_LEFT CLICKED
-                0, # JOYSTICK_BUTTON_LEFT PRESSED
-                0, # JOYSTICK_BUTTON_LEFT RELEASED
                 0, # JOYSTICK_DPAD_DOWN CLICKED
-                0, # JOYSTICK_DPAD_DOWN PRESSED
-                0, # JOYSTICK_DPAD_DOWN RELEASED
                 0, # JOYSTICK_DPAD_RIGHT CLICKED
-                0, # JOYSTICK_DPAD_RIGHT PRESSED
-                0, # JOYSTICK_DPAD_RIGHT RELEASED
                 0, # JOYSTICK_DPAD_UP CLICKED
-                0, # JOYSTICK_DPAD_UP PRESSED
-                0, # JOYSTICK_DPAD_UP RELEASED
                 0, # JOYSTICK_DPAD_LEFT CLICKED
-                0, # JOYSTICK_DPAD_LEFT PRESSED
-                0, # JOYSTICK_DPAD_LEFT RELEASED
                 0.0, # JOYSTICK_RIGHT_STICK_VERTICAL 
                 0.0, # JOYSTICK_RIGHT_STICK_HORIZONTAL
                 0, # JOYSTICK_RIGHT_STICK_CLICKED
-                0, # JOYSTICK_RIGHT_STICK_PRESSED 
-                0, # JOYSTICK_RIGHT_STICK_RELEASED
                 0.0, # JOYSTICK_LEFT_STICK_VERTICAL 
                 0.0, # JOYSTICK_LEFT_STICK_HORIZONTAL
                 0, # JOYSTICK_LEFT_STICK_CLICKED
-                0, # JOYSTICK_LEFT_STICK_PRESSED 
-                0, # JOYSTICK_LEFT_STICK_RELEASED
                 0, # JOYSTICK_BUTTON_SPEC_1 CLICKED
-                0, # JOYSTICK_BUTTON_SPEC_1 PRESSED
-                0, # JOYSTICK_BUTTON_SPEC_1 RELEASED
                 0, # JOYSTICK_BUTTON_SPEC_2 CLICKED
-                0, # JOYSTICK_BUTTON_SPEC_2 PRESSED
-                0, # JOYSTICK_BUTTON_SPEC_2 RELEASED
                 0, # JOYSTICK_RIGHT_BUMPER_CLICKED
-                0, # JOYSTICK_RIGHT_BUMPER_PRESSED 
-                0, # JOYSTICK_RIGHT_BUMPER_PRESSED 
                 0, # JOYSTICK_LEFT_BUMPER_CLICKED
-                0, # JOYSTICK_LEFT_BUMPER_PRESSED
-                0, # JOYSTICK_LEFT_BUMPER_PRESSED
                 0.0, # JOYSTICK_TRIGGER_R2
                 0.0 # JOYSTICK_TRIGGER_L2
             ]
@@ -305,34 +277,20 @@ class Input:
         def reset(self) -> None:
 
             # Reset joystick button click and releas values
-            self.inputs[JOYSTICK_BUTTON_DOWN_CLICKED[0]] = 0
-            self.inputs[JOYSTICK_BUTTON_DOWN_RELEASED[0]] = 0
-            self.inputs[JOYSTICK_BUTTON_RIGHT_CLICKED[0]] = 0
-            self.inputs[JOYSTICK_BUTTON_RIGHT_RELEASED[0]] = 0
-            self.inputs[JOYSTICK_BUTTON_UP_CLICKED[0]] = 0
-            self.inputs[JOYSTICK_BUTTON_UP_RELEASED[0]] = 0
-            self.inputs[JOYSTICK_BUTTON_LEFT_CLICKED[0]] = 0
-            self.inputs[JOYSTICK_BUTTON_LEFT_RELEASED[0]] = 0
-            self.inputs[JOYSTICK_DPAD_DOWN_CLICKED[0]] = 0
-            self.inputs[JOYSTICK_DPAD_DOWN_RELEASED[0]] = 0
-            self.inputs[JOYSTICK_DPAD_RIGHT_CLICKED[0]] = 0
-            self.inputs[JOYSTICK_DPAD_RIGHT_RELEASED[0]] = 0
-            self.inputs[JOYSTICK_DPAD_UP_CLICKED[0]] = 0
-            self.inputs[JOYSTICK_DPAD_UP_RELEASED[0]] = 0
-            self.inputs[JOYSTICK_DPAD_LEFT_CLICKED[0]] = 0
-            self.inputs[JOYSTICK_DPAD_LEFT_RELEASED[0]] = 0
-            self.inputs[JOYSTICK_RIGHT_STICK_CLICKED[0]] = 0
-            self.inputs[JOYSTICK_RIGHT_STICK_RELEASED[0]] = 0
-            self.inputs[JOYSTICK_LEFT_STICK_CLICKED[0]] = 0
-            self.inputs[JOYSTICK_LEFT_STICK_RELEASED[0]] = 0
-            self.inputs[JOYSTICK_BUTTON_SPECIAL_1_CLICKED[0]] = 0
-            self.inputs[JOYSTICK_BUTTON_SPECIAL_1_RELEASED[0]] = 0
-            self.inputs[JOYSTICK_BUTTON_SPECIAL_2_CLICKED[0]] = 0
-            self.inputs[JOYSTICK_BUTTON_SPECIAL_2_RELEASED[0]] = 0
-            self.inputs[JOYSTICK_RIGHT_BUMPER_CLICKED[0]] = 0
-            self.inputs[JOYSTICK_RIGHT_BUMPER_RELEASED[0]] = 0
-            self.inputs[JOYSTICK_LEFT_BUMPER_CLICKED[0]] = 0
-            self.inputs[JOYSTICK_LEFT_BUMPER_RELEASED[0]] = 0
+            self.inputs[JOYSTICK_BUTTON_DOWN[0]] = 0
+            self.inputs[JOYSTICK_BUTTON_RIGHT[0]] = 0
+            self.inputs[JOYSTICK_BUTTON_UP[0]] = 0
+            self.inputs[JOYSTICK_BUTTON_LEFT[0]] = 0
+            self.inputs[JOYSTICK_DPAD_DOWN[0]] = 0
+            self.inputs[JOYSTICK_DPAD_RIGHT[0]] = 0
+            self.inputs[JOYSTICK_DPAD_UP[0]] = 0
+            self.inputs[JOYSTICK_DPAD_LEFT[0]] = 0
+            self.inputs[JOYSTICK_RIGHT_STICK[0]] = 0
+            self.inputs[JOYSTICK_LEFT_STICK[0]] = 0
+            self.inputs[JOYSTICK_BUTTON_SPECIAL_1[0]] = 0
+            self.inputs[JOYSTICK_BUTTON_SPECIAL_2[0]] = 0
+            self.inputs[JOYSTICK_RIGHT_BUMPER[0]] = 0
+            self.inputs[JOYSTICK_LEFT_BUMPER[0]] = 0
 
         def get_input(self,button:int) -> int|float:
 
