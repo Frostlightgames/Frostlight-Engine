@@ -11,10 +11,12 @@ from classes.constances import *
 class Engine:
     def __init__(self,
                  color_depth:int=16,
+                 debug:bool=True,
                  fps:int=0,
                  fullscreen:bool=False,
                  game_version:str="1.0",
                  language:str="en",
+                 logging:bool=True,
                  mouse_visible:bool=True,
                  nowindow:bool=False,
                  resizable:bool=True,
@@ -31,6 +33,8 @@ class Engine:
             pygame.mixer.pre_init(44100,-16,2,512)
 
         # Boolean variables go here
+        self.debug = debug
+        self.logging = logging
         self.run_game = True
         self.sounds = sounds
 
@@ -41,7 +45,7 @@ class Engine:
         self.version = 0.1
 
         # String variables go here
-        self.engine_version = "1.0.1"
+        self.engine_version = "1.1.0 [DEV]"
         self.game_state = "intro"
         self.game_version = game_version
         self.language = language
@@ -143,19 +147,29 @@ class Engine:
 
         # Starting game engine
         self.logger.info(f"Starting [Engine version {self.engine_version} | Game version {self.game_version}]")
-        while self.run_game:
-
-            # Main loop
-            try:
+        if self.debug:
+            while self.run_game:
+                
+                # Main loop
                 self.get_events()
                 self.engine_update()
                 self.update()
                 self.draw()
                 self.engine_draw()
-            except Exception as e:
-                
-                # Error logging and catching
-                self.logger.error(e)
+        else:
+            while self.run_game:
+
+                # Main loop
+                try:
+                    self.get_events()
+                    self.engine_update()
+                    self.update()
+                    self.draw()
+                    self.engine_draw()
+                except Exception as e:
+                    
+                    # Error logging and catching
+                    self.logger.error(e)
 
         # Ending game
         self.logger.info("Closed game")
