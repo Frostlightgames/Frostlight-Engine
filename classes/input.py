@@ -42,14 +42,15 @@ class Input:
                 if key[0][1] == KEYBOARD:
                     self.keys[key[0][0]] = [False,False,False]
 
-    def new(self,name:str,key:list[int,int],methode:int) -> bool:
+    def new(self,name:str,key:list[int,int],methode:int=1) -> bool:
 
         # Register/add new input
         try:
             if name not in self.registered_input:
                 self.registered_input[name] = [[key,methode]]
             else:
-                self.registered_input[name].append([key,methode])
+                if [key,methode] not in self.registered_input[name]:
+                    self.registered_input[name].append([key,methode])
 
             self.keys[key[0]] = [False,False,False]
             return True
@@ -101,32 +102,31 @@ class Input:
             if key[0][1] == KEYBOARD:
                 if self.keys[key[0][0]][key[1]]:
                     return 1
-                
+
             # Mouse values
             elif key[0][1] == MOUSE:
-                print(self.mouse.buttons)
                 if self.mouse.buttons[key[0][0]][key[1]]:
                     return 1
-                
+
             # Joystick values
             elif key[0][1] == JOYSTICK:
                 if controller_index == -1:
 
                     # Get value from not specified joystick
                     for i in range(len(self.joystick_devices)):
-                        input_value = self.joystick_devices[i].get_input(key[0][0])
-                        if input_value != 0 and input_value != 0.0:
+                        input_value = self.joystick_devices[i].get_input(key[0][0],key[1])
+                        if input_value != False and input_value != 0.0:
                             return input_value
                 else:
 
                     # Get value from specified joystick
                     if controller_index < len(self.joystick_devices):
-                        input_value = self.joystick_devices[controller_index].get_input(key[0][0])
+                        input_value = self.joystick_devices[controller_index].get_input(key[0][0],key[1])
                     else:
                         return 0
-                
+
                     # Filter joystick input value
-                    if input_value != 0 or input_value != 0.0:
+                    if input_value != False or input_value != 0.0:
                         return input_value
 
         return 0
@@ -134,14 +134,16 @@ class Input:
     def __update__(self) -> None:
 
         # Update all input devices
-        for key in self.reset_keys:
+        for key in self.reset_keys.copy():
             self.keys[key][0] = False
             self.keys[key][2] = False
+            self.reset_keys.remove(key)
 
         self.mouse.update()
 
-        for joystick in self.reset_joy:
+        for joystick in self.reset_joy.copy():
             joystick.reset()
+            self.reset_joy.remove(joystick)
 
     def __handle_key_event__(self,event:pygame.Event):
 
@@ -179,7 +181,7 @@ class Input:
         # Handel joystick button release event
         elif event.type == pygame.JOYBUTTONUP:
             button_index = event.button
-            self.joystick_devices[joy_index].inputs[JOYSTICK_BUTTON_MAP[joy_type][button_index][1][0]] = [False,False,True]
+            self.joystick_devices[joy_index].inputs[JOYSTICK_BUTTON_MAP[joy_type][button_index][0][0]] = [False,False,True]
             self.reset_joy.append(self.joystick_devices[joy_index])
             
         # Handel joystick axis movement event
@@ -349,7 +351,10 @@ class Input:
             self.inputs[JOYSTICK_LEFT_BUMPER[0]][0] = False
             self.inputs[JOYSTICK_LEFT_BUMPER[0]][2] = False
 
-        def get_input(self,button:int) -> int|float:
+        def get_input(self,button:int,methode:int) -> int|float:
 
             # Get joystick button value
-            return self.inputs[button]
+            if type(self.inputs[button]) == list:
+                return self.inputs[button][methode]
+            else:
+                return self.inputs[button]
