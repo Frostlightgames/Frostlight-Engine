@@ -153,8 +153,6 @@ class Engine:
                 
             #     # Error logging and catching
             #     self.logger.error(e)
-            #     # Error logging and catching
-            #     self.logger.error(e)
 
         # Ending game
         self.logger.info("Closed game")
