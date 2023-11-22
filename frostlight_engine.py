@@ -6,6 +6,7 @@ from classes.input import Input
 from classes.logger import Logger
 from classes.window import Window
 from classes.builder import Builder
+from classes.save import SaveManager
 from classes.constances import *
 
 class Engine:
@@ -54,6 +55,7 @@ class Engine:
         self.builder = Builder(self)
         self.logger = Logger(self)
         self.input = Input(self)
+        self.save_manager = SaveManager(self,os.path.join("data","saves","save"))
         self.window = Window(self,window_size,fullscreen,resizable,nowindow,window_centered,vsync,window_name,mouse_visible,color_depth)
 
         # Object processing go here
