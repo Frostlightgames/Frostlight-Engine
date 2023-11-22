@@ -92,9 +92,13 @@ class Engine:
 
             # Keyboard events
             elif event.type == pygame.KEYDOWN:
+                self.input.__handle_key_event__(event)
                 if event.key == pygame.K_F11:
                     self.window.toggle_fullscreen()
 
+            elif event.type == pygame.KEYUP:
+                self.input.__handle_key_event__(event)
+                
             # Mouse events
             elif event.type == pygame.MOUSEBUTTONDOWN:
                 self.input.__handle_mouse_event__(event)
@@ -138,17 +142,17 @@ class Engine:
         self.logger.info(f"Starting [Engine version {self.engine_version} | Game version {self.game_version}]")
         while self.run_game:
 
-            # Main loop
-            try:
+            # # Main loop
+            # try:
                 self.get_events()
                 self.engine_update()
                 self.update()
                 self.draw()
                 self.engine_draw()
-            except Exception as e:
+            # except Exception as e:
                 
-                # Error logging and catching
-                self.logger.error(e)
+            #     # Error logging and catching
+            #     self.logger.error(e)
 
         # Ending game
         self.logger.info("Closed game")

@@ -35,6 +35,12 @@ class Input:
             "screenshot":[[KEY_P,CLICKED],[KEY_F6,CLICKED]]
         }
 
+        # Setting default value for keys
+        for i in self.registered_input:
+            for key in self.registered_input[i]:
+                if key[0][1] == KEYBOARD:
+                    self.keys[key[0][0]] = [False,False,False]
+
     def new(self,name:str,key:list[int,int],methode:int) -> bool:
 
         # Register/add new input
@@ -43,9 +49,12 @@ class Input:
                 self.registered_input[name] = [[key,methode]]
             else:
                 self.registered_input[name].append([key,methode])
+
+            self.keys[key[0]] = [False,False,False]
             return True
         except:
             return False
+
         
     def remove(self,inputname:str) -> bool:
 
@@ -55,6 +64,32 @@ class Input:
             return True
         except:
             return False
+
+    def reset(self,name:str,controller_index:int=-1):
+
+        # Resets value of registered input to default
+        for key in self.registered_input[name]:
+            if key[0][1] == KEYBOARD:
+                self.keys[key[0][0]] = [False,False,False]
+                
+            # Mouse values
+            elif key[0][1] == MOUSE:
+                self.mouse.buttons[key[0][0]] = [False,False,False]
+                
+            # Joystick values
+            elif key[0][1] == JOYSTICK:
+                if controller_index == -1:
+
+                    # Resets value from all joysticks
+                    for i in range(len(self.joystick_devices)):
+                        self.joystick_devices[controller_index].inputs[key[0][0]] = [False,False,False]
+                else:
+
+                    # Resets value from specified joystick
+                    if controller_index < len(self.joystick_devices):
+                        self.joystick_devices[controller_index].inputs[key[0][0]] = [False,False,False]
+                    else:
+                        return 0
         
     def get(self, name:str,controller_index:int=-1) -> int|float:
 
@@ -68,7 +103,8 @@ class Input:
                 
             # Mouse values
             elif key[0][1] == MOUSE:
-                if self.mouse.get_button(key[0][0])[key[1]]:
+                print(self.mouse.buttons)
+                if self.mouse.buttons[key[0][0]][key[1]]:
                     return 1
                 
             # Joystick values
@@ -77,14 +113,14 @@ class Input:
 
                     # Get value from not specified joystick
                     for i in range(len(self.joystick_devices)):
-                        input_value = self.joystick_devices[controller_index].get_input(key[0])
+                        input_value = self.joystick_devices[i].get_input(key[0][0])
                         if input_value != 0 and input_value != 0.0:
                             return input_value
                 else:
 
                     # Get value from specified joystick
                     if controller_index < len(self.joystick_devices):
-                        input_value = self.joystick_devices[controller_index].get_input(key[0])
+                        input_value = self.joystick_devices[controller_index].get_input(key[0][0])
                     else:
                         return 0
                 
@@ -121,11 +157,11 @@ class Input:
     def __handle_mouse_event__(self,event:pygame.Event):
         # Handel joystick button down event
         if event.type == pygame.MOUSEBUTTONDOWN:
-            self.keys[event.button-1] = [True,True,False]
+            self.mouse.buttons[event.button-1] = [True,True,False]
 
         # Handel mouse button release event
         elif event.type == pygame.MOUSEBUTTONUP:
-            self.keys[event.button-1] = [False,False,True]
+            self.mouse.buttons[event.button-1] = [False,False,True]
 
     def __handle_joy_event__(self,event:pygame.Event):
 
@@ -183,6 +219,12 @@ class Input:
         try:
             with open(self.save_path,"r+") as f:
                 self.registered_input = json.load(f)
+
+                # Setting default value for keys
+                for i in self.registered_input:
+                    for key in self.registered_input[i]:
+                        if key[0][1] == KEYBOARD:
+                            self.keys[key[0][0]] = [False,False,False]
             return True
         except:
             return False
