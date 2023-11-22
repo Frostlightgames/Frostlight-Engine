@@ -44,8 +44,9 @@ class SaveManager():
         """
         self.path = path
     
-    def encrypt(self,data:dict) -> bool:
+    def __encrypt__(self,data:dict) -> bool:
         """
+        !Used for internal functionality!
         Encrypt the provided data using Fernet encryption.
 
         Args:
@@ -63,8 +64,9 @@ class SaveManager():
         except Exception as e:
             self.engine.logger.error(e)
     
-    def decrypt(self) -> bool|dict:
+    def __decrypt__(self) -> bool|dict:
         """
+        !Used for internal functionality!
         Decrypt the data in the file specified by the path using Fernet decryption.
 
         Returns:
@@ -94,12 +96,12 @@ class SaveManager():
         - bool: True if saving is successful, False otherwise.
         """
         try:
-            data = self.decrypt()
+            data = self.__decrypt__()
             if data != False:
                 data[key] = value
             else:
                 data = {}
-            self.encrypt(data)
+            self.__encrypt__(data)
             return True
         except Exception as e:
             self.engine.logger.error(e)
@@ -118,7 +120,7 @@ class SaveManager():
         """
         if os.path.exists(self.path):
             try:
-                data = self.decrypt()
+                data = self.__decrypt__()
                 if data != False:
                     return data[key]
             except Exception as e:
