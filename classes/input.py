@@ -20,6 +20,7 @@ class Input:
         # Joystick variables
         self.joystick_dead_zone = joystick_dead_zone
         self.joystick_devices = []
+        self.reset_joy = []
         
         # Input variables
 
@@ -139,7 +140,7 @@ class Input:
 
         self.mouse.update()
 
-        for joystick in self.joystick_devices:
+        for joystick in self.reset_joy:
             joystick.reset()
 
     def __handle_key_event__(self,event:pygame.Event):
@@ -172,15 +173,15 @@ class Input:
         # Handel joystick button click event
         if event.type == pygame.JOYBUTTONDOWN:
             button_index = event.button
-            self.joystick_devices[joy_index].inputs[JOYSTICK_BUTTON_MAP[joy_type][button_index][0][0]] = 1
-            self.joystick_devices[joy_index].inputs[JOYSTICK_BUTTON_MAP[joy_type][button_index][1][0]] = 1
+            self.joystick_devices[joy_index].inputs[JOYSTICK_BUTTON_MAP[joy_type][button_index][0][0]] = [True,True,False]
+            self.reset_joy.append(self.joystick_devices[joy_index])
 
         # Handel joystick button release event
         elif event.type == pygame.JOYBUTTONUP:
             button_index = event.button
-            self.joystick_devices[joy_index].inputs[JOYSTICK_BUTTON_MAP[joy_type][button_index][1][0]] = 0
-            self.joystick_devices[joy_index].inputs[JOYSTICK_BUTTON_MAP[joy_type][button_index][2][0]] = 1
-
+            self.joystick_devices[joy_index].inputs[JOYSTICK_BUTTON_MAP[joy_type][button_index][1][0]] = [False,False,True]
+            self.reset_joy.append(self.joystick_devices[joy_index])
+            
         # Handel joystick axis movement event
         elif event.type == pygame.JOYAXISMOTION:
             axis_index = event.axis
@@ -294,45 +295,59 @@ class Input:
             self.instance_id = joystick.get_instance_id()
             self.guid = joystick.get_guid()
             self.inputs = [
-                0, # JOYSTICK_BUTTON_DOWN CLICKED
-                0, # JOYSTICK_BUTTON_RIGHT CLICKED
-                0, # JOYSTICK_BUTTON_UP CLICKED
-                0, # JOYSTICK_BUTTON_LEFT CLICKED
-                0, # JOYSTICK_DPAD_DOWN CLICKED
-                0, # JOYSTICK_DPAD_RIGHT CLICKED
-                0, # JOYSTICK_DPAD_UP CLICKED
-                0, # JOYSTICK_DPAD_LEFT CLICKED
-                0.0, # JOYSTICK_RIGHT_STICK_VERTICAL 
-                0.0, # JOYSTICK_RIGHT_STICK_HORIZONTAL
-                0, # JOYSTICK_RIGHT_STICK_CLICKED
-                0.0, # JOYSTICK_LEFT_STICK_VERTICAL 
-                0.0, # JOYSTICK_LEFT_STICK_HORIZONTAL
-                0, # JOYSTICK_LEFT_STICK_CLICKED
-                0, # JOYSTICK_BUTTON_SPEC_1 CLICKED
-                0, # JOYSTICK_BUTTON_SPEC_2 CLICKED
-                0, # JOYSTICK_RIGHT_BUMPER_CLICKED
-                0, # JOYSTICK_LEFT_BUMPER_CLICKED
-                0.0, # JOYSTICK_TRIGGER_R2
-                0.0 # JOYSTICK_TRIGGER_L2
+                [False,False,False],    # JOYSTICK_BUTTON_DOWN
+                [False,False,False],    # JOYSTICK_BUTTON_RIGHT
+                [False,False,False],    # JOYSTICK_BUTTON_UP
+                [False,False,False],    # JOYSTICK_BUTTON_LEFT
+                [False,False,False],    # JOYSTICK_DPAD_DOWN
+                [False,False,False],    # JOYSTICK_DPAD_RIGHT
+                [False,False,False],    # JOYSTICK_DPAD_UP
+                [False,False,False],    # JOYSTICK_DPAD_LEFT
+                0.0,                    # JOYSTICK_RIGHT_STICK_VERTICAL 
+                0.0,                    # JOYSTICK_RIGHT_STICK_HORIZONTAL
+                [False,False,False],    # JOYSTICK_RIGHT_STICK_CLICKED
+                0.0,                    # JOYSTICK_LEFT_STICK_VERTICAL 
+                0.0,                    # JOYSTICK_LEFT_STICK_HORIZONTAL
+                [False,False,False],    # JOYSTICK_LEFT_STICK_CLICKED
+                [False,False,False],    # JOYSTICK_BUTTON_SPEC_1
+                [False,False,False],    # JOYSTICK_BUTTON_SPEC_2
+                [False,False,False],    # JOYSTICK_RIGHT_BUMPER
+                [False,False,False],    # JOYSTICK_LEFT_BUMPER
+                0.0,                    # JOYSTICK_TRIGGER_R2
+                0.0                     # JOYSTICK_TRIGGER_L2
             ]
 
         def reset(self) -> None:
 
             # Reset joystick button click and releas values
-            self.inputs[JOYSTICK_BUTTON_DOWN[0]] = 0
-            self.inputs[JOYSTICK_BUTTON_RIGHT[0]] = 0
-            self.inputs[JOYSTICK_BUTTON_UP[0]] = 0
-            self.inputs[JOYSTICK_BUTTON_LEFT[0]] = 0
-            self.inputs[JOYSTICK_DPAD_DOWN[0]] = 0
-            self.inputs[JOYSTICK_DPAD_RIGHT[0]] = 0
-            self.inputs[JOYSTICK_DPAD_UP[0]] = 0
-            self.inputs[JOYSTICK_DPAD_LEFT[0]] = 0
-            self.inputs[JOYSTICK_RIGHT_STICK[0]] = 0
-            self.inputs[JOYSTICK_LEFT_STICK[0]] = 0
-            self.inputs[JOYSTICK_BUTTON_SPECIAL_1[0]] = 0
-            self.inputs[JOYSTICK_BUTTON_SPECIAL_2[0]] = 0
-            self.inputs[JOYSTICK_RIGHT_BUMPER[0]] = 0
-            self.inputs[JOYSTICK_LEFT_BUMPER[0]] = 0
+            self.inputs[JOYSTICK_BUTTON_DOWN[0]][0] = False
+            self.inputs[JOYSTICK_BUTTON_DOWN[0]][2] = False
+            self.inputs[JOYSTICK_BUTTON_RIGHT[0]][0] = False
+            self.inputs[JOYSTICK_BUTTON_RIGHT[0]][2] = False
+            self.inputs[JOYSTICK_BUTTON_UP[0]][0] = False
+            self.inputs[JOYSTICK_BUTTON_UP[0]][2] = False
+            self.inputs[JOYSTICK_BUTTON_LEFT[0]][0] = False
+            self.inputs[JOYSTICK_BUTTON_LEFT[0]][2] = False
+            self.inputs[JOYSTICK_DPAD_DOWN[0]][0] = False
+            self.inputs[JOYSTICK_DPAD_DOWN[0]][2] = False
+            self.inputs[JOYSTICK_DPAD_RIGHT[0]][0] = False
+            self.inputs[JOYSTICK_DPAD_RIGHT[0]][2] = False
+            self.inputs[JOYSTICK_DPAD_UP[0]][0] = False
+            self.inputs[JOYSTICK_DPAD_UP[0]][2] = False
+            self.inputs[JOYSTICK_DPAD_LEFT[0]][0] = False
+            self.inputs[JOYSTICK_DPAD_LEFT[0]][2] = False
+            self.inputs[JOYSTICK_RIGHT_STICK[0]][0] = False
+            self.inputs[JOYSTICK_RIGHT_STICK[0]][2] = False
+            self.inputs[JOYSTICK_LEFT_STICK[0]][0] = False
+            self.inputs[JOYSTICK_LEFT_STICK[0]][2] = False
+            self.inputs[JOYSTICK_BUTTON_SPECIAL_1[0]][0] = False
+            self.inputs[JOYSTICK_BUTTON_SPECIAL_1[0]][2] = False
+            self.inputs[JOYSTICK_BUTTON_SPECIAL_2[0]][0] = False
+            self.inputs[JOYSTICK_BUTTON_SPECIAL_2[0]][2] = False
+            self.inputs[JOYSTICK_RIGHT_BUMPER[0]][0] = False
+            self.inputs[JOYSTICK_RIGHT_BUMPER[0]][2] = False
+            self.inputs[JOYSTICK_LEFT_BUMPER[0]][0] = False
+            self.inputs[JOYSTICK_LEFT_BUMPER[0]][2] = False
 
         def get_input(self,button:int) -> int|float:
 

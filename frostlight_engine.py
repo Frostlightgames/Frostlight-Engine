@@ -143,14 +143,16 @@ class Engine:
         while self.run_game:
 
             # # Main loop
-            # try:
+            # # try:
                 self.get_events()
                 self.engine_update()
                 self.update()
                 self.draw()
                 self.engine_draw()
-            # except Exception as e:
+            # # except Exception as e:
                 
+            #     # Error logging and catching
+            #     self.logger.error(e)
             #     # Error logging and catching
             #     self.logger.error(e)
 
