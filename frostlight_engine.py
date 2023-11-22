@@ -24,7 +24,7 @@ class Engine:
                  window_centered:bool=True,
                  window_name:str="New Game",
                  window_size:list=None):
-
+        
         # initialize all modules
         pygame.init()
         pygame.joystick.init()
