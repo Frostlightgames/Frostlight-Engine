@@ -132,6 +132,32 @@ class Input:
                         return input_value
 
         return 0
+    
+    def save(self):
+
+        # Save registered input in file
+        try:
+            with open(self.save_path,"w+") as f:
+                json.dump(self.registered_input,f)
+            return True
+        except:
+            return False
+
+    def load(self):
+
+        # Load registered input in file
+        try:
+            with open(self.save_path,"r+") as f:
+                self.registered_input = json.load(f)
+
+                # Setting default value for keys
+                for i in self.registered_input:
+                    for key in self.registered_input[i]:
+                        if key[0][1] == KEYBOARD:
+                            self.keys[key[0][0]] = [False,False,False]
+            return True
+        except:
+            return False
         
     def __update__(self) -> None:
 
@@ -207,32 +233,6 @@ class Input:
         self.joystick_devices = []
         for joystick in range(pygame.joystick.get_count()):
             self.joystick_devices.append(self.Joystick(pygame.joystick.Joystick(joystick)))
-
-    def save(self):
-
-        # Save registered input in file
-        try:
-            with open(self.save_path,"w+") as f:
-                json.dump(self.registered_input,f)
-            return True
-        except:
-            return False
-
-    def load(self):
-
-        # Load registered input in file
-        try:
-            with open(self.save_path,"r+") as f:
-                self.registered_input = json.load(f)
-
-                # Setting default value for keys
-                for i in self.registered_input:
-                    for key in self.registered_input[i]:
-                        if key[0][1] == KEYBOARD:
-                            self.keys[key[0][0]] = [False,False,False]
-            return True
-        except:
-            return False
 
     class Mouse:
         def __init__(self) -> None:
