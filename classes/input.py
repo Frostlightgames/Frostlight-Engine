@@ -51,6 +51,8 @@ class Input:
             else:
                 if [key,methode] not in self.registered_input[name]:
                     self.registered_input[name].append([key,methode])
+                else:
+                    return False
 
             self.keys[key[0]] = [False,False,False]
             return True
