@@ -7,6 +7,7 @@ from classes.logger import Logger
 from classes.window import Window
 from classes.builder import Builder
 from classes.constances import *
+from nodes.playernode import *
 
 class Engine:
     def __init__(self,
