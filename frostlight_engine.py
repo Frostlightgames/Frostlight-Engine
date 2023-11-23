@@ -142,17 +142,17 @@ class Engine:
         self.logger.info(f"Starting [Engine version {self.engine_version} | Game version {self.game_version}]")
         while self.run_game:
 
-            # # Main loop
-            # # try:
+            # Main loop
+            try:
                 self.get_events()
                 self.engine_update()
                 self.update()
                 self.draw()
                 self.engine_draw()
-            # # except Exception as e:
+            except Exception as e:
                 
-            #     # Error logging and catching
-            #     self.logger.error(e)
+                # Error logging and catching
+                self.logger.error(e)
 
         # Ending game
         self.logger.info("Closed game")
