@@ -89,7 +89,7 @@ class PlayerNodePlatformer(PlayerNode):
 
         if self.is_jumping:
             self.vel.y = -self.jump_strength
-            self.remaining_jump_height -= abs(self.vel.y) * self.engine.delta_time  # Reduziere die verbleibende Sprunghöhe
+            self.remaining_jump_height -= abs(self.vel.y) * self.engine.delta_time
             if not self.jump_pressed or self.remaining_jump_height <= 0:
                 self.is_jumping = False
 
@@ -104,7 +104,7 @@ class PlayerNodePlatformer(PlayerNode):
         if self.vel.y != 0:
             self.on_ground = False
 
-        # if self.pos.y + self.sprite.get_height() >= self.ground:  # Adjust with player's height
+        # if self.pos.y + self.sprite.get_height() >= self.ground:
         #     self.pos.y = self.ground - self.sprite.get_height()
         #     self.vel.y = 0
         #     self.on_ground = True
