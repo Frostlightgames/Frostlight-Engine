@@ -69,7 +69,7 @@ class PlayerNodePlatformer(PlayerNode):
         self.coyote_time = (self.coyote_time + self.engine.delta_time) * int(not self.on_ground)
 
         if self.engine.input.get(self.jump_input):
-            if (self.on_ground or self.coyote_time < self.coyote_time_duration or self.available_jumps > 0) and not self.is_jumping and (not self.jumping_phase or self.available_jumps > 0):
+            if (self.on_ground or self.coyote_time < self.coyote_time_duration or self.available_jumps > 0) and not self.is_jumping and (not self.jumping_phase or (self.available_jumps > 0 and not self.jump_pressed)):
                 self.is_jumping = True
                 self.jumping_phase = True
                 self.jump_pressed = True
