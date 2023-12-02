@@ -6,7 +6,6 @@ from classes.input import Input
 from classes.logger import Logger
 from classes.window import Window
 from classes.builder import Builder
-from classes.constances import *
 
 class Engine:
     def __init__(self,
@@ -72,10 +71,11 @@ class Engine:
                                   pygame.JOYDEVICEADDED, 
                                   pygame.JOYDEVICEREMOVED])
 
-    def get_events(self):
+    def _get_events(self):
         self.clock.tick(self.fps)
         self.input.__update__()
         for event in pygame.event.get():
+            print(event)
             if event.type == pygame.QUIT:
                 self.quit()
 
@@ -125,13 +125,13 @@ class Engine:
             elif event.type == pygame.JOYDEVICEREMOVED:
                 self.input.__init_joysticks__()
 
-    def engine_update(self):
+    def _engine_update(self):
 
         # Update that runs before normal update
         self.delta_time = time.time()-self.last_time
         self.last_time = time.time()
 
-    def engine_draw(self):
+    def _engine_draw(self):
 
         # Draw that runs after normal draw
         pygame.display.update()
@@ -144,11 +144,11 @@ class Engine:
 
             # Main loop
             try:
-                self.get_events()
-                self.engine_update()
+                self._get_events()
+                self._engine_update()
                 self.update()
                 self.draw()
-                self.engine_draw()
+                self._engine_draw()
             except Exception as e:
                 
                 # Error logging and catching

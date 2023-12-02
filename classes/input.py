@@ -1,7 +1,328 @@
 import os
 import json
 import pygame
-from classes.constances import *
+
+# Input types
+_KEYBOARD = 0
+_MOUSE = 1
+_JOYSTICK = 2
+
+# Input method
+CLICKED = 0
+PRESSED = 1
+RELEASE = 2
+
+# Keyboard input index
+KEY_A = [pygame.K_a,_KEYBOARD]
+KEY_B = [pygame.K_b,_KEYBOARD]
+KEY_C = [pygame.K_c,_KEYBOARD]
+KEY_D = [pygame.K_d,_KEYBOARD]
+KEY_E = [pygame.K_e,_KEYBOARD]
+KEY_F = [pygame.K_f,_KEYBOARD]
+KEY_G = [pygame.K_g,_KEYBOARD]
+KEY_H = [pygame.K_h,_KEYBOARD]
+KEY_I = [pygame.K_i,_KEYBOARD]
+KEY_J = [pygame.K_j,_KEYBOARD]
+KEY_K = [pygame.K_k,_KEYBOARD]
+KEY_L = [pygame.K_l,_KEYBOARD]
+KEY_M = [pygame.K_m,_KEYBOARD]
+KEY_N = [pygame.K_n,_KEYBOARD]
+KEY_O = [pygame.K_o,_KEYBOARD]
+KEY_P = [pygame.K_p,_KEYBOARD]
+KEY_Q = [pygame.K_q,_KEYBOARD]
+KEY_R = [pygame.K_r,_KEYBOARD]
+KEY_S = [pygame.K_s,_KEYBOARD]
+KEY_T = [pygame.K_t,_KEYBOARD]
+KEY_U = [pygame.K_u,_KEYBOARD]
+KEY_V = [pygame.K_v,_KEYBOARD]
+KEY_W = [pygame.K_w,_KEYBOARD]
+KEY_X = [pygame.K_x,_KEYBOARD]
+KEY_Y = [pygame.K_y,_KEYBOARD]
+KEY_Z = [pygame.K_z,_KEYBOARD]
+KEY_F1 = [pygame.K_F1,_KEYBOARD]
+KEY_F2 = [pygame.K_F2,_KEYBOARD]
+KEY_F3 = [pygame.K_F3,_KEYBOARD]
+KEY_F4 = [pygame.K_F4,_KEYBOARD]
+KEY_F5 = [pygame.K_F5,_KEYBOARD]
+KEY_F6 = [pygame.K_F6,_KEYBOARD]
+KEY_F7 = [pygame.K_F7,_KEYBOARD]
+KEY_F8 = [pygame.K_F8,_KEYBOARD]
+KEY_F9 = [pygame.K_F9,_KEYBOARD]
+KEY_F10 = [pygame.K_F10,_KEYBOARD]
+KEY_F11 = [pygame.K_F11,_KEYBOARD]
+KEY_F12 = [pygame.K_F12,_KEYBOARD]
+KEY_ARROW_LEFT = [pygame.K_LEFT,_KEYBOARD]
+KEY_ARROW_RIGHT = [pygame.K_RIGHT,_KEYBOARD]
+KEY_ARROW_UP = [pygame.K_UP,_KEYBOARD]
+KEY_ARROW_DOWN = [pygame.K_DOWN,_KEYBOARD]
+KEY_RETURN = [pygame.K_RETURN,_KEYBOARD]
+KEY_SPACE = [pygame.K_SPACE,_KEYBOARD]
+KEY_ESCAPE = [pygame.K_ESCAPE,_KEYBOARD]
+KEY_BACKSPACE = [pygame.K_BACKSPACE,_KEYBOARD]
+
+# Mouse input index
+MOUSE_LEFTCLICK = [0,_MOUSE]
+MOUSE_MIDDLECLICK = [1,_MOUSE]
+MOUSE_RIGHTCLICK = [2,_MOUSE]
+
+# Joystick input index
+JOYSTICK_BUTTON_DOWN = [0,_JOYSTICK]
+JOYSTICK_BUTTON_RIGHT = [1,_JOYSTICK]
+JOYSTICK_BUTTON_UP = [2,_JOYSTICK]
+JOYSTICK_BUTTON_LEFT = [3,_JOYSTICK]
+JOYSTICK_DPAD_DOWN = [4,_JOYSTICK]
+JOYSTICK_DPAD_RIGHT = [5,_JOYSTICK]
+JOYSTICK_DPAD_UP = [6,_JOYSTICK]
+JOYSTICK_DPAD_LEFT = [7,_JOYSTICK]
+JOYSTICK_RIGHT_STICK_VERTICAL = [8,_JOYSTICK]
+JOYSTICK_RIGHT_STICK_HORIZONTAL = [9,_JOYSTICK]
+JOYSTICK_RIGHT_STICK = [10,_JOYSTICK]
+JOYSTICK_LEFT_STICK_VERTICAL = [11,_JOYSTICK]
+JOYSTICK_LEFT_STICK_HORIZONTAL = [12,_JOYSTICK]
+JOYSTICK_LEFT_STICK = [13,_JOYSTICK]
+JOYSTICK_BUTTON_SPECIAL_1 = [14,_JOYSTICK]
+JOYSTICK_BUTTON_SPECIAL_2 = [15,_JOYSTICK]
+JOYSTICK_RIGHT_BUMPER = [16,_JOYSTICK]
+JOYSTICK_LEFT_BUMPER = [17,_JOYSTICK]
+JOYSTICK_TRIGGER_R2 = [18,_JOYSTICK]
+JOYSTICK_TRIGGER_L2 = [19,_JOYSTICK]
+
+# Joystick types
+_XBOX_360_CONTROLLER = 0
+_PLAYSTATION_4_CONTROLLER = 1
+_PLAYSTATION_5_CONTROLLER = 2
+_NINTENDO_SWITCH_PRO_CONTROLLER = 3
+_NINTENDO_SWITCH_JOYCON_CONTROLLER_L = 4
+_NINTENDO_SWITCH_JOYCON_CONTROLLER_R = 5
+_NINTENDO_SWITCH_JOYCON_CONTROLLER_L_R = 6
+
+# Joystick button maps
+_JOYSTICK_XBOX_360_BUTTON_MAP = [
+    
+    [JOYSTICK_BUTTON_DOWN],         # A BUTTON
+    [JOYSTICK_BUTTON_RIGHT],        # B BUTTON
+    [JOYSTICK_BUTTON_LEFT],         # X BUTTON
+    [JOYSTICK_BUTTON_UP],           # Y BUTTON
+    [JOYSTICK_LEFT_BUMPER],         # LEFT BUMPER
+    [JOYSTICK_RIGHT_BUMPER],        # RIGHT BUMPER
+    [JOYSTICK_BUTTON_SPECIAL_1],    # BACK BUTTON 
+    [JOYSTICK_BUTTON_SPECIAL_2],    # START BUTTON
+    [JOYSTICK_LEFT_STICK],          # LEFT STICK
+    [JOYSTICK_RIGHT_STICK],         # RIGHT STICK
+    [JOYSTICK_BUTTON_SPECIAL_1],    # PS BUTTON
+]
+
+_JOYSTICK_PLAYSTATION_4_BUTTON_MAP = [
+    [JOYSTICK_BUTTON_DOWN],         # CROSS BUTTON
+    [JOYSTICK_BUTTON_RIGHT],        # CIRCLE BUTTON
+    [JOYSTICK_BUTTON_UP],           # TRIANGLE BUTTON
+    [JOYSTICK_BUTTON_LEFT],         # SQUARE BUTTON
+    [JOYSTICK_BUTTON_SPECIAL_1],    # SHARE BUTTON  
+    [JOYSTICK_BUTTON_SPECIAL_1],    # PS BUTTON
+    [JOYSTICK_BUTTON_SPECIAL_2],    # OPTIONS BUTTON
+    [JOYSTICK_LEFT_STICK],          # LEFT STICK
+    [JOYSTICK_RIGHT_STICK],         # RIGHT STICK
+    [JOYSTICK_LEFT_BUMPER],         # LEFT BUMPER
+    [JOYSTICK_RIGHT_BUMPER],        # RIGHT BUMPER
+    [JOYSTICK_DPAD_UP],             # DPAD UP
+    [JOYSTICK_DPAD_DOWN],           # DPAD DOWN
+    [JOYSTICK_DPAD_LEFT],           # DPAD LEFT
+    [JOYSTICK_DPAD_RIGHT],          # DPAD RIGHT
+    [JOYSTICK_BUTTON_SPECIAL_2],    # TOUCH PAD
+]
+
+_JOYSTICK_PLAYSTATION_5_BUTTON_MAP = [
+    [JOYSTICK_BUTTON_DOWN],         # CROSS BUTTON
+    [JOYSTICK_BUTTON_RIGHT],        # CIRCLE BUTTON
+    [JOYSTICK_BUTTON_UP],           # TRIANGLE BUTTON
+    [JOYSTICK_BUTTON_LEFT],         # SQUARE BUTTON
+    [JOYSTICK_BUTTON_SPECIAL_1],    # SHARE BUTTON  
+    [JOYSTICK_BUTTON_SPECIAL_1],    # PS BUTTON
+    [JOYSTICK_BUTTON_SPECIAL_2],    # OPTIONS BUTTON
+    [JOYSTICK_LEFT_STICK],          # LEFT STICK
+    [JOYSTICK_RIGHT_STICK],         # RIGHT STICK
+    [JOYSTICK_LEFT_BUMPER],         # LEFT BUMPER
+    [JOYSTICK_RIGHT_BUMPER],        # RIGHT BUMPER
+    [JOYSTICK_DPAD_UP],             # DPAD UP
+    [JOYSTICK_DPAD_DOWN],           # DPAD DOWN
+    [JOYSTICK_DPAD_LEFT],           # DPAD LEFT
+    [JOYSTICK_DPAD_RIGHT],          # DPAD RIGHT
+    [JOYSTICK_BUTTON_SPECIAL_2],    # TOUCH PAD
+]
+
+_JOYSTICK_NINTENDO_SWITCH_PRO_CONTROLLER_BUTTON_MAP = [
+    [JOYSTICK_BUTTON_RIGHT],        # A BUTTON
+    [JOYSTICK_BUTTON_DOWN],         # B BUTTON
+    [JOYSTICK_BUTTON_UP],           # X BUTTON
+    [JOYSTICK_BUTTON_LEFT],         # Y BUTTON
+    [JOYSTICK_BUTTON_SPECIAL_1],    # - BUTTON  
+    [JOYSTICK_BUTTON_SPECIAL_1],    # HOME BUTTON
+    [JOYSTICK_BUTTON_SPECIAL_2],    # + BUTTON
+    [JOYSTICK_LEFT_STICK],          # LEFT STICK
+    [JOYSTICK_RIGHT_STICK],         # RIGHT STICK
+    [JOYSTICK_LEFT_BUMPER],         # LEFT BUMPER
+    [JOYSTICK_RIGHT_BUMPER],        # RIGHT BUMPER
+    [JOYSTICK_DPAD_UP],             # DPAD UP
+    [JOYSTICK_DPAD_DOWN],           # DPAD DOWN
+    [JOYSTICK_DPAD_LEFT],           # DPAD LEFT
+    [JOYSTICK_DPAD_RIGHT],          # DPAD RIGHT
+    [JOYSTICK_BUTTON_SPECIAL_2],    # CAPTURE BUTTON
+]
+
+_JOYSTICK_NINTENDO_SWITCH_JOYCON_CONTROLLER_L_BUTTON_MAP = [
+    [JOYSTICK_BUTTON_RIGHT],        # DPAD RIGHT
+    [JOYSTICK_BUTTON_DOWN],         # DPAD DOWN
+    [JOYSTICK_BUTTON_UP],           # DPAD UP
+    [JOYSTICK_BUTTON_LEFT],         # DPAD LEFT
+    [None],
+    [JOYSTICK_BUTTON_SPECIAL_2],    # CAPTURE BUTTON
+    [JOYSTICK_BUTTON_SPECIAL_1],    # - BUTTON
+    [JOYSTICK_LEFT_STICK],          # LEFT STICK
+    [None],
+    [JOYSTICK_LEFT_BUMPER],         # SL
+    [JOYSTICK_RIGHT_BUMPER],        # SR
+    [None],
+    [None],
+    [None],
+    [None],
+    [None],
+    [None],
+    [JOYSTICK_TRIGGER_L2],          # L 
+    [None],
+    [JOYSTICK_TRIGGER_L2],          # ZL
+]
+
+_JOYSTICK_NINTENDO_SWITCH_JOYCON_CONTROLLER_R_BUTTON_MAP = [
+    [JOYSTICK_BUTTON_UP],           # X BUTTON
+    [JOYSTICK_BUTTON_RIGHT],        # A BUTTON
+    [JOYSTICK_BUTTON_LEFT],         # Y BUTTON
+    [JOYSTICK_BUTTON_DOWN],         # B BUTTON
+    [None],
+    [JOYSTICK_BUTTON_SPECIAL_1],    # HOME BUTTON
+    [JOYSTICK_BUTTON_SPECIAL_2],    # + BUTTON
+    [JOYSTICK_RIGHT_STICK],         # RIGHT STICK
+    [None],
+    [JOYSTICK_LEFT_BUMPER],         # SL
+    [JOYSTICK_RIGHT_BUMPER],        # SR
+    [None],
+    [None],
+    [None],
+    [None],
+    [None],
+    [JOYSTICK_TRIGGER_R2],          # R
+    [None],
+    [JOYSTICK_TRIGGER_R2],          # ZR
+    [None],
+]
+
+_JOYSTICK_NINTENDO_SWITCH_JOYCON_CONTROLLER_L_R_BUTTON_MAP = [
+    [JOYSTICK_BUTTON_RIGHT],        # A BUTTON
+    [JOYSTICK_BUTTON_DOWN],         # B BUTTON
+    [JOYSTICK_BUTTON_UP],           # X BUTTON
+    [JOYSTICK_BUTTON_LEFT],         # Y BUTTON
+    [JOYSTICK_BUTTON_SPECIAL_1],    # - BUTTON  
+    [JOYSTICK_BUTTON_SPECIAL_1],    # HOME BUTTON
+    [JOYSTICK_BUTTON_SPECIAL_2],    # + BUTTON
+    [JOYSTICK_LEFT_STICK],          # LEFT STICK
+    [JOYSTICK_RIGHT_STICK],         # RIGHT STICK
+    [JOYSTICK_LEFT_BUMPER],         # LEFT BUMPER
+    [JOYSTICK_RIGHT_BUMPER],        # RIGHT BUMPER
+    [JOYSTICK_DPAD_UP],             # DPAD UP
+    [JOYSTICK_DPAD_DOWN],           # DPAD DOWN
+    [JOYSTICK_DPAD_LEFT],           # DPAD LEFT
+    [JOYSTICK_DPAD_RIGHT],          # DPAD RIGHT
+    [JOYSTICK_BUTTON_SPECIAL_2],    # CAPTURE BUTTON
+]
+
+_JOYSTICK_BUTTON_MAP = [
+    _JOYSTICK_XBOX_360_BUTTON_MAP,
+    _JOYSTICK_PLAYSTATION_4_BUTTON_MAP,
+    _JOYSTICK_PLAYSTATION_5_BUTTON_MAP,
+    _JOYSTICK_NINTENDO_SWITCH_PRO_CONTROLLER_BUTTON_MAP,
+    _JOYSTICK_NINTENDO_SWITCH_JOYCON_CONTROLLER_L_BUTTON_MAP,
+    _JOYSTICK_NINTENDO_SWITCH_JOYCON_CONTROLLER_R_BUTTON_MAP,
+    _JOYSTICK_NINTENDO_SWITCH_JOYCON_CONTROLLER_L_R_BUTTON_MAP,
+]
+
+# Joystick axis map
+_JOYSTICK_XBOX_360_AXIS_MAP = [
+    JOYSTICK_LEFT_STICK_HORIZONTAL,
+    JOYSTICK_LEFT_STICK_VERTICAL,
+    JOYSTICK_TRIGGER_L2,
+    JOYSTICK_RIGHT_STICK_HORIZONTAL,
+    JOYSTICK_RIGHT_STICK_VERTICAL,
+    JOYSTICK_TRIGGER_R2,
+]
+
+_JOYSTICK_PLAYSTATION_4_AXIS_MAP = [
+    JOYSTICK_LEFT_STICK_HORIZONTAL,
+    JOYSTICK_LEFT_STICK_VERTICAL,
+    JOYSTICK_RIGHT_STICK_HORIZONTAL,
+    JOYSTICK_RIGHT_STICK_VERTICAL,
+    JOYSTICK_TRIGGER_L2,
+    JOYSTICK_TRIGGER_R2,
+]
+
+_JOYSTICK_PLAYSTATION_5_AXIS_MAP = [
+    JOYSTICK_LEFT_STICK_HORIZONTAL,
+    JOYSTICK_LEFT_STICK_VERTICAL,
+    JOYSTICK_RIGHT_STICK_HORIZONTAL,
+    JOYSTICK_RIGHT_STICK_VERTICAL,
+    JOYSTICK_TRIGGER_L2,
+    JOYSTICK_TRIGGER_R2,
+]
+
+_JOYSTICK_NINTENDO_SWITCH_PRO_CONTROLLER_AXIS_MAP = [
+    JOYSTICK_LEFT_STICK_HORIZONTAL,
+    JOYSTICK_LEFT_STICK_VERTICAL,
+    JOYSTICK_RIGHT_STICK_HORIZONTAL,
+    JOYSTICK_RIGHT_STICK_VERTICAL,
+    JOYSTICK_TRIGGER_L2,
+    JOYSTICK_TRIGGER_R2,
+]
+
+_JOYSTICK_NINTENDO_SWITCH_JOYCON_CONTROLLER_L_AXIS_MAP = [
+    JOYSTICK_LEFT_STICK_VERTICAL,
+    JOYSTICK_LEFT_STICK_HORIZONTAL,
+]
+
+_JOYSTICK_NINTENDO_SWITCH_JOYCON_CONTROLLER_R_AXIS_MAP = [
+    JOYSTICK_RIGHT_STICK_VERTICAL,
+    JOYSTICK_RIGHT_STICK_HORIZONTAL,
+]
+
+_JOYSTICK_NINTENDO_SWITCH_JOYCON_CONTROLLER_L_R_AXIS_MAP = [
+    JOYSTICK_LEFT_STICK_HORIZONTAL,
+    JOYSTICK_LEFT_STICK_VERTICAL,
+    JOYSTICK_RIGHT_STICK_HORIZONTAL,
+    JOYSTICK_RIGHT_STICK_VERTICAL,
+]
+
+_JOYSTICK_AXIS_MAP = [
+    _JOYSTICK_XBOX_360_AXIS_MAP,
+    _JOYSTICK_PLAYSTATION_4_AXIS_MAP,
+    _JOYSTICK_PLAYSTATION_5_AXIS_MAP,
+    _JOYSTICK_NINTENDO_SWITCH_PRO_CONTROLLER_AXIS_MAP,
+    _JOYSTICK_NINTENDO_SWITCH_JOYCON_CONTROLLER_L_AXIS_MAP,
+    _JOYSTICK_NINTENDO_SWITCH_JOYCON_CONTROLLER_R_AXIS_MAP,
+    _JOYSTICK_NINTENDO_SWITCH_JOYCON_CONTROLLER_L_R_AXIS_MAP,
+]
+
+# Joystick hat map
+_JOYSTICK_XBOX_360_HAT_MAP = [
+    [JOYSTICK_DPAD_DOWN,JOYSTICK_DPAD_UP],
+    [JOYSTICK_DPAD_LEFT,JOYSTICK_DPAD_RIGHT],
+]
+
+_JOYSTICK_HAT_MAP = [
+    _JOYSTICK_XBOX_360_HAT_MAP,
+    None,
+    None,
+    None,
+    None,
+    None,
+    None,
+]
 
 class Input:
     def __init__(self,engine,joystick_dead_zone:int=0.15) -> None:
@@ -39,7 +360,7 @@ class Input:
         # Setting default value for keys
         for i in self.registered_input:
             for key in self.registered_input[i]:
-                if key[0][1] == KEYBOARD:
+                if key[0][1] == _KEYBOARD:
                     self.keys[key[0][0]] = [False,False,False]
 
     def new(self,name:str,key:list[int,int],methode:int=1) -> bool:
@@ -73,15 +394,15 @@ class Input:
 
         # Resets value of registered input to default
         for key in self.registered_input[name]:
-            if key[0][1] == KEYBOARD:
+            if key[0][1] == _KEYBOARD:
                 self.keys[key[0][0]] = [False,False,False]
                 
             # Mouse values
-            elif key[0][1] == MOUSE:
+            elif key[0][1] == _MOUSE:
                 self.mouse.buttons[key[0][0]] = [False,False,False]
                 
             # Joystick values
-            elif key[0][1] == JOYSTICK:
+            elif key[0][1] == _JOYSTICK:
                 if controller_index == -1:
 
                     # Resets value from all joysticks
@@ -101,17 +422,17 @@ class Input:
         for key in self.registered_input[name]:
 
             # Keyboard values
-            if key[0][1] == KEYBOARD:
+            if key[0][1] == _KEYBOARD:
                 if self.keys[key[0][0]][key[1]]:
                     return 1
 
             # Mouse values
-            elif key[0][1] == MOUSE:
+            elif key[0][1] == _MOUSE:
                 if self.mouse.buttons[key[0][0]][key[1]]:
                     return 1
 
             # Joystick values
-            elif key[0][1] == JOYSTICK:
+            elif key[0][1] == _JOYSTICK:
                 if controller_index == -1:
 
                     # Get value from not specified joystick
@@ -153,7 +474,7 @@ class Input:
                 # Setting default value for keys
                 for i in self.registered_input:
                     for key in self.registered_input[i]:
-                        if key[0][1] == KEYBOARD:
+                        if key[0][1] == _KEYBOARD:
                             self.keys[key[0][0]] = [False,False,False]
             return True
         except:
@@ -203,13 +524,13 @@ class Input:
         # Handel joystick button click event
         if event.type == pygame.JOYBUTTONDOWN:
             button_index = event.button
-            self.joystick_devices[joy_index].inputs[JOYSTICK_BUTTON_MAP[joy_type][button_index][0][0]] = [True,True,False]
+            self.joystick_devices[joy_index].inputs[_JOYSTICK_BUTTON_MAP[joy_type][button_index][0][0]] = [True,True,False]
             self.reset_joy.append(self.joystick_devices[joy_index])
 
         # Handel joystick button release event
         elif event.type == pygame.JOYBUTTONUP:
             button_index = event.button
-            self.joystick_devices[joy_index].inputs[JOYSTICK_BUTTON_MAP[joy_type][button_index][0][0]] = [False,False,True]
+            self.joystick_devices[joy_index].inputs[_JOYSTICK_BUTTON_MAP[joy_type][button_index][0][0]] = [False,False,True]
             self.reset_joy.append(self.joystick_devices[joy_index])
             
         # Handel joystick axis movement event
@@ -220,7 +541,7 @@ class Input:
             # Detect deadzone
             if abs(event.value) > self.joystick_dead_zone:
                 value = max(min(event.value,1.0),-1.0)
-            self.joystick_devices[joy_index].inputs[JOYSTICK_AXIS_MAP[joy_type][axis_index][0]] = value
+            self.joystick_devices[joy_index].inputs[_JOYSTICK_AXIS_MAP[joy_type][axis_index][0]] = value
 
         elif event.type == pygame.JOYHATMOTION:
 
@@ -279,21 +600,21 @@ class Input:
             self.joystick = joystick
             self.name = joystick.get_name()
             if self.name == "Xbox 360 Controller":
-                self.type = XBOX_360_CONTROLLER
+                self.type = _XBOX_360_CONTROLLER
             elif self.name == "PS4 Controller":
-                self.type = PLAYSTATION_4_CONTROLLER
+                self.type = _PLAYSTATION_4_CONTROLLER
             elif self.name == "Sony Interactive Entertainment Wireless Controller":
-                self.type = PLAYSTATION_5_CONTROLLER
+                self.type = _PLAYSTATION_5_CONTROLLER
             elif self.name == "Nintendo Switch Pro Controller":
-                self.type = NINTENDO_SWITCH_PRO_CONTROLLER
+                self.type = _NINTENDO_SWITCH_PRO_CONTROLLER
             elif self.name == "Nintendo Switch Joy-Con (L)":
-                self.type = NINTENDO_SWITCH_JOYCON_CONTROLLER_L
+                self.type = _NINTENDO_SWITCH_JOYCON_CONTROLLER_L
             elif self.name == "Nintendo Switch Joy-Con (R)":
-                self.type = NINTENDO_SWITCH_JOYCON_CONTROLLER_R
+                self.type = _NINTENDO_SWITCH_JOYCON_CONTROLLER_R
             elif self.name == "Nintendo Switch Joy-Con (L/R)":
-                self.type = NINTENDO_SWITCH_JOYCON_CONTROLLER_L_R
+                self.type = _NINTENDO_SWITCH_JOYCON_CONTROLLER_L_R
             else:
-                self.type = XBOX_360_CONTROLLER
+                self.type = _XBOX_360_CONTROLLER
             self.battery = joystick.get_power_level()
             self.device_id = joystick.get_id()
             self.instance_id = joystick.get_instance_id()
