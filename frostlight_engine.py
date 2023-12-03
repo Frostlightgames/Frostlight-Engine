@@ -2,10 +2,10 @@ import os
 import time
 import pygame
 import argparse
-from classes.input import Input
-from classes.logger import Logger
-from classes.window import Window
-from classes.builder import Builder
+from classes.input import *
+from classes.logger import *
+from classes.window import *
+from classes.builder import *
 
 class Engine:
     def __init__(self,
@@ -50,7 +50,7 @@ class Engine:
 
         # Object variables go here
         self.clock = pygame.time.Clock()
-        self.builder = Builder(self)
+        self._builder = Builder(self)
         self.logger = Logger(self)
         self.input = Input(self)
         self.window = Window(self,window_size,fullscreen,resizable,nowindow,window_centered,vsync,window_name,mouse_visible,color_depth)
@@ -172,23 +172,23 @@ if __name__ == "__main__":
 
         # Pack Engine for release
         engine = Engine(nowindow=True)
-        engine.builder.pack_release()
+        engine._builder._pack_release()
 
     elif args.build:
     
         # Build game to EXE
         engine = Engine(nowindow=True)
-        engine.builder.setup_game()
-        engine.builder.create_exe()
+        engine._builder._setup_game()
+        engine._builder._create_exe()
 
     elif args.name: 
 
         # Setup new Project with name
         engine = Engine()
-        engine.builder.setup_game(args.name)
+        engine._builder._setup_game(args.name)
 
     else:
 
         # Setup new no name Project 
         engine = Engine()
-        engine.builder.setup_game()
+        engine._builder._setup_game()
