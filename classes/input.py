@@ -328,54 +328,53 @@ class Input:
     def __init__(self,engine,joystick_dead_zone:int=0.15) -> None:
         
         # Engine variable
-        self.engine = engine
+        self._engine = engine
 
         # Mouse variables        
-        self.mouse = self.Mouse()
-        self.reset_buttons = []
+        self.mouse = self._Mouse()
 
         # Keyboard variables
-        self.keys = {}
-        self.reset_keys = []
+        self._keys = {}
+        self._reset_keys = []
         
         # Joystick variables
         self.joystick_dead_zone = joystick_dead_zone
         self.joystick_devices = []
-        self.reset_joy = []
+        self._reset_joy = []
         
         # Input variables
 
         self.save_path = os.path.join("data","saves","input")
 
-        self.registered_input = {
+        self._registered_input = {
             "accept":[[MOUSE_LEFTCLICK,CLICKED],[KEY_SPACE,CLICKED],[KEY_RETURN,CLICKED],[JOYSTICK_BUTTON_DOWN,CLICKED]],
             "cancel":[[KEY_ESCAPE,CLICKED],[KEY_BACKSPACE,CLICKED],[JOYSTICK_BUTTON_RIGHT,CLICKED]],
-            "right":[[KEY_D,PRESSED],[KEY_L,PRESSED],[KEY_ARROW_RIGHT,PRESSED],[JOYSTICK_DPAD_RIGHT,PRESSED],[JOYSTICK_LEFT_STICK_HORIZONTAL,PRESSED]],
-            "left":[[KEY_A,PRESSED],[KEY_J,PRESSED],[KEY_ARROW_LEFT,PRESSED],[JOYSTICK_DPAD_LEFT,PRESSED],[JOYSTICK_LEFT_STICK_HORIZONTAL,PRESSED]],
-            "up":[[KEY_W,PRESSED],[KEY_I,PRESSED],[KEY_ARROW_UP,PRESSED],[JOYSTICK_DPAD_UP,PRESSED],[JOYSTICK_LEFT_STICK_VERTICAL,PRESSED]],
-            "down":[[KEY_S,PRESSED],[KEY_K,PRESSED],[KEY_ARROW_DOWN,PRESSED],[JOYSTICK_DPAD_DOWN,PRESSED],[JOYSTICK_LEFT_STICK_VERTICAL,PRESSED]],
+            "right":[[KEY_D,PRESSED],[KEY_L,PRESSED],[KEY_ARROW_RIGHT,PRESSED],[JOYSTICK_DPAD_RIGHT,PRESSED]],
+            "left":[[KEY_A,PRESSED],[KEY_J,PRESSED],[KEY_ARROW_LEFT,PRESSED],[JOYSTICK_DPAD_LEFT,PRESSED]],
+            "up":[[KEY_W,PRESSED],[KEY_I,PRESSED],[KEY_ARROW_UP,PRESSED],[JOYSTICK_DPAD_UP,PRESSED]],
+            "down":[[KEY_S,PRESSED],[KEY_K,PRESSED],[KEY_ARROW_DOWN,PRESSED],[JOYSTICK_DPAD_DOWN,PRESSED]],
             "screenshot":[[KEY_P,CLICKED],[KEY_F6,CLICKED]]
         }
 
         # Setting default value for keys
-        for i in self.registered_input:
-            for key in self.registered_input[i]:
+        for i in self._registered_input:
+            for key in self._registered_input[i]:
                 if key[0][1] == _KEYBOARD:
-                    self.keys[key[0][0]] = [False,False,False]
+                    self._keys[key[0][0]] = [False,False,False]
 
-    def new(self,name:str,key:list[int,int],methode:int=1) -> bool:
+    def new(self,name:str,key:list[int,int],method:int=1) -> bool:
 
         # Register/add new input
         try:
-            if name not in self.registered_input:
-                self.registered_input[name] = [[key,methode]]
+            if name not in self._registered_input:
+                self._registered_input[name] = [[key,method]]
             else:
-                if [key,methode] not in self.registered_input[name]:
-                    self.registered_input[name].append([key,methode])
+                if [key,method] not in self.registered_input[name]:
+                    self._registered_input[name].append([key,method])
                 else:
                     return False
 
-            self.keys[key[0]] = [False,False,False]
+            self._keys[key[0]] = [False,False,False]
             return True
         except:
             return False
@@ -385,7 +384,7 @@ class Input:
 
         # Remove registered input
         try:
-            del self.registered_input[inputname]
+            del self._registered_input[inputname]
             return True
         except:
             return False
@@ -393,9 +392,9 @@ class Input:
     def reset(self,name:str,controller_index:int=-1):
 
         # Resets value of registered input to default
-        for key in self.registered_input[name]:
+        for key in self._registered_input[name]:
             if key[0][1] == _KEYBOARD:
-                self.keys[key[0][0]] = [False,False,False]
+                self._keys[key[0][0]] = [False,False,False]
                 
             # Mouse values
             elif key[0][1] == _MOUSE:
@@ -419,11 +418,11 @@ class Input:
     def get(self, name:str,controller_index:int=-1) -> int|float:
 
         # Get input value from registered input
-        for key in self.registered_input[name]:
+        for key in self._registered_input[name]:
 
             # Keyboard values
             if key[0][1] == _KEYBOARD:
-                if self.keys[key[0][0]][key[1]]:
+                if self._keys[key[0][0]][key[1]]:
                     return 1
 
             # Mouse values
@@ -438,7 +437,7 @@ class Input:
                     # Get value from not specified joystick
                     for i in range(len(self.joystick_devices)):
                         input_value = self.joystick_devices[i].get_input(key[0][0],key[1])
-                        if input_value != False and input_value != 0.0:
+                        if input_value != False or input_value != 0.0:
                             return input_value
                 else:
 
@@ -459,7 +458,7 @@ class Input:
         # Save registered input in file
         try:
             with open(self.save_path,"w+") as f:
-                json.dump(self.registered_input,f)
+                json.dump(self._registered_input,f)
             return True
         except:
             return False
@@ -469,44 +468,44 @@ class Input:
         # Load registered input in file
         try:
             with open(self.save_path,"r+") as f:
-                self.registered_input = json.load(f)
+                self._registered_input = json.load(f)
 
                 # Setting default value for keys
-                for i in self.registered_input:
-                    for key in self.registered_input[i]:
+                for i in self._registered_input:
+                    for key in self._registered_input[i]:
                         if key[0][1] == _KEYBOARD:
-                            self.keys[key[0][0]] = [False,False,False]
+                            self._keys[key[0][0]] = [False,False,False]
             return True
         except:
             return False
         
-    def __update__(self) -> None:
+    def _update(self) -> None:
 
         # Update all input devices
-        for key in self.reset_keys.copy():
-            self.keys[key][0] = False
-            self.keys[key][2] = False
-            self.reset_keys.remove(key)
+        for key in self._reset_keys.copy():
+            self._keys[key][0] = False
+            self._keys[key][2] = False
+            self._reset_keys.remove(key)
 
         self.mouse.update()
 
-        for joystick in self.reset_joy.copy():
+        for joystick in self._reset_joy.copy():
             joystick.reset()
-            self.reset_joy.remove(joystick)
+            self._reset_joy.remove(joystick)
 
-    def __handle_key_event__(self,event:pygame.Event):
+    def _handle_key_event(self,event:pygame.Event):
 
         # Handel joystick button down event
         if event.type == pygame.KEYDOWN:
-            self.keys[event.key] = [True,True,False]
-            self.reset_keys.append(event.key)
+            self._keys[event.key] = [True,True,False]
+            self._reset_keys.append(event.key)
 
         # Handel mouse button release event
         elif event.type == pygame.KEYUP:
-            self.keys[event.key] = [False,False,True]
-            self.reset_keys.append(event.key)
+            self._keys[event.key] = [False,False,True]
+            self._reset_keys.append(event.key)
 
-    def __handle_mouse_event__(self,event:pygame.Event):
+    def _handle_mouse_event(self,event:pygame.Event):
         # Handel joystick button down event
         if event.type == pygame.MOUSEBUTTONDOWN:
             self.mouse.buttons[event.button-1] = [True,True,False]
@@ -515,7 +514,7 @@ class Input:
         elif event.type == pygame.MOUSEBUTTONUP:
             self.mouse.buttons[event.button-1] = [False,False,True]
 
-    def __handle_joy_event__(self,event:pygame.Event):
+    def _handle_joy_event(self,event:pygame.Event):
 
         # joystick specification
         joy_index = event.joy
@@ -525,13 +524,13 @@ class Input:
         if event.type == pygame.JOYBUTTONDOWN:
             button_index = event.button
             self.joystick_devices[joy_index].inputs[_JOYSTICK_BUTTON_MAP[joy_type][button_index][0][0]] = [True,True,False]
-            self.reset_joy.append(self.joystick_devices[joy_index])
+            self._reset_joy.append(self.joystick_devices[joy_index])
 
         # Handel joystick button release event
         elif event.type == pygame.JOYBUTTONUP:
             button_index = event.button
             self.joystick_devices[joy_index].inputs[_JOYSTICK_BUTTON_MAP[joy_type][button_index][0][0]] = [False,False,True]
-            self.reset_joy.append(self.joystick_devices[joy_index])
+            self._reset_joy.append(self.joystick_devices[joy_index])
             
         # Handel joystick axis movement event
         elif event.type == pygame.JOYAXISMOTION:
@@ -546,16 +545,51 @@ class Input:
         elif event.type == pygame.JOYHATMOTION:
 
             # Xbox dpad hat event
-            pass
 
-    def __init_joysticks__(self) -> None:
+            # DPAD LEFT
+            if event.value[0] == -1:
+                self.joystick_devices[joy_index].inputs[_JOYSTICK_BUTTON_MAP[joy_type][JOYSTICK_DPAD_LEFT[0]][0][0]] = [True,True,False]
+                self._reset_joy.append(self.joystick_devices[joy_index])
+
+            # DPAD RIGHT
+            elif event.value[0] == 1:
+                self.joystick_devices[joy_index].inputs[_JOYSTICK_BUTTON_MAP[joy_type][JOYSTICK_DPAD_RIGHT[0]][0][0]] = [True,True,False]
+                self._reset_joy.append(self.joystick_devices[joy_index])
+
+            # DPAD resets to default
+            else:
+                if self.joystick_devices[joy_index].inputs[_JOYSTICK_BUTTON_MAP[joy_type][JOYSTICK_DPAD_RIGHT[0]][0][0]][1] == True:
+                    self.joystick_devices[joy_index].inputs[_JOYSTICK_BUTTON_MAP[joy_type][JOYSTICK_DPAD_RIGHT[0]][0][0]] = [False,False,True]
+                elif self.joystick_devices[joy_index].inputs[_JOYSTICK_BUTTON_MAP[joy_type][JOYSTICK_DPAD_LEFT[0]][0][0]][1] == True:
+                    self.joystick_devices[joy_index].inputs[_JOYSTICK_BUTTON_MAP[joy_type][JOYSTICK_DPAD_LEFT[0]][0][0]] = [False,False,True]
+                self._reset_joy.append(self.joystick_devices[joy_index])
+
+            # DPAD DOWN
+            if event.value[1] == -1:
+                self.joystick_devices[joy_index].inputs[_JOYSTICK_BUTTON_MAP[joy_type][JOYSTICK_DPAD_DOWN[0]][0][0]] = [True,True,False]
+                self._reset_joy.append(self.joystick_devices[joy_index])
+            
+            # DPAD UP
+            elif event.value[1] == 1:
+                self.joystick_devices[joy_index].inputs[_JOYSTICK_BUTTON_MAP[joy_type][JOYSTICK_DPAD_UP[0]][0][0]] = [True,True,False]
+                self._reset_joy.append(self.joystick_devices[joy_index])
+
+            # DPAD resets to default
+            else:
+                if self.joystick_devices[joy_index].inputs[_JOYSTICK_BUTTON_MAP[joy_type][JOYSTICK_DPAD_UP[0]][0][0]][1] == True:
+                    self.joystick_devices[joy_index].inputs[_JOYSTICK_BUTTON_MAP[joy_type][JOYSTICK_DPAD_UP[0]][0][0]] = [False,False,True]
+                elif self.joystick_devices[joy_index].inputs[_JOYSTICK_BUTTON_MAP[joy_type][JOYSTICK_DPAD_DOWN[0]][0][0]][1] == True:
+                    self.joystick_devices[joy_index].inputs[_JOYSTICK_BUTTON_MAP[joy_type][JOYSTICK_DPAD_DOWN[0]][0][0]] = [False,False,True]
+                self._reset_joy.append(self.joystick_devices[joy_index])
+
+    def _init_joysticks(self) -> None:
 
         # Creates joystick device to be used
         self.joystick_devices = []
         for joystick in range(pygame.joystick.get_count()):
-            self.joystick_devices.append(self.Joystick(pygame.joystick.Joystick(joystick)))
+            self.joystick_devices.append(self._Joystick(pygame.joystick.Joystick(joystick)))
 
-    class Mouse:
+    class _Mouse:
         def __init__(self) -> None:
 
             # Mouse variables
@@ -593,7 +627,7 @@ class Input:
             # Getting mouse position
             return self.position
 
-    class Joystick:
+    class _Joystick:
         def __init__(self,joystick:pygame.joystick.JoystickType) -> None:
 
             # Joystick variables
@@ -644,7 +678,7 @@ class Input:
 
         def reset(self) -> None:
 
-            # Reset joystick button click and releas values
+            # Reset joystick button click and release values
             self.inputs[JOYSTICK_BUTTON_DOWN[0]][0] = False
             self.inputs[JOYSTICK_BUTTON_DOWN[0]][2] = False
             self.inputs[JOYSTICK_BUTTON_RIGHT[0]][0] = False
@@ -674,10 +708,10 @@ class Input:
             self.inputs[JOYSTICK_LEFT_BUMPER[0]][0] = False
             self.inputs[JOYSTICK_LEFT_BUMPER[0]][2] = False
 
-        def get_input(self,button:int,methode:int) -> int|float:
+        def get_input(self,button:int,method:int) -> int|float:
 
             # Get joystick button value
             if type(self.inputs[button]) == list:
-                return self.inputs[button][methode]
+                return self.inputs[button][method]
             else:
                 return self.inputs[button]

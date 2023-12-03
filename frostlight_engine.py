@@ -73,9 +73,8 @@ class Engine:
 
     def _get_events(self):
         self.clock.tick(self.fps)
-        self.input.__update__()
+        self.input._update()
         for event in pygame.event.get():
-            print(event)
             if event.type == pygame.QUIT:
                 self.quit()
 
@@ -92,38 +91,38 @@ class Engine:
 
             # Keyboard events
             elif event.type == pygame.KEYDOWN:
-                self.input.__handle_key_event__(event)
+                self.input._handle_key_event(event)
                 if event.key == pygame.K_F11:
                     self.window.toggle_fullscreen()
 
             elif event.type == pygame.KEYUP:
-                self.input.__handle_key_event__(event)
+                self.input._handle_key_event(event)
                 
             # Mouse events
             elif event.type == pygame.MOUSEBUTTONDOWN:
-                self.input.__handle_mouse_event__(event)
+                self.input._handle_mouse_event(event)
 
             elif event.type == pygame.MOUSEBUTTONUP:
-                self.input.__handle_mouse_event__(event)
+                self.input._handle_mouse_event(event)
 
             # Joystick events
             elif event.type == pygame.JOYBUTTONDOWN:
-                self.input.__handle_joy_event__(event)
+                self.input._handle_joy_event(event)
 
             elif event.type == pygame.JOYBUTTONUP:
-                self.input.__handle_joy_event__(event)
+                self.input._handle_joy_event(event)
 
             elif event.type == pygame.JOYAXISMOTION:
-                self.input.__handle_joy_event__(event)
+                self.input._handle_joy_event(event)
 
             elif event.type == pygame.JOYHATMOTION:
-                self.input.__handle_joy_event__(event)
+                self.input._handle_joy_event(event)
 
             elif event.type == pygame.JOYDEVICEADDED:
-                self.input.__init_joysticks__()
+                self.input._init_joysticks()
 
             elif event.type == pygame.JOYDEVICEREMOVED:
-                self.input.__init_joysticks__()
+                self.input._init_joysticks()
 
     def _engine_update(self):
 
