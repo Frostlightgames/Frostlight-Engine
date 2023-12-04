@@ -257,9 +257,9 @@ _JOYSTICK_BUTTON_MAP = [
 _JOYSTICK_XBOX_360_AXIS_MAP = [
     JOYSTICK_LEFT_STICK_HORIZONTAL,
     JOYSTICK_LEFT_STICK_VERTICAL,
-    JOYSTICK_TRIGGER_L2,
     JOYSTICK_RIGHT_STICK_HORIZONTAL,
     JOYSTICK_RIGHT_STICK_VERTICAL,
+    JOYSTICK_TRIGGER_L2,
     JOYSTICK_TRIGGER_R2,
 ]
 
@@ -320,9 +320,9 @@ _JOYSTICK_AXIS_MAP = [
 _JOYSTICK_XBOX_360_DIRECTION_AXIS_MAP = [
     [JOYSTICK_LEFT_STICK_LEFT,JOYSTICK_LEFT_STICK_RIGHT],
     [JOYSTICK_LEFT_STICK_UP,JOYSTICK_LEFT_STICK_DOWN],
-    [JOYSTICK_TRIGGER_L2,JOYSTICK_TRIGGER_L2],
     [JOYSTICK_RIGHT_STICK_LEFT,JOYSTICK_RIGHT_STICK_RIGHT],
     [JOYSTICK_RIGHT_STICK_UP,JOYSTICK_RIGHT_STICK_DOWN],
+    [JOYSTICK_TRIGGER_L2,JOYSTICK_TRIGGER_L2],
     [JOYSTICK_TRIGGER_R2,JOYSTICK_TRIGGER_R2],
 ]
 
@@ -607,15 +607,16 @@ class Input:
             axis_index = event.axis
             value = 0.0
 
-            # Detect deadzone
-            if abs(event.value) > self.joystick_dead_zone:
-                value = max(min(event.value,1),-1)
-            self.joystick_devices[joy_index].inputs[_JOYSTICK_AXIS_MAP[joy_type][axis_index][0]] = value
+            if self.joystick_devices[joy_index].name == "Xbox 360 Controller":
+                # Detect deadzone
+                if abs(event.value) > self.joystick_dead_zone:
+                    value = max(min(event.value,1),-1)
+                self.joystick_devices[joy_index].inputs[_JOYSTICK_AXIS_MAP[joy_type][axis_index][0]] = value
 
-            # Direction inputs
+                # Direction inputs
 
-            self.joystick_devices[joy_index].inputs[_JOYSTICK_DIRECTION_AXIS_MAP[joy_type][axis_index][0][0]] = -min(value,0.0)
-            self.joystick_devices[joy_index].inputs[_JOYSTICK_DIRECTION_AXIS_MAP[joy_type][axis_index][1][0]] = max(value,0.0)
+                self.joystick_devices[joy_index].inputs[_JOYSTICK_DIRECTION_AXIS_MAP[joy_type][axis_index][0][0]] = -min(value,0.0)
+                self.joystick_devices[joy_index].inputs[_JOYSTICK_DIRECTION_AXIS_MAP[joy_type][axis_index][1][0]] = max(value,0.0)
 
         elif event.type == pygame.JOYHATMOTION:
 
