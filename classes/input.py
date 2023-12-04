@@ -381,8 +381,8 @@ _JOYSTICK_DIRECTION_AXIS_MAP = [
 ]
 
 class Input:
-    def __init__(self,engine,joystick_dead_zone:int=0.15) -> None:
-        
+    def __init__(self, engine, joystick_dead_zone:int=0.15) -> None:
+
         # Engine variable
         self._engine = engine
 
@@ -417,7 +417,11 @@ class Input:
                 if key[0][1] == _KEYBOARD:
                     self._keys[key[0][0]] = [False,False,False]
 
-    def new(self,name:str,key:list[int,int],method:int=1) -> bool:
+    def new(self, name:str, key:list[int,int], method:int=1) -> bool:
+
+        '''
+        To register or add a new input you can later call with "name".
+        '''
 
         # Register/add new input
         try:
@@ -438,7 +442,7 @@ class Input:
             return False
 
         
-    def remove(self,inputname:str) -> bool:
+    def remove(self, inputname:str) -> bool:
 
         # Remove registered input
         try:
@@ -447,7 +451,7 @@ class Input:
         except:
             return False
 
-    def reset(self,name:str,controller_index:int=-1):
+    def reset(self, name:str, controller_index:int=-1):
 
         # Resets value of registered input to default
         for key in self._registered_input[name]:
@@ -473,7 +477,7 @@ class Input:
                     else:
                         return 0
         
-    def get(self, name:str,controller_index:int=-1) -> int|float:
+    def get(self, name:str, controller_index:int=-1) -> int|float:
 
         # Get input value from registered input
         for key in self._registered_input[name]:
@@ -510,6 +514,14 @@ class Input:
                         return input_value
 
         return 0
+    
+    def set(self, name:str, inputs:list[int,int]):
+
+        # Sets key to new inputs
+        self._registered_input[name] = inputs
+        for key in self._registered_input[name]:
+            if key[0][1] == _KEYBOARD:
+                self._keys[key[0][0]] = [False,False,False]
     
     def save(self):
 
@@ -551,7 +563,7 @@ class Input:
             joystick.reset()
             self._reset_joy.remove(joystick)
 
-    def _handle_key_event(self,event:pygame.Event):
+    def _handle_key_event(self, event:pygame.Event):
 
         # Handel joystick button down event
         if event.type == pygame.KEYDOWN:
@@ -563,7 +575,7 @@ class Input:
             self._keys[event.key] = [False,False,True]
             self._reset_keys.append(event.key)
 
-    def _handle_mouse_event(self,event:pygame.Event):
+    def _handle_mouse_event(self, event:pygame.Event):
         # Handel joystick button down event
         if event.type == pygame.MOUSEBUTTONDOWN:
             self.mouse.buttons[event.button-1] = [True,True,False]
@@ -572,7 +584,7 @@ class Input:
         elif event.type == pygame.MOUSEBUTTONUP:
             self.mouse.buttons[event.button-1] = [False,False,True]
 
-    def _handle_joy_event(self,event:pygame.Event):
+    def _handle_joy_event(self, event:pygame.Event):
 
         # joystick specification
         joy_index = event.joy
@@ -680,7 +692,7 @@ class Input:
             self.buttons[1][1] = mouse_pressed[1]
             self.buttons[2][1] = mouse_pressed[2]
 
-        def get_button(self,button:int) -> bool:
+        def get_button(self, button:int) -> bool:
 
             # Get mouse button             
             return self.buttons[button]
@@ -691,7 +703,7 @@ class Input:
             return self.position
 
     class _Joystick:
-        def __init__(self,joystick:pygame.joystick.JoystickType) -> None:
+        def __init__(self, joystick:pygame.joystick.JoystickType) -> None:
 
             # Joystick variables
             self.joystick = joystick
@@ -779,7 +791,7 @@ class Input:
             self.inputs[JOYSTICK_LEFT_BUMPER[0]][0] = False
             self.inputs[JOYSTICK_LEFT_BUMPER[0]][2] = False
 
-        def get_input(self,button:int,method:int) -> int|float:
+        def get_input(self, button:int, method:int) -> int|float:
 
             # Get joystick button value
             if type(self.inputs[button]) == list:
