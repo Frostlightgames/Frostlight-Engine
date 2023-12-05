@@ -578,18 +578,18 @@ class Input:
         # Handel joystick axis movement event
         elif event.type == pygame.JOYAXISMOTION:
             axis_index = event.axis
+            print(axis_index)
             value = 0.0
 
-            if self.joystick_devices[joy_index].name == "Xbox 360 Controller":
-                # Detect deadzone
-                if abs(event.value) > self.joystick_dead_zone:
-                    value = max(min(event.value,1),-1)
-                self.joystick_devices[joy_index].inputs[_JOYSTICK_AXIS_MAP[joy_type][axis_index][0]] = value
+            # Detect deadzone
+            if abs(event.value) > self.joystick_dead_zone:
+                value = max(min(event.value,1),-1)
+            self.joystick_devices[joy_index].inputs[_JOYSTICK_AXIS_MAP[joy_type][axis_index][0]] = value
 
-                # Direction inputs
+            # Direction inputs
 
-                self.joystick_devices[joy_index].inputs[_JOYSTICK_DIRECTION_AXIS_MAP[joy_type][axis_index][0][0]] = -min(value,0.0)
-                self.joystick_devices[joy_index].inputs[_JOYSTICK_DIRECTION_AXIS_MAP[joy_type][axis_index][1][0]] = max(value,0.0)
+            self.joystick_devices[joy_index].inputs[_JOYSTICK_DIRECTION_AXIS_MAP[joy_type][axis_index][0][0]] = -min(value,0.0)
+            self.joystick_devices[joy_index].inputs[_JOYSTICK_DIRECTION_AXIS_MAP[joy_type][axis_index][1][0]] = max(value,0.0)
 
         elif event.type == pygame.JOYHATMOTION:
 
