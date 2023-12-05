@@ -444,6 +444,22 @@ class Input:
         
     def remove(self, inputname:str) -> bool:
 
+        ''' 
+        Removes registered Input
+
+        Parameters:
+        "inputname": the name of the registered input you want to remove.
+        
+        Example:
+        registered inputs before:
+        {"accept","cancel","right","left","up","down","screenshot"}
+        ```
+        self.input.remove("accept")
+        ```
+        registered inputs after:
+        {"cancel","right","left","up","down","screenshot"}
+        '''
+
         # Remove registered input
         try:
             del self._registered_input[inputname]
