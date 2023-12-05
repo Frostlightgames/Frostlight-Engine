@@ -121,26 +121,7 @@ _JOYSTICK_XBOX_360_BUTTON_MAP = [
     [JOYSTICK_BUTTON_SPECIAL_1],    # PS BUTTON
 ]
 
-_JOYSTICK_PLAYSTATION_4_BUTTON_MAP = [
-    [JOYSTICK_BUTTON_DOWN],         # CROSS BUTTON
-    [JOYSTICK_BUTTON_RIGHT],        # CIRCLE BUTTON
-    [JOYSTICK_BUTTON_UP],           # TRIANGLE BUTTON
-    [JOYSTICK_BUTTON_LEFT],         # SQUARE BUTTON
-    [JOYSTICK_BUTTON_SPECIAL_1],    # SHARE BUTTON  
-    [JOYSTICK_BUTTON_SPECIAL_1],    # PS BUTTON
-    [JOYSTICK_BUTTON_SPECIAL_2],    # OPTIONS BUTTON
-    [JOYSTICK_LEFT_STICK],          # LEFT STICK
-    [JOYSTICK_RIGHT_STICK],         # RIGHT STICK
-    [JOYSTICK_LEFT_BUMPER],         # LEFT BUMPER
-    [JOYSTICK_RIGHT_BUMPER],        # RIGHT BUMPER
-    [JOYSTICK_DPAD_UP],             # DPAD UP
-    [JOYSTICK_DPAD_DOWN],           # DPAD DOWN
-    [JOYSTICK_DPAD_LEFT],           # DPAD LEFT
-    [JOYSTICK_DPAD_RIGHT],          # DPAD RIGHT
-    [JOYSTICK_BUTTON_SPECIAL_2],    # TOUCH PAD
-]
-
-_JOYSTICK_PLAYSTATION_5_BUTTON_MAP = [
+_JOYSTICK_PLAYSTATION_BUTTON_MAP = [
     [JOYSTICK_BUTTON_DOWN],         # CROSS BUTTON
     [JOYSTICK_BUTTON_RIGHT],        # CIRCLE BUTTON
     [JOYSTICK_BUTTON_UP],           # TRIANGLE BUTTON
@@ -245,8 +226,8 @@ _JOYSTICK_NINTENDO_SWITCH_JOYCON_CONTROLLER_L_R_BUTTON_MAP = [
 
 _JOYSTICK_BUTTON_MAP = [
     _JOYSTICK_XBOX_360_BUTTON_MAP,
-    _JOYSTICK_PLAYSTATION_4_BUTTON_MAP,
-    _JOYSTICK_PLAYSTATION_5_BUTTON_MAP,
+    _JOYSTICK_PLAYSTATION_BUTTON_MAP,
+    _JOYSTICK_PLAYSTATION_BUTTON_MAP,
     _JOYSTICK_NINTENDO_SWITCH_PRO_CONTROLLER_BUTTON_MAP,
     _JOYSTICK_NINTENDO_SWITCH_JOYCON_CONTROLLER_L_BUTTON_MAP,
     _JOYSTICK_NINTENDO_SWITCH_JOYCON_CONTROLLER_R_BUTTON_MAP,
@@ -254,34 +235,8 @@ _JOYSTICK_BUTTON_MAP = [
 ]
 
 # Joystick axis map
-_JOYSTICK_XBOX_360_AXIS_MAP = [
-    JOYSTICK_LEFT_STICK_HORIZONTAL,
-    JOYSTICK_LEFT_STICK_VERTICAL,
-    JOYSTICK_RIGHT_STICK_HORIZONTAL,
-    JOYSTICK_RIGHT_STICK_VERTICAL,
-    JOYSTICK_TRIGGER_L2,
-    JOYSTICK_TRIGGER_R2,
-]
 
-_JOYSTICK_PLAYSTATION_4_AXIS_MAP = [
-    JOYSTICK_LEFT_STICK_HORIZONTAL,
-    JOYSTICK_LEFT_STICK_VERTICAL,
-    JOYSTICK_RIGHT_STICK_HORIZONTAL,
-    JOYSTICK_RIGHT_STICK_VERTICAL,
-    JOYSTICK_TRIGGER_L2,
-    JOYSTICK_TRIGGER_R2,
-]
-
-_JOYSTICK_PLAYSTATION_5_AXIS_MAP = [
-    JOYSTICK_LEFT_STICK_HORIZONTAL,
-    JOYSTICK_LEFT_STICK_VERTICAL,
-    JOYSTICK_RIGHT_STICK_HORIZONTAL,
-    JOYSTICK_RIGHT_STICK_VERTICAL,
-    JOYSTICK_TRIGGER_L2,
-    JOYSTICK_TRIGGER_R2,
-]
-
-_JOYSTICK_NINTENDO_SWITCH_PRO_CONTROLLER_AXIS_MAP = [
+_JOYSTICK_GENERIC_AXIS_MAP = [
     JOYSTICK_LEFT_STICK_HORIZONTAL,
     JOYSTICK_LEFT_STICK_VERTICAL,
     JOYSTICK_RIGHT_STICK_HORIZONTAL,
@@ -308,43 +263,16 @@ _JOYSTICK_NINTENDO_SWITCH_JOYCON_CONTROLLER_L_R_AXIS_MAP = [
 ]
 
 _JOYSTICK_AXIS_MAP = [
-    _JOYSTICK_XBOX_360_AXIS_MAP,
-    _JOYSTICK_PLAYSTATION_4_AXIS_MAP,
-    _JOYSTICK_PLAYSTATION_5_AXIS_MAP,
-    _JOYSTICK_NINTENDO_SWITCH_PRO_CONTROLLER_AXIS_MAP,
+    _JOYSTICK_GENERIC_AXIS_MAP,
+    _JOYSTICK_GENERIC_AXIS_MAP,
+    _JOYSTICK_GENERIC_AXIS_MAP,
+    _JOYSTICK_GENERIC_AXIS_MAP,
     _JOYSTICK_NINTENDO_SWITCH_JOYCON_CONTROLLER_L_AXIS_MAP,
     _JOYSTICK_NINTENDO_SWITCH_JOYCON_CONTROLLER_R_AXIS_MAP,
     _JOYSTICK_NINTENDO_SWITCH_JOYCON_CONTROLLER_L_R_AXIS_MAP,
 ]
 
-_JOYSTICK_XBOX_360_DIRECTION_AXIS_MAP = [
-    [JOYSTICK_LEFT_STICK_LEFT,JOYSTICK_LEFT_STICK_RIGHT],
-    [JOYSTICK_LEFT_STICK_UP,JOYSTICK_LEFT_STICK_DOWN],
-    [JOYSTICK_RIGHT_STICK_LEFT,JOYSTICK_RIGHT_STICK_RIGHT],
-    [JOYSTICK_RIGHT_STICK_UP,JOYSTICK_RIGHT_STICK_DOWN],
-    [JOYSTICK_TRIGGER_L2,JOYSTICK_TRIGGER_L2],
-    [JOYSTICK_TRIGGER_R2,JOYSTICK_TRIGGER_R2],
-]
-
-_JOYSTICK_PLAYSTATION_4_DIRECTION_AXIS_MAP = [
-    [JOYSTICK_LEFT_STICK_LEFT,JOYSTICK_LEFT_STICK_RIGHT],
-    [JOYSTICK_LEFT_STICK_UP,JOYSTICK_LEFT_STICK_DOWN],
-    [JOYSTICK_RIGHT_STICK_LEFT,JOYSTICK_RIGHT_STICK_RIGHT],
-    [JOYSTICK_RIGHT_STICK_UP,JOYSTICK_RIGHT_STICK_DOWN],
-    [JOYSTICK_TRIGGER_L2,JOYSTICK_TRIGGER_L2],
-    [JOYSTICK_TRIGGER_R2,JOYSTICK_TRIGGER_R2],
-]
-
-_JOYSTICK_PLAYSTATION_5_DIRECTION_AXIS_MAP = [
-    [JOYSTICK_LEFT_STICK_LEFT,JOYSTICK_LEFT_STICK_RIGHT],
-    [JOYSTICK_LEFT_STICK_UP,JOYSTICK_LEFT_STICK_DOWN],
-    [JOYSTICK_RIGHT_STICK_LEFT,JOYSTICK_RIGHT_STICK_RIGHT],
-    [JOYSTICK_RIGHT_STICK_UP,JOYSTICK_RIGHT_STICK_DOWN],
-    [JOYSTICK_TRIGGER_L2,JOYSTICK_TRIGGER_L2],
-    [JOYSTICK_TRIGGER_R2,JOYSTICK_TRIGGER_R2],
-]
-
-_JOYSTICK_NINTENDO_SWITCH_PRO_CONTROLLER_DIRECTION_AXIS_MAP = [
+_JOYSTICK_GENERIC_DIRECTION_AXIS_MAP = [
     [JOYSTICK_LEFT_STICK_LEFT,JOYSTICK_LEFT_STICK_RIGHT],
     [JOYSTICK_LEFT_STICK_UP,JOYSTICK_LEFT_STICK_DOWN],
     [JOYSTICK_RIGHT_STICK_LEFT,JOYSTICK_RIGHT_STICK_RIGHT],
@@ -371,10 +299,10 @@ _JOYSTICK_NINTENDO_SWITCH_JOYCON_CONTROLLER_L_R_DIRECTION_AXIS_MAP = [
 ]
 
 _JOYSTICK_DIRECTION_AXIS_MAP = [
-    _JOYSTICK_XBOX_360_DIRECTION_AXIS_MAP,
-    _JOYSTICK_PLAYSTATION_4_DIRECTION_AXIS_MAP,
-    _JOYSTICK_PLAYSTATION_5_DIRECTION_AXIS_MAP,
-    _JOYSTICK_NINTENDO_SWITCH_PRO_CONTROLLER_DIRECTION_AXIS_MAP,
+    _JOYSTICK_GENERIC_DIRECTION_AXIS_MAP,
+    _JOYSTICK_GENERIC_DIRECTION_AXIS_MAP,
+    _JOYSTICK_GENERIC_DIRECTION_AXIS_MAP,
+    _JOYSTICK_GENERIC_DIRECTION_AXIS_MAP,
     _JOYSTICK_NINTENDO_SWITCH_JOYCON_CONTROLLER_L_DIRECTION_AXIS_MAP,
     _JOYSTICK_NINTENDO_SWITCH_JOYCON_CONTROLLER_R_DIRECTION_AXIS_MAP,
     _JOYSTICK_NINTENDO_SWITCH_JOYCON_CONTROLLER_L_R_DIRECTION_AXIS_MAP,
@@ -419,9 +347,25 @@ class Input:
 
     def new(self, name:str, key:list[int,int], method:int=1) -> bool:
 
-        '''
-        To register or add a new input you can later call with "name".
-        '''
+        """
+        Register or add a new input you can read out later.
+        
+        Args:
+        - name (str): The name of the input you want to register.
+        - key: The input key which will be monitored.
+        - method: The way the input is pressed: [CLICKED, PRESSED, RELEASE]
+        
+        Returns:
+        - True if registration was successful
+        - False if input is already registered or something went wrong
+
+        If the variable autosave is True the new input is automatically saved and loaded
+
+        Example:
+        ```
+        self.input.new("move_left",KEY_ARROW_LEFT,PRESSED)
+        ```
+        """
 
         # Register/add new input
         try:
@@ -445,24 +389,37 @@ class Input:
     def remove(self, inputname:str) -> bool:
 
         ''' 
-        Removes registered Input
+        Removes registered input
 
-        Parameters:
-        "inputname": the name of the registered input you want to remove.
+        Args:
+        - inputname (str): the name of the registered input you want to remove.
         
+        Returns:
+        - True if removal was successful
+        - False if something went wrong
+        
+        If the variable autosave is True the removal of the input is automatically saved.
+
         Example:
-        registered inputs before:
+
+        ```
+        self.input.remove("move_left")
+        ```
+        registered inputs 
+
+        - before removal:
+        {"accept","cancel","right","left","up","down","screenshot","move_left"}
+
+        - after removal:
         {"accept","cancel","right","left","up","down","screenshot"}
-        ```
-        self.input.remove("accept")
-        ```
-        registered inputs after:
-        {"cancel","right","left","up","down","screenshot"}
         '''
 
         # Remove registered input
         try:
             del self._registered_input[inputname]
+            if self.autosave:
+                self.save()
+                self.load()
             return True
         except:
             return False
