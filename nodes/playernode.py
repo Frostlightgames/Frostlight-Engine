@@ -78,7 +78,6 @@ class PlayerNodePlatformer(PlayerNode):
 
         if not self.on_ground and self.engine.input.get(self.jump_input) and not self.prev_jump_input and not self.coyote_time < self.coyote_time_duration and self.available_jumps == 0 and not self.jump_buffer:
             self.jump_buffer = True
-            print(True)
 
         if (self.on_ground or self.coyote_time < self.coyote_time_duration) and self.jump_buffer and not self.is_jumping and self.remaining_jump_height > 0 and not self.jumping_phase:
             self.is_jumping = True
