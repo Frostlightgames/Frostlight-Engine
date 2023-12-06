@@ -311,6 +311,19 @@ _JOYSTICK_DIRECTION_AXIS_MAP = [
 class Input:
     def __init__(self, engine, joystick_dead_zone:int=0.15) -> None:
 
+        """
+        Initialise the engines input system.
+
+        The input system should help collect and read out many inputs by a specified key.
+
+        Args:
+        
+        - engine (Engine): The engine to access specific variables.
+        - joystick_dead_zone (int)=0.15: Default controller stick deadzone.
+
+        !!!This is only used internally by the engine and should not be called in a game!!!
+        """
+
         # Engine variable
         self._engine = engine
 
@@ -323,7 +336,7 @@ class Input:
         
         # Joystick variables
         self.joystick_dead_zone = joystick_dead_zone
-        self.joystick_devices = []
+        self._joystick_devices = []
         self._reset_joy = []
         
         # Input variables
@@ -434,7 +447,7 @@ class Input:
         - controller_index (int): Index or joystick id of the controller to reset.
         
         Returns:
-        - True if reset was succesful
+        - True if reset was successful
         - False if controller_index is out of range or something went wrong
 
         Example:
@@ -464,13 +477,13 @@ class Input:
                     if controller_index == -1:
 
                         # Resets value from all joysticks
-                        for i in range(len(self.joystick_devices)):
-                            self.joystick_devices[controller_index].inputs[key[0][0]] = [False,False,False]
+                        for i in range(len(self._joystick_devices)):
+                            self._joystick_devices[controller_index].inputs[key[0][0]] = [False,False,False]
                     else:
 
                         # Resets value from specified joystick
-                        if controller_index < len(self.joystick_devices):
-                            self.joystick_devices[controller_index].inputs[key[0][0]] = [False,False,False]
+                        if controller_index < len(self._joystick_devices):
+                            self._joystick_devices[controller_index].inputs[key[0][0]] = [False,False,False]
                         else:
                             return False
             return True
@@ -484,7 +497,7 @@ class Input:
 
         Args:
         - name (str): The name of the registered input to get a value from.
-        - conrtoller_index (int): Index or joystick id of the controller to get a value from.
+        - controller_index (int): Index or joystick id of the controller to get a value from.
         
         Returns:
         - Axis return value between -1.0 and 1.0
@@ -518,15 +531,15 @@ class Input:
                     if controller_index == -1:
 
                         # Get value from not specified joystick
-                        for i in range(len(self.joystick_devices)):
-                            input_value = self.joystick_devices[i].get_input(key[0][0],key[1])
+                        for i in range(len(self._joystick_devices)):
+                            input_value = self._joystick_devices[i].get_input(key[0][0],key[1])
                             if input_value != False or input_value != 0.0:
                                 return input_value
                     else:
 
                         # Get value from specified joystick
-                        if controller_index < len(self.joystick_devices):
-                            input_value = self.joystick_devices[controller_index].get_input(key[0][0],key[1])
+                        if controller_index < len(self._joystick_devices):
+                            input_value = self._joystick_devices[controller_index].get_input(key[0][0],key[1])
                         else:
                             return 0
 
@@ -641,7 +654,7 @@ class Input:
             self._keys[key][2] = False
             self._reset_keys.remove(key)
 
-        self.mouse.update()
+        self.mouse._update()
 
         for joystick in self._reset_joy.copy():
             joystick.reset()
@@ -672,19 +685,19 @@ class Input:
 
         # joystick specification
         joy_index = event.joy
-        joy_type = self.joystick_devices[joy_index].type
+        joy_type = self._joystick_devices[joy_index].type
         
         # Handel joystick button click event
         if event.type == pygame.JOYBUTTONDOWN:
             button_index = event.button
-            self.joystick_devices[joy_index].inputs[_JOYSTICK_BUTTON_MAP[joy_type][button_index][0][0]] = [True,True,False]
-            self._reset_joy.append(self.joystick_devices[joy_index])
+            self._joystick_devices[joy_index].inputs[_JOYSTICK_BUTTON_MAP[joy_type][button_index][0][0]] = [True,True,False]
+            self._reset_joy.append(self._joystick_devices[joy_index])
 
         # Handel joystick button release event
         elif event.type == pygame.JOYBUTTONUP:
             button_index = event.button
-            self.joystick_devices[joy_index].inputs[_JOYSTICK_BUTTON_MAP[joy_type][button_index][0][0]] = [False,False,True]
-            self._reset_joy.append(self.joystick_devices[joy_index])
+            self._joystick_devices[joy_index].inputs[_JOYSTICK_BUTTON_MAP[joy_type][button_index][0][0]] = [False,False,True]
+            self._reset_joy.append(self._joystick_devices[joy_index])
             
         # Handel joystick axis movement event
         elif event.type == pygame.JOYAXISMOTION:
@@ -694,12 +707,12 @@ class Input:
             # Detect deadzone
             if abs(event.value) > self.joystick_dead_zone:
                 value = max(min(event.value,1),-1)
-            self.joystick_devices[joy_index].inputs[_JOYSTICK_AXIS_MAP[joy_type][axis_index][0]] = value
+            self._joystick_devices[joy_index].inputs[_JOYSTICK_AXIS_MAP[joy_type][axis_index][0]] = value
 
             # Direction inputs
 
-            self.joystick_devices[joy_index].inputs[_JOYSTICK_DIRECTION_AXIS_MAP[joy_type][axis_index][0][0]] = -min(value,0.0)
-            self.joystick_devices[joy_index].inputs[_JOYSTICK_DIRECTION_AXIS_MAP[joy_type][axis_index][1][0]] = max(value,0.0)
+            self._joystick_devices[joy_index].inputs[_JOYSTICK_DIRECTION_AXIS_MAP[joy_type][axis_index][0][0]] = -min(value,0.0)
+            self._joystick_devices[joy_index].inputs[_JOYSTICK_DIRECTION_AXIS_MAP[joy_type][axis_index][1][0]] = max(value,0.0)
 
         elif event.type == pygame.JOYHATMOTION:
 
@@ -707,46 +720,46 @@ class Input:
 
             # DPAD LEFT
             if event.value[0] == -1:
-                self.joystick_devices[joy_index].inputs[_JOYSTICK_BUTTON_MAP[joy_type][JOYSTICK_DPAD_LEFT[0]][0][0]] = [True,True,False]
-                self._reset_joy.append(self.joystick_devices[joy_index])
+                self._joystick_devices[joy_index].inputs[_JOYSTICK_BUTTON_MAP[joy_type][JOYSTICK_DPAD_LEFT[0]][0][0]] = [True,True,False]
+                self._reset_joy.append(self._joystick_devices[joy_index])
 
             # DPAD RIGHT
             elif event.value[0] == 1:
-                self.joystick_devices[joy_index].inputs[_JOYSTICK_BUTTON_MAP[joy_type][JOYSTICK_DPAD_RIGHT[0]][0][0]] = [True,True,False]
-                self._reset_joy.append(self.joystick_devices[joy_index])
+                self._joystick_devices[joy_index].inputs[_JOYSTICK_BUTTON_MAP[joy_type][JOYSTICK_DPAD_RIGHT[0]][0][0]] = [True,True,False]
+                self._reset_joy.append(self._joystick_devices[joy_index])
 
             # DPAD resets to default
             else:
-                if self.joystick_devices[joy_index].inputs[_JOYSTICK_BUTTON_MAP[joy_type][JOYSTICK_DPAD_RIGHT[0]][0][0]][1] == True:
-                    self.joystick_devices[joy_index].inputs[_JOYSTICK_BUTTON_MAP[joy_type][JOYSTICK_DPAD_RIGHT[0]][0][0]] = [False,False,True]
-                elif self.joystick_devices[joy_index].inputs[_JOYSTICK_BUTTON_MAP[joy_type][JOYSTICK_DPAD_LEFT[0]][0][0]][1] == True:
-                    self.joystick_devices[joy_index].inputs[_JOYSTICK_BUTTON_MAP[joy_type][JOYSTICK_DPAD_LEFT[0]][0][0]] = [False,False,True]
-                self._reset_joy.append(self.joystick_devices[joy_index])
+                if self._joystick_devices[joy_index].inputs[_JOYSTICK_BUTTON_MAP[joy_type][JOYSTICK_DPAD_RIGHT[0]][0][0]][1] == True:
+                    self._joystick_devices[joy_index].inputs[_JOYSTICK_BUTTON_MAP[joy_type][JOYSTICK_DPAD_RIGHT[0]][0][0]] = [False,False,True]
+                elif self._joystick_devices[joy_index].inputs[_JOYSTICK_BUTTON_MAP[joy_type][JOYSTICK_DPAD_LEFT[0]][0][0]][1] == True:
+                    self._joystick_devices[joy_index].inputs[_JOYSTICK_BUTTON_MAP[joy_type][JOYSTICK_DPAD_LEFT[0]][0][0]] = [False,False,True]
+                self._reset_joy.append(self._joystick_devices[joy_index])
 
             # DPAD DOWN
             if event.value[1] == -1:
-                self.joystick_devices[joy_index].inputs[_JOYSTICK_BUTTON_MAP[joy_type][JOYSTICK_DPAD_DOWN[0]][0][0]] = [True,True,False]
-                self._reset_joy.append(self.joystick_devices[joy_index])
+                self._joystick_devices[joy_index].inputs[_JOYSTICK_BUTTON_MAP[joy_type][JOYSTICK_DPAD_DOWN[0]][0][0]] = [True,True,False]
+                self._reset_joy.append(self._joystick_devices[joy_index])
             
             # DPAD UP
             elif event.value[1] == 1:
-                self.joystick_devices[joy_index].inputs[_JOYSTICK_BUTTON_MAP[joy_type][JOYSTICK_DPAD_UP[0]][0][0]] = [True,True,False]
-                self._reset_joy.append(self.joystick_devices[joy_index])
+                self._joystick_devices[joy_index].inputs[_JOYSTICK_BUTTON_MAP[joy_type][JOYSTICK_DPAD_UP[0]][0][0]] = [True,True,False]
+                self._reset_joy.append(self._joystick_devices[joy_index])
 
             # DPAD resets to default
             else:
-                if self.joystick_devices[joy_index].inputs[_JOYSTICK_BUTTON_MAP[joy_type][JOYSTICK_DPAD_UP[0]][0][0]][1] == True:
-                    self.joystick_devices[joy_index].inputs[_JOYSTICK_BUTTON_MAP[joy_type][JOYSTICK_DPAD_UP[0]][0][0]] = [False,False,True]
-                elif self.joystick_devices[joy_index].inputs[_JOYSTICK_BUTTON_MAP[joy_type][JOYSTICK_DPAD_DOWN[0]][0][0]][1] == True:
-                    self.joystick_devices[joy_index].inputs[_JOYSTICK_BUTTON_MAP[joy_type][JOYSTICK_DPAD_DOWN[0]][0][0]] = [False,False,True]
-                self._reset_joy.append(self.joystick_devices[joy_index])
+                if self._joystick_devices[joy_index].inputs[_JOYSTICK_BUTTON_MAP[joy_type][JOYSTICK_DPAD_UP[0]][0][0]][1] == True:
+                    self._joystick_devices[joy_index].inputs[_JOYSTICK_BUTTON_MAP[joy_type][JOYSTICK_DPAD_UP[0]][0][0]] = [False,False,True]
+                elif self._joystick_devices[joy_index].inputs[_JOYSTICK_BUTTON_MAP[joy_type][JOYSTICK_DPAD_DOWN[0]][0][0]][1] == True:
+                    self._joystick_devices[joy_index].inputs[_JOYSTICK_BUTTON_MAP[joy_type][JOYSTICK_DPAD_DOWN[0]][0][0]] = [False,False,True]
+                self._reset_joy.append(self._joystick_devices[joy_index])
 
     def _init_joysticks(self) -> None:
 
         # Creates joystick device to be used
-        self.joystick_devices = []
+        self._joystick_devices = []
         for joystick in range(pygame.joystick.get_count()):
-            self.joystick_devices.append(self._Joystick(pygame.joystick.Joystick(joystick)))
+            self._joystick_devices.append(self._Joystick(pygame.joystick.Joystick(joystick)))
 
     class _Mouse:
         def __init__(self) -> None:
@@ -759,7 +772,7 @@ class Input:
                 [False,False,False]
             ]
 
-        def update(self) -> None:
+        def _update(self) -> None:
 
             # Reset mouse input values
             self.buttons[0][0] = False
@@ -843,7 +856,7 @@ class Input:
                 0.0,                    # JOYSTICK_RIGHT_STICK_RIGHT
             ]
 
-        def reset(self) -> None:
+        def _reset(self) -> None:
 
             # Reset joystick button click and release values
             self.inputs[JOYSTICK_BUTTON_DOWN[0]][0] = False
@@ -875,7 +888,7 @@ class Input:
             self.inputs[JOYSTICK_LEFT_BUMPER[0]][0] = False
             self.inputs[JOYSTICK_LEFT_BUMPER[0]][2] = False
 
-        def get_input(self, button:int, method:int) -> int|float:
+        def _get_input(self, button:int, method:int) -> int|float:
 
             # Get joystick button value
             if type(self.inputs[button]) == list:
