@@ -689,7 +689,6 @@ class Input:
         # Handel joystick axis movement event
         elif event.type == pygame.JOYAXISMOTION:
             axis_index = event.axis
-            print(axis_index)
             value = 0.0
 
             # Detect deadzone
