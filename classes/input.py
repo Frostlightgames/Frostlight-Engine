@@ -348,10 +348,10 @@ class Input:
     def new(self, name:str, key:list[int,int], method:int=1) -> bool:
 
         """
-        Register or add a new input you can read out later.
+        Register or add a new input for read out later.
         
         Args:
-        - name (str): The name of the input you want to register.
+        - name (str): The name of the input to register.
         - key: The input key which will be monitored.
         - method: The way the input is pressed: [CLICKED, PRESSED, RELEASE]
         
@@ -388,11 +388,11 @@ class Input:
         
     def remove(self, inputname:str) -> bool:
 
-        ''' 
+        """ 
         Removes registered input
 
         Args:
-        - inputname (str): the name of the registered input you want to remove.
+        - inputname (str): the name of the registered input to remove.
         
         Returns:
         - True if removal was successful
@@ -412,7 +412,7 @@ class Input:
 
         - after removal:
         {"accept","cancel","right","left","up","down","screenshot"}
-        '''
+        """
 
         # Remove registered input
         try:
@@ -426,77 +426,172 @@ class Input:
 
     def reset(self, name:str, controller_index:int=-1):
 
+        """
+        Resets input to default value
+        
+        Args:
+        - name (str): The name of the input value to reset.
+        - controller_index (int): Index or joystick id of the controller to reset.
+        
+        Returns:
+        - True if reset was succesful
+        - False if controller_index is out of range or something went wrong
+
+        Example:
+
+        ```
+        print(self.input.get("move_left"))
+        >>> 1
+        self.input.reset("move_left")
+        print(self.input.get("move_left"))
+        >>> 0
+        ```
+        """
+
         # Resets value of registered input to default
-        for key in self._registered_input[name]:
-            if key[0][1] == _KEYBOARD:
-                self._keys[key[0][0]] = [False,False,False]
-                
-            # Mouse values
-            elif key[0][1] == _MOUSE:
-                self.mouse.buttons[key[0][0]] = [False,False,False]
-                
-            # Joystick values
-            elif key[0][1] == _JOYSTICK:
-                if controller_index == -1:
 
-                    # Resets value from all joysticks
-                    for i in range(len(self.joystick_devices)):
-                        self.joystick_devices[controller_index].inputs[key[0][0]] = [False,False,False]
-                else:
+        try:
+            for key in self._registered_input[name]:
+                if key[0][1] == _KEYBOARD:
+                    self._keys[key[0][0]] = [False,False,False]
+                    
+                # Mouse values
+                elif key[0][1] == _MOUSE:
+                    self.mouse.buttons[key[0][0]] = [False,False,False]
+                    
+                # Joystick values
+                elif key[0][1] == _JOYSTICK:
+                    if controller_index == -1:
 
-                    # Resets value from specified joystick
-                    if controller_index < len(self.joystick_devices):
-                        self.joystick_devices[controller_index].inputs[key[0][0]] = [False,False,False]
+                        # Resets value from all joysticks
+                        for i in range(len(self.joystick_devices)):
+                            self.joystick_devices[controller_index].inputs[key[0][0]] = [False,False,False]
                     else:
-                        return 0
+
+                        # Resets value from specified joystick
+                        if controller_index < len(self.joystick_devices):
+                            self.joystick_devices[controller_index].inputs[key[0][0]] = [False,False,False]
+                        else:
+                            return False
+            return True
+        except:
+            return False
         
     def get(self, name:str, controller_index:int=-1) -> int|float:
 
+        """
+        Gets value of registered input
+
+        Args:
+        - name (str): The name of the registered input to get a value from.
+        - conrtoller_index (int): Index or joystick id of the controller to get a value from.
+        
+        Returns:
+        - Axis return value between -1.0 and 1.0
+        - Keys and buttons return either 0 or 1
+        - If return is 0 either the inputname or joystick dose not exist or input is on default value
+
+        Example:
+
+        ```
+        print(self.input.get("move_left"))
+        >>> 1
+        ```
+        """
+
         # Get input value from registered input
-        for key in self._registered_input[name]:
+        try:
+            for key in self._registered_input[name]:
 
-            # Keyboard values
-            if key[0][1] == _KEYBOARD:
-                if self._keys[key[0][0]][key[1]]:
-                    return 1
+                # Keyboard values
+                if key[0][1] == _KEYBOARD:
+                    if self._keys[key[0][0]][key[1]]:
+                        return 1
 
-            # Mouse values
-            elif key[0][1] == _MOUSE:
-                if self.mouse.buttons[key[0][0]][key[1]]:
-                    return 1
+                # Mouse values
+                elif key[0][1] == _MOUSE:
+                    if self.mouse.buttons[key[0][0]][key[1]]:
+                        return 1
 
-            # Joystick values
-            elif key[0][1] == _JOYSTICK:
-                if controller_index == -1:
+                # Joystick values
+                elif key[0][1] == _JOYSTICK:
+                    if controller_index == -1:
 
-                    # Get value from not specified joystick
-                    for i in range(len(self.joystick_devices)):
-                        input_value = self.joystick_devices[i].get_input(key[0][0],key[1])
+                        # Get value from not specified joystick
+                        for i in range(len(self.joystick_devices)):
+                            input_value = self.joystick_devices[i].get_input(key[0][0],key[1])
+                            if input_value != False or input_value != 0.0:
+                                return input_value
+                    else:
+
+                        # Get value from specified joystick
+                        if controller_index < len(self.joystick_devices):
+                            input_value = self.joystick_devices[controller_index].get_input(key[0][0],key[1])
+                        else:
+                            return 0
+
+                        # Filter joystick input value
                         if input_value != False or input_value != 0.0:
                             return input_value
-                else:
-
-                    # Get value from specified joystick
-                    if controller_index < len(self.joystick_devices):
-                        input_value = self.joystick_devices[controller_index].get_input(key[0][0],key[1])
-                    else:
-                        return 0
-
-                    # Filter joystick input value
-                    if input_value != False or input_value != 0.0:
-                        return input_value
+        except:
+            return 0
 
         return 0
     
-    def set(self, name:str, inputs:list[int,int]):
+    def set(self, name:str, keys:list[int,int]):
+
+        """
+        Register or add a new input to read out later.
+        
+        Args:
+        - name (str): The name of the input to overwrite.
+        - keys (list): Is a list of [key, method]
+        - method: The way the input is pressed: [CLICKED, PRESSED, RELEASE]
+        
+        Returns:
+        - True if registration was successful
+        - False if something went wrong
+
+        If the variable autosave is True the new input is automatically saved and loaded
+
+        Example:
+        ```
+        self.input.set("move_left",[[KEY_D,PRESSED],[KEY_ARROW_LEFT,PRESSED]])
+        ```
+        """
 
         # Sets key to new inputs
-        self._registered_input[name] = inputs
-        for key in self._registered_input[name]:
-            if key[0][1] == _KEYBOARD:
-                self._keys[key[0][0]] = [False,False,False]
+        try:
+            self._registered_input[name] = key
+            for key in self._registered_input[name]:
+                if key[0][1] == _KEYBOARD:
+                    self._keys[key[0][0]] = [False,False,False]
+
+            if self.autosave:
+                self.save()
+                self.load()
+
+            return True
+        except:
+            return False
     
     def save(self):
+
+        """
+        Saves registered inputs to file.
+        
+        Args:
+        - no args are required
+
+        Returns:
+        - True if save was successful
+        - False if something went wrong
+
+        Example:
+        ```
+        self.input.save()
+        ```
+        """
 
         # Save registered input in file
         try:
@@ -507,6 +602,22 @@ class Input:
             return False
 
     def load(self):
+
+        """
+        Load registered inputs from file
+        
+        Args:
+        - no args are required
+
+        Returns:
+        - True if load was successful
+        - False if something went wrong
+
+        Example:
+        ```
+        self.input.load()
+        ```
+        """
 
         # Load registered input in file
         try:
