@@ -5,7 +5,7 @@ import datetime
 from cryptography.fernet import Fernet
 
 class SaveManager():
-    """Eine Klasse zur Verwaltung von verschlüsselten Speicherdaten."""
+    """A class for managing encrypted storage data."""
     def __init__(self,engine,path="data/saves/save") -> None:
         """
         Initialize the SaveManager object.
