@@ -62,7 +62,7 @@ class Engine:
         self.window = Window(self,window_size,fullscreen,resizable,nowindow,window_centered,vsync,window_name,mouse_visible,color_depth)
 
         # Object processing go here
-        self.window.create()
+        self.window._create()
         pygame.event.set_allowed([pygame.QUIT,
                                   pygame.WINDOWMOVED, 
                                   pygame.VIDEORESIZE, 
