@@ -55,7 +55,7 @@ class SaveManager():
 
         self.path = path
     
-    def __encrypt__(self,data:dict) -> bool:
+    def _encrypt(self,data:dict) -> bool:
 
         """
         !Used for internal functionality!
@@ -77,7 +77,7 @@ class SaveManager():
         except Exception as e:
             self.engine.logger.error(e)
     
-    def __decrypt__(self) -> bool|dict:
+    def _decrypt(self) -> bool|dict:
 
         """
         !Used for internal functionality!
@@ -113,39 +113,40 @@ class SaveManager():
         """
 
         try:
-            data = self.__decrypt__()
+            data = self._decrypt()
             if data != False:
                 data[key] = value
             else:
                 data = {}
-            self.__encrypt__(data)
+            self._encrypt(data)
             return True
         except Exception as e:
             self.engine.logger.error(e)
 
         return False
     
-    def load(self,key) -> any:
+    def load(self,key,default=None) -> any:
 
         """
         Load data from the file using the specified key.
 
         Args:
         - key: Key to retrieve data.
+        - default: If key is not found, default will be returned instead.
 
         Returns:
-        - any: Retrieved value corresponding to the key, or None if not found.
+        - any: Retrieved value corresponding to the key, or default value if not found.
         """
 
         if os.path.exists(self.path):
             try:
-                data = self.__decrypt__()
+                data = self._decrypt()
                 if data != False:
                     return data[key]
             except Exception as e:
                 self.engine.logger.error(e)
         else:
-            return None
+            return default
         
     def backup(self,backup_path:str="data/saves/backup"):
 
