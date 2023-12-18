@@ -4,9 +4,9 @@ class Builder:
     def __init__(self,engine) -> None:
 
         # Engine variable
-        self.engine = engine
+        self._engine = engine
 
-    def setup_game(self,name:str="New Game"):
+    def _setup_game(self,name:str="New Game"):
 
         # Create engine tree
         directories_created = 0
@@ -19,7 +19,7 @@ class Builder:
                 os.mkdir(directory)
                 directories_created += 1
             except FileExistsError:
-                self.engine.logger.warning(f"Skipping creation of directory {directory}, it already exist.")
+                self._engine.logger.warning(f"Skipping creation of directory {directory}, it already exist.")
 
         # Create main code file
         if not os.path.exists("main.py"):
@@ -56,15 +56,15 @@ class Builder:
                 file.write("    game.run()\n")
             files_created += 1
         else:
-            self.engine.logger.warning("Skipping creation of main file, already exist.")
+            self._engine.logger.warning("Skipping creation of main file, already exist.")
 
         # Log creation process
         if files_created == 0 and directories_created == 0:
-            self.engine.logger.info("No new files or directories where created.")
+            self._engine.logger.info("No new files or directories where created.")
         else:
-            self.engine.logger.info(f"Created game files structure with {files_created} files and {directories_created} directories")
+            self._engine.logger.info(f"Created game files structure with {files_created} files and {directories_created} directories")
 
-    def create_exe(self,name:str="game"):
+    def _create_exe(self,name:str="game"):
 
         # Import Modules
         import subprocess
@@ -108,7 +108,7 @@ class Builder:
                 shutil.make_archive("export","zip","export")
                 shutil.rmtree("export")
 
-    def pack_release(self):
+    def _pack_release(self):
         
         # Relevent paths
         class_path = "./classes"
