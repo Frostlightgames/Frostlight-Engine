@@ -14,7 +14,7 @@ class Window:
         - engine (Engine): The engine to access specific variables.
         - set_window_size (list)=None: Size of window.
         - fullscreen (bool)=False: Sets windows fullscreen mode.
-        - resizable (bool)=True: Sets windows resizeability.
+        - resizable (bool)=True: Sets windows resizability.
         - windowless (bool)=False: Removes window interaction menu at the top.
         - window_centered (bool)=True: Sets window centered state.
         - vsync (bool)=False: Sets vsync state.
@@ -172,7 +172,7 @@ class Window:
     def set_name(self,name:str="") -> None:
 
         """
-        Set window name.
+        Set a window name.
 
         Args:
         
@@ -212,15 +212,15 @@ class Window:
     def fill(self,color:list[int,int,int]) -> None:
 
         """
-        Set window name.
+        Fills window with a color.
 
         Args:
         
-        - name (str)="": New window name.
+        - color (list[int,int,int]): Color the window is filled with.
 
         Example:
         ```
-        self.window.set_name("new game")
+        self.window.fill([3,13,36])
         ```
         """
 
