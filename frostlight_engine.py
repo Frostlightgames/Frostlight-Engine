@@ -150,11 +150,11 @@ class Engine:
 
                 # Main loop
                 try:
-                    self.get_events()
-                    self.engine_update()
+                    self._get_events()
+                    self._engine_update()
                     self.update()
                     self.draw()
-                    self.engine_draw()
+                    self._engine_draw()
                 except Exception as e:
 
                     # Error logging and catching
