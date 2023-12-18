@@ -6,7 +6,7 @@ class Builder:
         """
         Initialise the engines input system.
 
-        The build system packs the engine files if a release is planed and converts your game to an exe file.
+        The build system packs the engine files if a release is planed and converts the game to an exe file.
 
         Args:
         
@@ -25,7 +25,7 @@ class Builder:
 
         Args:
 
-        -name (str): Not implemented yet, for naming your game files
+        -name (str): Not implemented yet, for naming the game files
 
         !!!This is only used internally by the engine and should not be called in a game!!!
         """
@@ -93,7 +93,7 @@ class Builder:
 
         Args:
 
-        -name (str): Not implemented yet, for naming your game files
+        -name (str): Not implemented yet, for naming the game files
 
         !!!This is only used internally by the engine and should not be called in a game!!!
         """

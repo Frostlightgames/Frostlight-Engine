@@ -5,6 +5,19 @@ import datetime
 class Logger:
     def __init__(self,engine,delete_old_logs:bool=False) -> None:
 
+        """
+        Initialise the engines logging system.
+
+        The logging system helps to log important information and collects error messages.
+
+        Args:
+        
+        - engine (Engine): The engine to access specific variables.
+        - delete_old_logs (bool)=False: If true there will only be one logfile.
+
+        !!!This is only used internally by the engine and should not be called in a game!!!
+        """
+
         # Engine variable
         self.engine = engine
 
@@ -32,17 +45,73 @@ class Logger:
 
     # Different log variants
     def error(self,message:str):
+
+        """
+        Logs an error.
+
+        Args:
+        
+        - message (str): Content to log.
+
+        Mostly used by the engine internally but can also be used for logging other error messages
+
+        Example:
+        ```
+        self.logger.error("The Exception")
+        ```
+        """
+
         exc_type, exc_obj, exc_tb = sys.exc_info()
         fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
         self._log("Error",f"{message} in [{fname} line: {exc_tb.tb_lineno}]")
 
     def warning(self,message:str):
+
+        """
+        Logs a warning.
+
+        Args:
+        
+        - message (str): Content to log.
+
+        Example:
+        ```
+        self.logger.warning("Memory almost 80% filled!")
+        ```
+        """
+
         self._log("Warning",str(message))
 
     def info(self,message:str):
+
+        """
+        Logs an info.
+
+        Args:
+        
+        - message (str): Content to log.
+
+        Example:
+        ```
+        self.logger.info("I am a duck)
+        ```
+        """
+
         self._log("Info",str(message))
 
-    def __log__(self,prefix:str,message:str):
+    def _log(self,prefix:str,message:str):
+
+        """
+        Writes logged content to file.
+
+        Args:
+        
+        - prefix (str): Importance of content 
+        - message (str): Content to write to logfile.
+
+        !!!This is only used internally by the engine and should not be called in a game!!!
+        """
+
         if self.engine.logging:
             caller = "Engine"
             try:

@@ -366,13 +366,13 @@ class Input:
         Args:
         - name (str): The name of the input to register.
         - key: The input key which will be monitored.
-        - method: The way the input is pressed: [CLICKED, PRESSED, RELEASE]
+        - method: The way the input is pressed: [CLICKED, PRESSED, RELEASE].
         
         Returns:
-        - True if registration was successful
-        - False if input is already registered or something went wrong
+        - True if registration was successful.
+        - False if input is already registered or something went wrong.
 
-        If the variable autosave is True the new input is automatically saved and loaded
+        If the variable autosave is True the new input is automatically saved and loaded.
 
         Example:
         ```
@@ -402,14 +402,14 @@ class Input:
     def remove(self, inputname:str) -> bool:
 
         """ 
-        Removes registered input
+        Removes registered input.
 
         Args:
         - inputname (str): the name of the registered input to remove.
         
         Returns:
-        - True if removal was successful
-        - False if something went wrong
+        - True if removal was successful.
+        - False if something went wrong.
         
         If the variable autosave is True the removal of the input is automatically saved.
 
@@ -440,15 +440,15 @@ class Input:
     def reset(self, name:str, controller_index:int=-1):
 
         """
-        Resets input to default value
+        Resets input to default value.
         
         Args:
         - name (str): The name of the input value to reset.
         - controller_index (int): Index or joystick id of the controller to reset.
         
         Returns:
-        - True if reset was successful
-        - False if controller_index is out of range or something went wrong
+        - True if reset was successful.
+        - False if controller_index is out of range or something went wrong.
 
         Example:
 
@@ -493,16 +493,16 @@ class Input:
     def get(self, name:str, controller_index:int=-1) -> int|float:
 
         """
-        Gets value of registered input
+        Gets value of registered input.
 
         Args:
         - name (str): The name of the registered input to get a value from.
         - controller_index (int): Index or joystick id of the controller to get a value from.
         
         Returns:
-        - Axis return value between -1.0 and 1.0
-        - Keys and buttons return either 0 or 1
-        - If return is 0 either the inputname or joystick dose not exist or input is on default value
+        - Axis return value between -1.0 and 1.0.
+        - Keys and buttons return either 0 or 1.
+        - If return is 0 either the inputname or joystick dose not exist or input is on default value.
 
         Example:
 
@@ -558,14 +558,14 @@ class Input:
         
         Args:
         - name (str): The name of the input to overwrite.
-        - keys (list): Is a list of [key, method]
-        - method: The way the input is pressed: [CLICKED, PRESSED, RELEASE]
+        - keys (list): Is a list of [key, method].
+        - method: The way the input is pressed: [CLICKED, PRESSED, RELEASE].
         
         Returns:
-        - True if registration was successful
-        - False if something went wrong
+        - True if registration was successful.
+        - False if something went wrong.
 
-        If the variable autosave is True the new input is automatically saved and loaded
+        If the variable autosave is True the new input is automatically saved and loaded.
 
         Example:
         ```
@@ -594,11 +594,11 @@ class Input:
         Saves registered inputs to file.
         
         Args:
-        - no args are required
+        - no args are required.
 
         Returns:
-        - True if save was successful
-        - False if something went wrong
+        - True if save was successful.
+        - False if something went wrong.
 
         Example:
         ```
@@ -617,14 +617,14 @@ class Input:
     def load(self):
 
         """
-        Load registered inputs from file
+        Load registered inputs from file.
         
         Args:
-        - no args are required
+        - no args are required.
 
         Returns:
-        - True if load was successful
-        - False if something went wrong
+        - True if load was successful.
+        - False if something went wrong.
 
         Example:
         ```
@@ -792,13 +792,13 @@ class Input:
         def get_pos(self) -> list[int,int]:
 
             """
-            Returns mouse position relative to main window
+            Returns mouse position relative to main window.
             
             Args:
-            - no args are required
+            - no args are required.
 
             Returns:
-            - List of [x mouse position (int), y mouse position (int)]
+            - List of [x mouse position (int), y mouse position (int)].
 
             Example:
             ```
