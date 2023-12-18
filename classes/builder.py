@@ -131,7 +131,7 @@ class Builder:
                                 if not line.startswith("from classes."):
                                     imported_modules.append(line)
 
-        imported_modules = sorted(set(imported_modules))
+        imported_modules = sorted(set(imported_modules),key=len)
 
         # Read main file
         with open(main_file, "r", encoding="utf-8") as main_handle:
@@ -142,7 +142,7 @@ class Builder:
                     if not line.startswith("from classes."):
                         imported_modules.append(line)
 
-        imported_modules = sorted(set(imported_modules))
+        imported_modules = sorted(set(imported_modules),key=len)
 
         # Creating export file
         with open(export_file, "w", encoding="utf-8") as f:
