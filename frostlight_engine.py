@@ -9,11 +9,13 @@ from classes.builder import *
 
 class Engine:
     def __init__(self,
+                 catch_error:bool=True,
                  color_depth:int=16,
                  fps:int=0,
                  fullscreen:bool=False,
                  game_version:str="1.0",
                  language:str="en",
+                 logging:bool=True,
                  mouse_visible:bool=True,
                  nowindow:bool=False,
                  resizable:bool=True,
@@ -30,6 +32,8 @@ class Engine:
             pygame.mixer.pre_init(44100,-16,2,512)
 
         # Boolean variables go here
+        self.catch_error = catch_error
+        self.logging = logging
         self.run_game = True
         self.sounds = sounds
 
@@ -139,20 +143,30 @@ class Engine:
 
         # Starting game engine
         self.logger.info(f"Starting [Engine version {self.engine_version} | Game version {self.game_version}]")
-        while self.run_game:
+        if self.catch_error:
+            while self.run_game:
 
-            # Main loop
-            # try:
-                self._get_events()
-                self._engine_update()
+                # Main loop
+                try:
+                    self.get_events()
+                    self.engine_update()
+                    self.update()
+                    self.draw()
+                    self.engine_draw()
+                except Exception as e:
+
+                    # Error logging and catching
+                    self.logger.error(e)
+        else:
+            while self.run_game:
+                
+                # Main loop
+                self.get_events()
+                self.engine_update()
                 self.update()
                 self.draw()
-                self._engine_draw()
-            # except Exception as e:
-                
-            #     # Error logging and catching
-            #     self.logger.error(e)
-
+                self.engine_draw()
+            
         # Ending game
         self.logger.info("Closed game")
 
