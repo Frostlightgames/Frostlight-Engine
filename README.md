@@ -41,11 +41,11 @@ Frostlight-Engine is an easy to use game framework for python that is based on p
 
 ## **Getting Started**
 
-1. Install Python 3.9 or newer. <https://www.python.org/downloads/>
-2. Install pygame/pygame-ce 2.x <https://pypi.org/project/pygame/>
-3. Download the newest Frostlight-Engine version <https://github.com/Frostlightgames/Frostlight-Engine\>
+1.  Install Python 3.9 or newer. \<https://www.python.org/downloads/\>
+2.  Install pygame/pygame-ce 2.x \<https://pypi.org/project/pygame/\>
+3.  Download the newest Frostlight-Engine version \<https://github.com/Frostlightgames/Frostlight-Engine\>
 
-```cmd
+```
 pip install pygame | pip install pygame-ce
 ```
 
@@ -58,10 +58,10 @@ pip install pygame | pip install pygame-ce
 
 Frostlight-Engine is a single-file framework, that helps you create games very fast and efficient. The game logic will be written in python. You can use any text editor you want. Frostlight-Engine provides some tool like window or input management to simplify the game making process.
 
-1. Create an empty directory and paste the `frostlight_engine.py` file in it
-2. Run `frostlight_engine.py` in your terminal, it will setup your project structure
+1.  Create an empty directory and paste the `frostlight_engine.py` file in it
+2.  Run `frostlight_engine.py` in your terminal, it will setup your project structure
 
-```cmd
+```
 python frostlight_engine.py
 ```
 
@@ -80,8 +80,8 @@ class Game(Engine):
         self.player_sprite = pygame.Surface((100,100))
         self.player_sprite.fill((10,126,221))
 
-        # Creating player position
-        self.player_pos = pygame.Vector2(350,350)
+        # Loading player pos from save file
+        self.player_pos = pygame.Vector2(self.save_manager.load("pos",[350,350]))
 
         # Switching game state
         self.game_state = "game"
@@ -100,6 +100,9 @@ class Game(Engine):
             y_vel = self.input.get("down")-self.input.get("up")
             self.player_pos.y += y_vel*200*self.delta_time
 
+            # Writing player position to save file
+            self.save_manager.save("pos",[self.player_pos[0],self.player_pos[1]])
+
     def draw(self):
         if self.game_state == "game":
 
@@ -114,13 +117,13 @@ if __name__ == "__main__":
 
 Now you can run your game by typing the following in your terminal:
 
-```cmd
+```
 python main.py
 ```
 
 If you now want to share your game with friends, that don't have python installed, you can just pack your game into an executable by running:
 
-```cmd
+```
 python frostlight_engine.py -b | python frostlight_engine.py --build
 ```
 
@@ -146,11 +149,12 @@ Your game will be compressed into a zip archive called `export.zip` that you can
 
 ### **Project Structure**
 
-```txt
+```
 📁game_name                 # your created root directory.
     📁data                  # store important game data
         📁classes           # to store your game classes like player and monsters
         📁saves             # to store progress saves and input configurations
+            📁backup        # to store your backed up save files
         📁sprites           # to store your game sprites or fonts
     📁logs                  # to collect your game and engine logs
     📁screenshots           # to collect your game screenshots
