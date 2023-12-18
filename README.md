@@ -15,29 +15,26 @@ Frostlight-Engine is an easy to use game framework for python that is based on p
   - [**Documentation**](#documentation)
     - [**Features**](#features)
     - [**Project Structure**](#project-structure)
-    - [**Modules Overview**](#modules-overview)
-      - [Window](#window)
-      - [Input](#input)
-      - [Logger](#logger)
-    - [**Window Module**](#window-module)
-      - [`create()`](#create)
-      - [`render()`](#render)
-      - [`fill()`](#fill)
-      - [`resize()`](#resize)
-      - [`set_fullscreen()`](#set_fullscreen)
-      - [`toggle_fullscreen()`](#toggle_fullscreen)
-      - [`set_name()`](#set_name)
-      - [`get_fps()`](#get_fps)
     - [**Input Module**](#input-module)
       - [`new()`](#new)
       - [`get()`](#get)
       - [`remove()`](#remove)
       - [`save()`](#save)
       - [`load()`](#load)
+    - [**Save Manager**](#save-manager)
+      - [`save()`](#save-1)
     - [**Logger Module**](#logger-module)
       - [`error()`](#error)
       - [`warning()`](#warning)
       - [`info()`](#info)
+    - [**Window Module**](#window-module)
+      - [`render()`](#render)
+      - [`resize()`](#resize)
+      - [`set_fullscreen()`](#set_fullscreen)
+      - [`toggle_fullscreen()`](#toggle_fullscreen)
+      - [`set_name()`](#set_name)
+      - [`get_fps()`](#get_fps)
+      - [`fill()`](#fill)
 
 ## **Getting Started**
 
@@ -142,9 +139,11 @@ Your game will be compressed into a zip archive called `export.zip` that you can
     - Playstation 4
     - Playstation 5
     - Nintendo Switch Pro Controller
+    - Nintendo Switch Joy Cons
 - Logging
+- Save managing
 - Error catching and handling
-- EXE Converting
+- EXE converting
 - Automatic project setup
 
 ### **Project Structure**
@@ -162,88 +161,6 @@ Your game will be compressed into a zip archive called `export.zip` that you can
     📃frostlight_engine.py  # single frostlight-engine file
     📃main.py               # your main game logic
 ```
-
-### **Modules Overview**
-
-#### Window
-
-- `create()`
-- `render()`
-- `fill()`
-- `resize()`
-- `set_fullscreen()`
-- `toggle_fullscreen()`
-- `set_name()`
-- `get_fps()`
-
-#### Input
-
-- `new()`
-- `get()`
-- `remove()`
-- `save()`
-- `load()`
-
-#### Logger
-
-- `error()`
-- `warning()`
-- `info()`
-
-### **Window Module**
-
-#### `create()`
-
-Dose not need any parameter and will be executed, every time the your game is starting.
-
-#### `render()`
-
-**Parameter:**
-
-- sprite : pygame.Surface
-- pos : list\[int,int\]
-
-Renders a sprite to the main surface.
-
-#### `fill()`
-
-**Parameter:**
-
-- color : list\[int,int,int\]
-
-Fills the main surface with a color.
-
-#### `resize()`
-
-**Parameter:**
-
-- new_window_size : list\[int,int\]
-
-Resizes the window to the new size.
-
-#### `set_fullscreen()`
-
-**Parameter:**
-
-- fullscreen : bool
-
-Changes fullscreen attribute of the window.
-
-#### `toggle_fullscreen()`
-
-Dose not need any parameter and will toggle the fullscreen attribute of the window.
-
-#### `set_name()`
-
-**Parameter:**
-
-- name : any
-
-Changes name attribute of the window.
-
-#### `get_fps()`
-
-Dose not need any parameter and will return the games fps value.
 
 ### **Input Module**
 
@@ -281,6 +198,17 @@ Dose not need any parameter and will save the input configuration in `data/saves
 
 Dose not need any parameter and will load the input configuration in `data/saves/input.save`. It will return true on success else it will return false.
 
+### **Save Manager**
+
+#### `save()`
+
+**Parameter:**
+
+- name : str
+- key : list\[int,int\]
+
+Registers a new input or adds new input to existing name.
+
 ### **Logger Module**
 
 #### `error()`
@@ -306,3 +234,54 @@ Will log an warning message in the lated log file. It will return true on succes
 - message : str
 
 Will log an info message in the lated log file. It will return true on success else it will return false.
+
+### **Window Module**
+
+#### `render()`
+
+**Parameter:**
+
+- sprite : pygame.Surface
+- pos : list\[int,int\]
+
+Renders a sprite to the main surface.
+
+#### `resize()`
+
+**Parameter:**
+
+- new_window_size : list\[int,int\]
+
+Resizes the window to the new size.
+
+#### `set_fullscreen()`
+
+**Parameter:**
+
+- fullscreen : bool
+
+Changes fullscreen attribute of the window.
+
+#### `toggle_fullscreen()`
+
+Dose not need any parameter and will toggle the fullscreen attribute of the window.
+
+#### `set_name()`
+
+**Parameter:**
+
+- name : any
+
+Changes name attribute of the window.
+
+#### `get_fps()`
+
+Dose not need any parameter and will return the games fps value.
+
+#### `fill()`
+
+**Parameter:**
+
+- color : list\[int,int,int\]
+
+Fills the main surface with a color.
