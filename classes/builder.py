@@ -3,10 +3,32 @@ import os
 class Builder:
     def __init__(self,engine) -> None:
 
+        """
+        Initialise the engines input system.
+
+        The build system packs the engine files if a release is planed and converts your game to an exe file.
+
+        Args:
+        
+        - engine (Engine): The engine to access specific variables.
+
+        !!!This is only used internally by the engine and should not be called in a game!!!
+        """
+
         # Engine variable
         self._engine = engine
 
     def _setup_game(self,name:str="New Game"):
+
+        """
+        Created the initial game folder structure
+
+        Args:
+
+        -name (str): Not implemented yet, for naming your game files
+
+        !!!This is only used internally by the engine and should not be called in a game!!!
+        """
 
         # Create engine tree
         directories_created = 0
@@ -66,6 +88,16 @@ class Builder:
 
     def _create_exe(self,name:str="game"):
 
+        """
+        Builds the game into exe file and zips all dependencies
+
+        Args:
+
+        -name (str): Not implemented yet, for naming your game files
+
+        !!!This is only used internally by the engine and should not be called in a game!!!
+        """
+
         # Import Modules
         import subprocess
         import shutil
@@ -109,6 +141,16 @@ class Builder:
                 shutil.rmtree("export")
 
     def _pack_release(self):
+
+        """
+        Packs engine for release into single file
+
+        Args:
+
+        - no args are required
+
+        !!!This is only used internally by the engine and should not be called in a game!!!
+        """
         
         # Relevent paths
         class_path = "./classes"
