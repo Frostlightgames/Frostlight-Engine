@@ -789,12 +789,22 @@ class Input:
             self.buttons[1][1] = mouse_pressed[1]
             self.buttons[2][1] = mouse_pressed[2]
 
-        def get_button(self, button:int) -> bool:
-
-            # Get mouse button             
-            return self.buttons[button]
-        
         def get_pos(self) -> list[int,int]:
+
+            """
+            Returns mouse position relative to main window
+            
+            Args:
+            - no args are required
+
+            Returns:
+            - List of [x mouse position (int), y mouse position (int)]
+
+            Example:
+            ```
+            mouse_pos = self.input.mouse.get_pos()
+            ```
+            """
 
             # Getting mouse position
             return self.position
