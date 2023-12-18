@@ -2,6 +2,7 @@ import os
 import time
 import pygame
 import argparse
+from classes.save import *
 from classes.input import *
 from classes.logger import *
 from classes.window import *
@@ -57,6 +58,7 @@ class Engine:
         self._builder = Builder(self)
         self.logger = Logger(self)
         self.input = Input(self)
+        self.save_manager = SaveManager(self,os.path.join("data","saves","save"))
         self.window = Window(self,window_size,fullscreen,resizable,nowindow,window_centered,vsync,window_name,mouse_visible,color_depth)
 
         # Object processing go here

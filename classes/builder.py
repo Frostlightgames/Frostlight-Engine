@@ -11,7 +11,7 @@ class Builder:
         # Create engine tree
         directories_created = 0
         files_created = 0
-        directories_to_create = ["data","screenshots",os.path.join("data","classes"),os.path.join("data","saves"),os.path.join("data","sprites")]
+        directories_to_create = ["data","screenshots",os.path.join("data","classes"),os.path.join("data","saves"),os.path.join("data","saves","backup"),os.path.join("data","sprites")]
         
         # Creating directories
         for directory in directories_to_create:
