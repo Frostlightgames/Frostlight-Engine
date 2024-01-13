@@ -163,11 +163,11 @@ class Engine:
             while self.run_game:
                 
                 # Main loop
-                self.get_events()
-                self.engine_update()
+                self._get_events()
+                self._engine_update()
                 self.update()
                 self.draw()
-                self.engine_draw()
+                self._engine_draw()
             
         # Ending game
         self.logger.info("Closed game")
