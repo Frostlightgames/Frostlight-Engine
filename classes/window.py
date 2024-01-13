@@ -149,7 +149,7 @@ class Window:
         # Set fullscreen variable
         self.fullscreen = fullscreen
         pygame.display.quit()
-        self.create()
+        self._create()
 
     def toggle_fullscreen(self):
 
