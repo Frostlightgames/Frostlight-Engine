@@ -226,3 +226,9 @@ class Window:
 
         # Fills the screen with a solid color
         self.main_surface.fill(color)
+    
+    def get_size(self) -> list[int]:
+        """
+        Returns the Window size.
+        """
+        return self.window_size
