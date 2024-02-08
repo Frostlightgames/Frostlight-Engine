@@ -531,14 +531,14 @@ class Input:
 
                         # Get value from not specified joystick
                         for i in range(len(self._joystick_devices)):
-                            input_value = self._joystick_devices[i].get_input(key[0][0],key[1])
+                            input_value = self._joystick_devices[i]._get_input(key[0][0],key[1])
                             if input_value != False or input_value != 0.0:
                                 return input_value
                     else:
 
                         # Get value from specified joystick
                         if controller_index < len(self._joystick_devices):
-                            input_value = self._joystick_devices[controller_index].get_input(key[0][0],key[1])
+                            input_value = self._joystick_devices[controller_index]._get_input(key[0][0],key[1])
                         else:
                             return 0
 
@@ -656,7 +656,7 @@ class Input:
         self.mouse._update()
 
         for joystick in self._reset_joy.copy():
-            joystick.reset()
+            joystick._reset()
             self._reset_joy.remove(joystick)
 
     def _handle_key_event(self, event:pygame.Event):
