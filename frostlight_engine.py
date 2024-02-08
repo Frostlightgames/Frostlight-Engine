@@ -83,6 +83,7 @@ class Engine:
         self.input._update()
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
+                self.event_quit()
                 self.quit()
 
             # Window events
@@ -90,13 +91,13 @@ class Engine:
                 self.last_time = time.time()
                 self.delta_time = 0
                 self.event_window_move([event.x,event.y])
-                self.event_window_resize([event.w,event.h])
 
             elif event.type == pygame.VIDEORESIZE:
                 if not self.window.fullscreen:
                     self.last_time = time.time()
                     self.delta_time = 0
                     self.window.resize([event.w,event.h])
+                    self.event_window_resize([event.w,event.h])
 
             # Keyboard events
             elif event.type == pygame.KEYDOWN:
@@ -144,42 +145,107 @@ class Engine:
                 self.event_joystick_removed(event.instance_id)
 
     def event_quit(self):
-        pass
+
+        # Event function to overwrite on quit
+        """
+        This function can be overwritten to react to the game quit event.
+        Event is called before the game closes.
+
+        Args:
+        
+        - no args are required.
+
+        Example:
+        ```
+        def event_quit(self):
+            print("game end")
+        ```
+        """
 
     def event_window_move(self,position:list[int,int]):
-        pass
+        
+        # Event function to overwrite on window move
+        """
+        This function can be overwritten to react to the window move event.
+        Event is called after the window moved.
+
+        Args:
+        
+        - position (list[int,int]): Monitor position to where to window moved.
+
+        Example:
+        ```
+        def event_window_move(self,position:list[int,int]):
+            print(f"The window moved to: {position}")
+        ```
+        """
 
     def event_window_resize(self,size:list[int,int]):
-        pass
+        
+        # Event function to overwrite on window resize
+        """
+        This function can be overwritten to react to the window resize event.
+        Event is called after the window is resized.
+
+        Args:
+        
+        - size (list[int,int]): New window size.
+
+        Example:
+        ```
+        def event_window_resize(self,size:list[int,int]):
+            print(f"The window was resized to: {size}")
+        ```
+        """
     
     def event_keydown(self,key:int,unicode:str):
+        
+        # Event function to overwrite on keypress
         pass
     
     def event_keyup(self,key:int,unicode:str):
+        
+        # Event function to overwrite on keyrelease
         pass
 
     def event_mouse_buttondown(sefl,button:int,position:list[int,int]):
+        
+        # Event function to overwrite on mouse click
         pass
     
     def event_mouse_buttonup(sefl,button:int,position:list[int,int]):
+        
+        # Event function to overwrite on mouse release
         pass
     
     def event_joystick_buttondown(sefl,button:int,joystick_id:int,instance_id:int):
+        
+        # Event function to overwrite on joystick button click
         pass
     
     def event_joystick_buttonup(sefl,button:int,joystick_id:int,instance_id:int):
+        
+        # Event function to overwrite on joystick button release
         pass
     
     def event_joystick_axismotion(sefl,joy_id:int,instance_id:int,axis:int,value:int):
+        
+        # Event function to overwrite on joystick axis motion
         pass
     
     def event_joystick_hatmotion(self,hat:int,joystick_id:int,instance_id:int):
+        
+        # Event function to overwrite on joystick hat motion
         pass
     
     def event_joystick_added(self,device_index:int,guid:str):
+        
+        # Event function to overwrite on joystick connected
         pass
     
     def event_joystick_removed(self,instance_id:int):
+        
+        # Event function to overwrite on joystick disconnected
         pass
 
     def _engine_update(self):
@@ -194,6 +260,10 @@ class Engine:
         pygame.display.update()
 
     def run(self):
+
+        """
+        
+        """
 
         # Starting game engine
         self.logger.info(f"Starting [Engine version {self.engine_version} | Game version {self.game_version}]")
@@ -225,6 +295,11 @@ class Engine:
         self.logger.info("Closed game")
 
     def quit(self):
+        
+        """
+        """
+        
+        # Quit game loop
         self.run_game = False
 
 if __name__ == "__main__":
