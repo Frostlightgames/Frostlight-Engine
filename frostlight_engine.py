@@ -12,6 +12,7 @@ class Engine:
     def __init__(self,
                  catch_error:bool=True,
                  color_depth:int=16,
+                 delete_old_logs:bool=False,
                  fps:int=0,
                  fullscreen:bool=False,
                  game_version:str="1.0",
@@ -56,7 +57,7 @@ class Engine:
         # Object variables go here
         self.clock = pygame.time.Clock()
         self._builder = Builder(self)
-        self.logger = Logger(self)
+        self.logger = Logger(self,delete_old_logs)
         self.input = Input(self)
         self.save_manager = SaveManager(self,os.path.join("data","saves","save"))
         self.window = Window(self,window_size,fullscreen,resizable,nowindow,window_centered,vsync,window_name,mouse_visible,color_depth)
