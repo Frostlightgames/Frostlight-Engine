@@ -89,6 +89,8 @@ class Engine:
             elif event.type == pygame.WINDOWMOVED:
                 self.last_time = time.time()
                 self.delta_time = 0
+                self.event_window_move([event.x,event.y])
+                self.event_window_resize([event.w,event.h])
 
             elif event.type == pygame.VIDEORESIZE:
                 if not self.window.fullscreen:
@@ -101,35 +103,84 @@ class Engine:
                 self.input._handle_key_event(event)
                 if event.key == pygame.K_F11:
                     self.window.toggle_fullscreen()
+                self.event_keydown(event.key,event.unicode)
 
             elif event.type == pygame.KEYUP:
                 self.input._handle_key_event(event)
+                self.event_keyup(event.key,event.unicode)
                 
             # Mouse events
             elif event.type == pygame.MOUSEBUTTONDOWN:
                 self.input._handle_mouse_event(event)
+                self.event_mouse_buttondown(event.button,event.pos)
 
             elif event.type == pygame.MOUSEBUTTONUP:
                 self.input._handle_mouse_event(event)
+                self.event_mouse_buttonup(event.button,event.pos)
 
             # Joystick events
             elif event.type == pygame.JOYBUTTONDOWN:
                 self.input._handle_joy_event(event)
+                self.event_joystick_buttondown(event.button,event.joy,event.instance_id)
 
             elif event.type == pygame.JOYBUTTONUP:
                 self.input._handle_joy_event(event)
+                self.event_joystick_buttonup(event.button,event.joy,event.instance_id)
 
             elif event.type == pygame.JOYAXISMOTION:
                 self.input._handle_joy_event(event)
+                self.event_joystick_axismotion(event.joy,event.instance_id,event.axis,event.value)
 
             elif event.type == pygame.JOYHATMOTION:
                 self.input._handle_joy_event(event)
+                self.event_joystick_hatmotion(event.button)
 
             elif event.type == pygame.JOYDEVICEADDED:
                 self.input._init_joysticks()
+                self.event_joystick_added(event.device_index,event.guid)
 
             elif event.type == pygame.JOYDEVICEREMOVED:
                 self.input._init_joysticks()
+                self.event_joystick_removed(event.instance_id)
+
+    def event_quit(self):
+        pass
+
+    def event_window_move(self,position:list[int,int]):
+        pass
+
+    def event_window_resize(self,size:list[int,int]):
+        pass
+    
+    def event_keydown(self,key:int,unicode:str):
+        pass
+    
+    def event_keyup(self,key:int,unicode:str):
+        pass
+
+    def event_mouse_buttondown(sefl,button:int,position:list[int,int]):
+        pass
+    
+    def event_mouse_buttonup(sefl,button:int,position:list[int,int]):
+        pass
+    
+    def event_joystick_buttondown(sefl,button:int,joystick_id:int,instance_id:int):
+        pass
+    
+    def event_joystick_buttonup(sefl,button:int,joystick_id:int,instance_id:int):
+        pass
+    
+    def event_joystick_axismotion(sefl,joy_id:int,instance_id:int,axis:int,value:int):
+        pass
+    
+    def event_joystick_hatmotion(self,hat:int,joystick_id:int,instance_id:int):
+        pass
+    
+    def event_joystick_added(self,device_index:int,guid:str):
+        pass
+    
+    def event_joystick_removed(self,instance_id:int):
+        pass
 
     def _engine_update(self):
 
