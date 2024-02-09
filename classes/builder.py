@@ -97,7 +97,7 @@ class Builder:
 
         !!!This is only used internally by the engine and should not be called in a game!!!
         """
-
+        import os
         # Import Modules
         import subprocess
         import shutil
@@ -158,6 +158,7 @@ class Builder:
         main_file = "frostlight_engine.py"
         imported_modules = []
         class_contents = []
+        within_class = False
 
         # Read class folder 
         for pathname, _, files in os.walk(class_path):
@@ -166,17 +167,17 @@ class Builder:
                     file_path = os.path.join(pathname, file)
                     with open(file_path, "r", encoding="utf-8") as f:
                         content = f.read()
-                        stop = False
                         for line in content.split("\n"):
+                            unstriped_line = line
                             line = line.strip()
-                            if line.startswith("# Import Modules"):
-                                stop = True
-                            if (line.startswith("import ") or line.startswith("from "))  and not "PyInstaller.__main__" in line and not stop:
+                            if unstriped_line.startswith("class "):
+                                within_class = True
+                            elif unstriped_line and not unstriped_line.startswith(" ") and within_class:
+                                within_class = False
+                            if (line.startswith("import ") or line.startswith("from "))  and not "PyInstaller.__main__" in line and not within_class:
                                 if not line.startswith("from classes."):
                                     imported_modules.append(line)
-                                    content = content.replace(line+"\n", "")
-                            if stop and line == "":
-                                stop = False
+                                    content = content.replace(unstriped_line, "")
                         class_contents.append(content)
 
         imported_modules = sorted(set(imported_modules),key=len)
