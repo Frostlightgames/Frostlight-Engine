@@ -97,7 +97,7 @@ class Builder:
 
         !!!This is only used internally by the engine and should not be called in a game!!!
         """
-        import os
+
         # Import Modules
         import subprocess
         import shutil
