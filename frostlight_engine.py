@@ -201,22 +201,78 @@ class Engine:
     def event_keydown(self,key:int,unicode:str):
         
         # Event function to overwrite on keypress
-        pass
+        """
+        This function can be overwritten to react to the keypress event.
+        Event is called after a key is pressed.
+
+        Args:
+        
+        - key (int): Index of pressed key.
+        - unicode (str): Displayable unicode of key.
+
+        Example:
+        ```
+        def event_keydown(self,key:int,unicode:str):
+            print(f"Key {unicode} with id {key} was pressed")
+        ```
+        """
     
     def event_keyup(self,key:int,unicode:str):
         
-        # Event function to overwrite on keyrelease
-        pass
+        # Event function to overwrite on key release
+        """
+        This function can be overwritten to react to the key release event.
+        Event is called after a key is released.
+
+        Args:
+        
+        - key (int): Index of released key.
+        - unicode (str): Displayable unicode of key.
+
+        Example:
+        ```
+        def event_keyup(self,key:int,unicode:str):
+            print(f"Key {unicode} with id {key} was released")
+        ```
+        """
 
     def event_mouse_buttondown(sefl,button:int,position:list[int,int]):
         
         # Event function to overwrite on mouse click
-        pass
+        """
+        This function can be overwritten to react to a mouse click.
+        Event is called after the mouse is clicked.
+
+        Args:
+        
+        - button (int): Index of clicked button.
+        - position (list[int,int]): Position the mouse was on when clicked.
+
+        Example:
+        ```
+        def event_mouse_buttondown(sefl,button:int,position:list[int,int])
+            print(f"Mouse button {button {button} was pressed at position {position}}")
+        ```
+        """
     
     def event_mouse_buttonup(sefl,button:int,position:list[int,int]):
         
         # Event function to overwrite on mouse release
-        pass
+        """
+        This function can be overwritten to react to a mouse button release.
+        Event is called after the mouse button is released.
+
+        Args:
+        
+        - button (int): Index of released button.
+        - position (list[int,int]): Position the mouse was on when released.
+
+        Example:
+        ```
+        def event_mouse_buttonup(sefl,button:int,position:list[int,int])
+            print(f"Mouse button {button {button} was released at position {position}}")
+        ```
+        """
     
     def event_joystick_buttondown(sefl,button:int,joystick_id:int,instance_id:int):
         
