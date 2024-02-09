@@ -166,7 +166,6 @@ class Builder:
                     file_path = os.path.join(pathname, file)
                     with open(file_path, "r", encoding="utf-8") as f:
                         content = f.read()
-                        class_contents.append(content)
                         stop = False
                         for line in content.split("\n"):
                             line = line.strip()
@@ -175,8 +174,10 @@ class Builder:
                             if (line.startswith("import ") or line.startswith("from "))  and not "PyInstaller.__main__" in line and not stop:
                                 if not line.startswith("from classes."):
                                     imported_modules.append(line)
+                                    content = content.replace(line+"\n", "")
                             if stop and line == "":
                                 stop = False
+                        class_contents.append(content)
 
         imported_modules = sorted(set(imported_modules),key=len)
 
@@ -200,8 +201,6 @@ class Builder:
 
             # Write classes content
             for content in class_contents:
-                for importlines in imported_modules:
-                    content = content.replace(importlines+"\n", "")
                 content = "\n".join(line for line in content.split("\n") if not line.strip().startswith("from classes."))
                 f.write(content.strip())
                 f.write("\n\n")
