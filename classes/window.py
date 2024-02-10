@@ -3,14 +3,14 @@ import pygame
 
 class Window:
     def __init__(self,engine,set_window_size=None,fullscreen=False,resizable=True,windowless=False,window_centered=True,vsync=False,window_name="Frostlight Engine",mouse_visible=True,color_depth=24) -> None:
-        
+
         """
         Initialise the engines window system.
 
         The window system manages all window events and rendering.
 
         Args:
-        
+
         - engine (Engine): The engine to access specific variables.
         - set_window_size (list)=None: Size of window.
         - fullscreen (bool)=False: Sets windows fullscreen mode.
@@ -45,7 +45,7 @@ class Window:
         Creates main window instance.
 
         Args:
-        
+
         - no args are required.
 
         !!!This is only used internally by the engine and should not be called in a game!!!
@@ -53,7 +53,7 @@ class Window:
 
         if not self.windowless:
             pygame.display.init()
-            
+
             # Center window
             if self.window_centered:
                 os.environ['SDL_VIDEO_CENTERED'] = '1'
@@ -63,7 +63,7 @@ class Window:
             # Create window
             display_size = [int(pygame.display.Info().current_w),int(pygame.display.Info().current_h)]
             if self.fullscreen: 
-                
+
                 # Fullscreen window
                 self.main_surface = pygame.display.set_mode(display_size,pygame.HWSURFACE|pygame.DOUBLEBUF|pygame.FULLSCREEN,vsync=self.vsync,depth=self.color_depth)
             else:
@@ -73,14 +73,14 @@ class Window:
                     self.window_size = [display_size[0],display_size[1]*0.94]
 
                 if self.resizable:
-                    
+
                     # Resizable window
                     self.main_surface = pygame.display.set_mode(self.window_size,pygame.HWSURFACE|pygame.DOUBLEBUF|pygame.RESIZABLE,vsync=self.vsync,depth=self.color_depth)
                 else: 
-                    
+
                     # Fixed size window
                     self.main_surface = pygame.display.set_mode(self.window_size,pygame.HWSURFACE|pygame.DOUBLEBUF|pygame.NOFRAME,vsync=self.vsync,depth=self.color_depth)
-            
+
             # Change window attributes
             pygame.display.set_caption(self.window_name)
             pygame.mouse.set_visible(self.mouse_visible)
@@ -91,7 +91,7 @@ class Window:
         Renders a sprite to the main window.
 
         Args:
-        
+
         - sprite (pygame.Surface): The sprite to render.
         - pos (list[int,int]): The position to render the sprite to.
 
@@ -110,7 +110,7 @@ class Window:
         Resizes the main window.
 
         Args:
-        
+
         - new_window_size (list[int,int]): The new window size.
 
         Example:
@@ -127,7 +127,7 @@ class Window:
             # Resizable window 
             self.main_surface = pygame.display.set_mode(self.window_size,pygame.HWSURFACE|pygame.DOUBLEBUF|pygame.RESIZABLE,vsync=self.vsync,depth=self.color_depth)
         else: 
-            
+
             # Fixed size window
             self.main_surface = pygame.display.set_mode(self.window_size,pygame.HWSURFACE|pygame.DOUBLEBUF|pygame.NOFRAME,vsync=self.vsync,depth=self.color_depth)
 
@@ -137,7 +137,7 @@ class Window:
         Changes window fullscreen state.
 
         Args:
-        
+
         - fullscreen (bool): Fullscreen state.
 
         Example:
@@ -157,7 +157,7 @@ class Window:
         Toggles window fullscreen state.
 
         Args:
-        
+
         - no args are required.
 
         Example:
@@ -175,7 +175,7 @@ class Window:
         Set a window name.
 
         Args:
-        
+
         - name (str)="": New window name.
 
         Example:
@@ -193,7 +193,7 @@ class Window:
         Returns games fps value.
 
         Args:
-        
+
         - no args are required.
 
         Returns:
@@ -215,7 +215,7 @@ class Window:
         Fills window with a color.
 
         Args:
-        
+
         - color (list[int,int,int]): Color the window is filled with.
 
         Example:
@@ -227,19 +227,24 @@ class Window:
         # Fills the screen with a solid color
         self.main_surface.fill(color)
     
-    def get_size(self):
+    def get_size(self) -> list[int,int]:
+
         """
+        Returns window size as list.
+
         Args:
-        
+
         - no args are required.
 
         Returns:
-        
-        - Window size as list.
+
+        - Window size as list of integers.
 
         Example:
         ```
         print(self.window.get_size())
         ```
         """
+
+        # Returning window size as a list of integers
         return self.window_size

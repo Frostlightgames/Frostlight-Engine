@@ -106,7 +106,6 @@ _NINTENDO_SWITCH_JOYCON_CONTROLLER_L_R = 6
 
 # Joystick button maps
 _JOYSTICK_XBOX_360_BUTTON_MAP = [
-    
     [JOYSTICK_BUTTON_DOWN],         # A BUTTON
     [JOYSTICK_BUTTON_RIGHT],        # B BUTTON
     [JOYSTICK_BUTTON_LEFT],         # X BUTTON
@@ -316,7 +315,7 @@ class Input:
         The input system should help collect and read out many inputs by a specified key.
 
         Args:
-        
+
         - engine (Engine): The engine to access specific variables.
         - joystick_dead_zone (int)=0.15: Default controller stick deadzone.
 
@@ -332,12 +331,12 @@ class Input:
         # Keyboard variables
         self._keys = {}
         self._reset_keys = []
-        
+
         # Joystick variables
         self.joystick_dead_zone = joystick_dead_zone
         self._joystick_devices = []
         self._reset_joy = []
-        
+
         # Input variables
         self.autosave = True
         self.save_path = os.path.join("data","saves","input")
@@ -361,12 +360,12 @@ class Input:
 
         """
         Register or add a new input for read out later.
-        
+
         Args:
         - name (str): The name of the input to register.
         - key: The input key which will be monitored.
         - method: The way the input is pressed: [CLICKED, PRESSED, RELEASE].
-        
+
         Returns:
         - True if registration was successful.
         - False if input is already registered or something went wrong.
@@ -405,11 +404,11 @@ class Input:
 
         Args:
         - inputname (str): the name of the registered input to remove.
-        
+
         Returns:
         - True if removal was successful.
         - False if something went wrong.
-        
+
         If the variable autosave is True the removal of the input is automatically saved.
 
         Example:
@@ -440,11 +439,11 @@ class Input:
 
         """
         Resets input to default value.
-        
+
         Args:
         - name (str): The name of the input value to reset.
         - controller_index (int): Index or joystick id of the controller to reset.
-        
+
         Returns:
         - True if reset was successful.
         - False if controller_index is out of range or something went wrong.
@@ -488,7 +487,7 @@ class Input:
             return True
         except:
             return False
-        
+
     def get(self, name:str, controller_index:int=-1) -> int|float:
 
         """
@@ -554,12 +553,12 @@ class Input:
 
         """
         Register or add a new input to read out later.
-        
+
         Args:
         - name (str): The name of the input to overwrite.
         - keys (list): Is a list of [key, method].
         - method: The way the input is pressed: [CLICKED, PRESSED, RELEASE].
-        
+
         Returns:
         - True if registration was successful.
         - False if something went wrong.
@@ -586,12 +585,12 @@ class Input:
             return True
         except:
             return False
-    
+
     def save(self):
 
         """
         Saves registered inputs to file.
-        
+
         Args:
         - no args are required.
 
@@ -617,7 +616,7 @@ class Input:
 
         """
         Load registered inputs from file.
-        
+
         Args:
         - no args are required.
 
@@ -644,7 +643,7 @@ class Input:
             return True
         except:
             return False
-        
+
     def _update(self) -> None:
 
         # Update all input devices
@@ -697,7 +696,7 @@ class Input:
             button_index = event.button
             self._joystick_devices[joy_index].inputs[_JOYSTICK_BUTTON_MAP[joy_type][button_index][0][0]] = [False,False,True]
             self._reset_joy.append(self._joystick_devices[joy_index])
-            
+
         # Handel joystick axis movement event
         elif event.type == pygame.JOYAXISMOTION:
             axis_index = event.axis
@@ -739,7 +738,7 @@ class Input:
             if event.value[1] == -1:
                 self._joystick_devices[joy_index].inputs[_JOYSTICK_BUTTON_MAP[joy_type][JOYSTICK_DPAD_DOWN[0]][0][0]] = [True,True,False]
                 self._reset_joy.append(self._joystick_devices[joy_index])
-            
+
             # DPAD UP
             elif event.value[1] == 1:
                 self._joystick_devices[joy_index].inputs[_JOYSTICK_BUTTON_MAP[joy_type][JOYSTICK_DPAD_UP[0]][0][0]] = [True,True,False]
@@ -792,7 +791,7 @@ class Input:
 
             """
             Returns mouse position relative to main window.
-            
+
             Args:
             - no args are required.
 

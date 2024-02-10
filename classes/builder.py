@@ -34,7 +34,7 @@ class Builder:
         directories_created = 0
         files_created = 0
         directories_to_create = ["data","screenshots",os.path.join("data","classes"),os.path.join("data","saves"),os.path.join("data","saves","backup"),os.path.join("data","sprites")]
-        
+
         # Creating directories
         for directory in directories_to_create:
             try:
@@ -151,7 +151,7 @@ class Builder:
 
         !!!This is only used internally by the engine and should not be called in a game!!!
         """
-        
+
         # Relevent paths
         class_path = "./classes"
         export_file = "engine_export.py"

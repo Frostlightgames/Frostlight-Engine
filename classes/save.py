@@ -14,6 +14,7 @@ class SaveManager():
         Initialize the SaveManager object.
 
         Args:
+
         - engine: Engine instance.
         - path (str): Path to the file to be managed. Defaults to "data/saves/save".
         """
@@ -28,6 +29,7 @@ class SaveManager():
         Set the encryption key for the SaveManager.
 
         Args:
+
         - encryption_key (bytes): New encryption key to be set.
         """
 
@@ -39,22 +41,24 @@ class SaveManager():
         Generate a new encryption key using Fernet.
 
         Returns:
+
         - bytes: Generated encryption key.
         """
 
         return Fernet.generate_key()
-    
+
     def set_save_path(self,path:str) -> None:
 
         """
         Set the save path for the SaveManager.
 
         Args:
+
         - path (str): New path to be set for saving data.
         """
 
         self.path = path
-    
+
     def _encrypt(self,data:dict) -> bool:
 
         """
@@ -62,9 +66,11 @@ class SaveManager():
         Encrypt the provided data using Fernet encryption.
 
         Args:
+
         - data (dict): Data to be encrypted (as a dictionary).
 
         Returns:
+
         - bool: True if encryption is successful, False otherwise.
         """
 
@@ -76,7 +82,7 @@ class SaveManager():
                 file.write(encrypted_data)
         except Exception as e:
             self.engine.logger.error(e)
-    
+
     def _decrypt(self) -> bool|dict:
 
         """
@@ -84,6 +90,7 @@ class SaveManager():
         Decrypt the data in the file specified by the path using Fernet decryption.
 
         Returns:
+
         - bool | dict: Decrypted data as a dictionary if successful, False otherwise.
         """
 
@@ -98,17 +105,19 @@ class SaveManager():
             self.engine.logger.error(e)
 
         return False
-    
+
     def save(self,key,value) -> bool:
 
         """
         Save data to the file using a specified key-value pair.
 
         Args:
+
         - key: Key for the data.
         - value: Value to be saved corresponding to the key.
 
         Returns:
+
         - bool: True if saving is successful, False otherwise.
         """
 
@@ -124,17 +133,19 @@ class SaveManager():
             self.engine.logger.error(e)
 
         return False
-    
+
     def load(self,key,default=None) -> any:
 
         """
         Load data from the file using the specified key.
 
         Args:
+
         - key: Key to retrieve data.
         - default: If key is not found, default will be returned instead.
 
         Returns:
+
         - any: Retrieved value corresponding to the key, or default value if not found.
         """
 
@@ -147,16 +158,17 @@ class SaveManager():
                 self.engine.logger.error(e)
         else:
             return default
-        
+
     def backup(self,backup_path:str="data/saves/backup"):
 
         """
         Create a backup of the current save file.
 
         Args:
+
         - backup_path (str): Path to store the backup file. Defaults to "data/saves/backup".
         """
-        
+
         shutil.copyfile(
             self.path,
             os.path.join(backup_path,f'{os.path.split(self.path)[-1]}-{datetime.datetime.now().strftime("%H-%M-%S")}')

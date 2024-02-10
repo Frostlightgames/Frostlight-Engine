@@ -109,7 +109,7 @@ class Engine:
             elif event.type == pygame.KEYUP:
                 self.input._handle_key_event(event)
                 self.event_keyup(event.key,event.unicode)
-                
+
             # Mouse events
             elif event.type == pygame.MOUSEBUTTONDOWN:
                 self.input._handle_mouse_event(event)
@@ -152,7 +152,7 @@ class Engine:
         Event is called before the game closes.
 
         Args:
-        
+
         - no args are required.
 
         Example:
@@ -163,14 +163,14 @@ class Engine:
         """
 
     def event_window_move(self,position:list[int,int]):
-        
+
         # Event function to overwrite on window move
         """
         This function can be overwritten to react to the window move event.
         Event is called after the window moved.
 
         Args:
-        
+
         - position (list[int,int]): Monitor position to where to window moved.
 
         Example:
@@ -181,14 +181,14 @@ class Engine:
         """
 
     def event_window_resize(self,size:list[int,int]):
-        
+
         # Event function to overwrite on window resize
         """
         This function can be overwritten to react to the window resize event.
         Event is called after the window is resized.
 
         Args:
-        
+
         - size (list[int,int]): New window size.
 
         Example:
@@ -197,16 +197,16 @@ class Engine:
             print(f"The window was resized to: {size}")
         ```
         """
-    
+
     def event_keydown(self,key:int,unicode:str):
-        
+
         # Event function to overwrite on keypress
         """
         This function can be overwritten to react to the keypress event.
         Event is called after a key is pressed.
 
         Args:
-        
+
         - key (int): Index of pressed key.
         - unicode (str): Displayable unicode of key.
 
@@ -216,9 +216,9 @@ class Engine:
             print(f"Key {unicode} with id {key} was pressed")
         ```
         """
-    
+
     def event_keyup(self,key:int,unicode:str):
-        
+
         # Event function to overwrite on key release
         """
         This function can be overwritten to react to the key release event.
@@ -237,14 +237,14 @@ class Engine:
         """
 
     def event_mouse_buttondown(sefl,button:int,position:list[int,int]):
-        
+
         # Event function to overwrite on mouse click
         """
         This function can be overwritten to react to a mouse click.
         Event is called after the mouse is clicked.
 
         Args:
-        
+
         - button (int): Index of clicked button.
         - position (list[int,int]): Position the mouse was on when clicked.
 
@@ -254,16 +254,16 @@ class Engine:
             print(f"Mouse button {button {button} was pressed at position {position}}")
         ```
         """
-    
+
     def event_mouse_buttonup(sefl,button:int,position:list[int,int]):
-        
+
         # Event function to overwrite on mouse release
         """
         This function can be overwritten to react to a mouse button release.
         Event is called after the mouse button is released.
 
         Args:
-        
+
         - button (int): Index of released button.
         - position (list[int,int]): Position the mouse was on when released.
 
@@ -273,12 +273,12 @@ class Engine:
             print(f"Mouse button {button {button} was released at position {position}}")
         ```
         """
-    
+
     def event_joystick_buttondown(sefl,button:int,joystick_id:int,instance_id:int):
-        
+
         # Event function to overwrite on joystick button click
         pass
-    
+
     def event_joystick_buttonup(sefl,button:int,joystick_id:int,instance_id:int):
         
         # Event function to overwrite on joystick button release
@@ -318,7 +318,7 @@ class Engine:
     def run(self):
 
         """
-        
+
         """
 
         # Starting game engine
@@ -339,22 +339,36 @@ class Engine:
                     self.logger.error(e)
         else:
             while self.run_game:
-                
+
                 # Main loop
                 self._get_events()
                 self._engine_update()
                 self.update()
                 self.draw()
                 self._engine_draw()
-            
+
         # Ending game
         self.logger.info("Closed game")
 
     def quit(self):
-        
+
         """
+        This function closes the game loop
+
+        Args:
+
+        - no args are required.
+
+        Example:
+        ```
+        i = 0
+        while True:
+            i += 1
+            if i == 10:
+                self.quit()
+        ```
         """
-        
+
         # Quit game loop
         self.run_game = False
 
@@ -374,7 +388,7 @@ if __name__ == "__main__":
         engine._builder._pack_release()
 
     elif args.build:
-    
+
         # Build game to EXE
         engine = Engine(nowindow=True)
         engine._builder._setup_game()

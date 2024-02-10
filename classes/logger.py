@@ -50,7 +50,7 @@ class Logger:
         Logs an error.
 
         Args:
-        
+
         - message (str): Content to log.
 
         Mostly used by the engine internally but can also be used for logging other error messages
@@ -71,7 +71,7 @@ class Logger:
         Logs a warning.
 
         Args:
-        
+
         - message (str): Content to log.
 
         Example:
@@ -88,7 +88,7 @@ class Logger:
         Logs an info.
 
         Args:
-        
+
         - message (str): Content to log.
 
         Example:
@@ -105,7 +105,7 @@ class Logger:
         Writes logged content to file.
 
         Args:
-        
+
         - prefix (str): Importance of content 
         - message (str): Content to write to logfile.
 
