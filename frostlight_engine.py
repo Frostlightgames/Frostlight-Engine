@@ -397,11 +397,11 @@ if __name__ == "__main__":
     elif args.name: 
 
         # Setup new Project with name
-        engine = Engine()
+        engine = Engine(nowindow=True)
         engine._builder._setup_game(args.name)
 
     else:
 
-        # Setup new no name Project 
-        engine = Engine()
+        # Setup new no name Project
+        engine = Engine(nowindow=True)
         engine._builder._setup_game()

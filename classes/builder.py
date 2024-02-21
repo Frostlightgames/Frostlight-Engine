@@ -25,10 +25,12 @@ class Builder:
 
         Args:
 
-        -name (str): Not implemented yet, for naming the game files
+        - name (str): Not implemented yet, for naming the game files
 
         !!!This is only used internally by the engine and should not be called in a game!!!
         """
+
+        self._update_modules()
 
         # Create engine tree
         directories_created = 0
@@ -86,6 +88,54 @@ class Builder:
         else:
             self._engine.logger.info(f"Created game files structure with {files_created} files and {directories_created} directories")
 
+    def _update_modules(self):
+
+        """
+        Updates required python modules
+
+        Args:
+
+        - no args are required
+
+        !!!This is only used internally by the engine and should not be called in a game!!!
+        """
+
+        import os
+        import sys
+        import ast
+        import subprocess
+
+        # collecting modules to update
+        
+        modules = []
+        with open(os.path.basename(__file__), 'r') as f:
+            content = f.read()
+            tree = ast.parse(content)
+            for node in ast.walk(tree):
+                if isinstance(node, ast.Import):
+                    for alias in node.names:
+                        module_name = alias.name
+                        module_name = module_name.split('.')[0]
+                        if not module_name in sys.stdlib_module_names:
+                            modules.append(module_name)
+
+                elif isinstance(node, ast.ImportFrom):
+                    module_name = node.module
+                    module_name = module_name.split('.')[0]
+                    if not module_name in sys.stdlib_module_names:
+                        modules.append(module_name)
+
+        # updating modules
+
+        for module_name in modules:
+            print(f"\n\033[94m[Info] Updating module: \033[0m{module_name}\n")
+            try:
+                subprocess.check_call(['pip', 'install', module_name])
+                print(f"\n\033[92m[Info] Successfully updated \033[0m{module_name}\n")
+            except subprocess.CalledProcessError:
+                print(f"\n\033[91m [Error] Failed to updated \033[0m{module_name}\n")
+            print('-'*50)
+
     def _create_exe(self,name:str="game"):
 
         """
@@ -93,7 +143,7 @@ class Builder:
 
         Args:
 
-        -name (str): Not implemented yet, for naming the game files
+        - name (str): Not implemented yet, for naming the game files
 
         !!!This is only used internally by the engine and should not be called in a game!!!
         """
