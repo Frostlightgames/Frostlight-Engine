@@ -1,5 +1,6 @@
 import os
 import sys
+import glob
 import datetime
 
 class Logger:
@@ -13,7 +14,7 @@ class Logger:
         Args:
         
         - engine (Engine): The engine to access specific variables.
-        - delete_old_logs (bool)=False: If true there will only be one logfile.
+        - delete_old_logs (bool)=False: If true there will only be the newest logfile.
 
         !!!This is only used internally by the engine and should not be called in a game!!!
         """
@@ -33,9 +34,12 @@ class Logger:
             try:
 
                 # Create empty file
-                if not os.path.exists(self.logpath) or delete_old_logs:
+                if not os.path.exists(self.logpath):
                     if not os.path.exists("logs"):
                         os.mkdir("logs")
+                    if delete_old_logs:
+                        for filename in glob.glob(f"{self.logpath}/*.log"):
+                            os.remove(filename)
                     with open(self.logpath,"+w") as file:
                         file.write("")
             except Exception as e:
