@@ -38,7 +38,7 @@ class Logger:
                     if not os.path.exists("logs"):
                         os.mkdir("logs")
                     if delete_old_logs:
-                        for filename in glob.glob(f"{self.logpath}/*.log"):
+                        for filename in glob.glob("logs/*.log"):
                             os.remove(filename)
                     with open(self.logpath,"+w") as file:
                         file.write("")
