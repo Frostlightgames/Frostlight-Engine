@@ -153,7 +153,7 @@ class Engine:
 
         Args:
 
-        - no args are required.
+        - No args are required.
 
         Example:
         ```
@@ -250,8 +250,8 @@ class Engine:
 
         Example:
         ```
-        def event_mouse_buttondown(sefl,button:int,position:list[int,int])
-            print(f"Mouse button {button {button} was pressed at position {position}}")
+        def event_mouse_buttondown(sefl,button:int,position:list[int,int]):
+            print(f"Mouse button {button} was pressed at position {position}}")
         ```
         """
 
@@ -269,40 +269,129 @@ class Engine:
 
         Example:
         ```
-        def event_mouse_buttonup(sefl,button:int,position:list[int,int])
-            print(f"Mouse button {button {button} was released at position {position}}")
+        def event_mouse_buttonup(sefl,button:int,position:list[int,int]):
+            print(f"Mouse button {button} was released at position {position}}")
         ```
         """
 
     def event_joystick_buttondown(sefl,button:int,joystick_id:int,instance_id:int):
 
         # Event function to overwrite on joystick button click
-        pass
+        """
+        This function can be overwritten to react to a joystick button press.
+        Event is called after the joystick button press.
+
+        Args:
+
+        - button (int): Index of released button.
+        - joystick_id (int): Index id of joystick object.
+        - instance_id (int): Instance id of joystick object.
+
+        Example:
+        ```
+        def event_joystick_buttondown(sefl,button:int,joystick_id:int,instance_id:int):
+            print(f"Button {button} was pressed at joystick {joystick_id}")
+        ```
+        """
 
     def event_joystick_buttonup(sefl,button:int,joystick_id:int,instance_id:int):
         
         # Event function to overwrite on joystick button release
-        pass
+        """
+        This function can be overwritten to react to a joystick button release.
+        Event is called after the joystick button is released.
+
+        Args:
+
+        - button (int): Index of released button.
+        - joystick_id (int): Index id of joystick object.
+        - instance_id (int): Instance id of joystick object.
+
+        Example:
+        ```
+        def event_joystick_buttonup(sefl,button:int,joystick_id:int,instance_id:int):
+            print(f"Button {button} was released at joystick {joystick_id}")
+        ```
+        """
     
-    def event_joystick_axismotion(sefl,joy_id:int,instance_id:int,axis:int,value:int):
+    def event_joystick_axismotion(sefl,joystick_id:int,instance_id:int,axis:int,value:float):
         
         # Event function to overwrite on joystick axis motion
-        pass
+        """
+        This function can be overwritten to react to a joysticks axis motion.
+        Event is called after the joystick axis motion.
+
+        Args:
+
+        - joystick_id (int): Index id of joystick object.
+        - instance_id (int): Instance id of joystick object.
+        - axis (int): Index of moved joystick axis.
+        - value (float): Value of motion between -1.0 and 1.0.
+
+        Example:
+        ```
+        def event_joystick_axismotion(sefl,joystick_id:int,instance_id:int,axis:int,value:int):
+            print(f"Axis {axis} detected motion {value} at joystick {joystick_id}")
+        ```
+        """
     
-    def event_joystick_hatmotion(self,hat:int,joystick_id:int,instance_id:int):
+    def event_joystick_hatmotion(self,joystick_id:int,instance_id:int,hat:int,value:int):
         
         # Event function to overwrite on joystick hat motion
-        pass
+        """
+        This function can be overwritten to react to a joysticks hat motion.
+        Event is called after the joystick hat motion.
+
+        Args:
+
+        - joystick_id (int): Index id of joystick object.
+        - instance_id (int): Instance id of joystick object.
+        - hat (int): Index of joystick hat.
+        - value (int): Value of hat pressed: -1 or 0 or 1
+
+        Example:
+        ```
+        def event_joystick_hatmotion(self,joystick_id:int,instance_id:int,hat:int,value:int):
+            print(f"Hat {hat} detected motion {value} at joystick {joy_id}")
+        ```
+        """
     
     def event_joystick_added(self,device_index:int,guid:str):
         
         # Event function to overwrite on joystick connected
-        pass
+        """
+        This function can be overwritten to react to a new joystick device registered.
+        Event is called after the joystick is added.
+
+        Args:
+
+        - device_index (int): Index id of joystick object.
+        - guid (int): Gamepad unique id.
+
+        Example:
+        ```
+        def event_joystick_added(self,device_index:int,guid:str):
+            print(f"Connected new joystick {guid} at {device_index}")
+        ```
+        """
     
     def event_joystick_removed(self,instance_id:int):
         
         # Event function to overwrite on joystick disconnected
-        pass
+        """
+        This function can be overwritten to react to the removal of a registered joystick device.
+        Event is called after the joystick is removed.
+
+        Args:
+
+        - instance_id (int): Instance id of joystick object.
+
+        Example:
+        ```
+        def event_joystick_removed(self,instance_id:int):
+            print(f"Joystick {instance_id} disconnected!!!")
+        ```
+        """
 
     def _engine_update(self):
 
@@ -318,7 +407,18 @@ class Engine:
     def run(self):
 
         """
+        This function starts the main game loop
 
+        Args:
+
+        - No args are required.
+
+        Example:
+        ```
+        if __name__ == "__main__"
+            game = Game()
+            game.run()
+        ```
         """
 
         # Starting game engine
@@ -357,7 +457,7 @@ class Engine:
 
         Args:
 
-        - no args are required.
+        - No args are required.
 
         Example:
         ```
