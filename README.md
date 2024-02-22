@@ -4,17 +4,6 @@
 
 Frostlight-Engine is an easy to use game framework for python that is based on pygame. We plan on making an entire game engine some day.
 
-## **Overview**
-
-- [Frostlight-Engine](#frostlight-engine)
-  - [**Overview**](#overview)
-  - [**Getting Started**](#getting-started)
-  - [**Dependencies**](#dependencies)
-  - [**Making a game**](#making-a-game)
-  - [**Example**](#example)
-    - [**Features**](#features)
-    - [**Project Structure**](#project-structure)
-
 ## **Getting Started**
 
 1.  Install Python 3.9 or newer. <https://www.python.org/downloads/>
