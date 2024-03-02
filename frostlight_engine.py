@@ -43,10 +43,9 @@ class Engine:
         self.fps = fps
         self.delta_time = 1
         self.last_time = time.time()
-        self.version = 0.1
 
         # String variables go here
-        self.engine_version = "1.1.0 [DEV]"
+        self.engine_version = "1.1.0"
         self.game_state = "intro"
         self.game_version = game_version
         self.language = language
