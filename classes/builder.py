@@ -100,7 +100,6 @@ class Builder:
         !!!This is only used internally by the engine and should not be called in a game!!!
         """
 
-        import os
         import sys
         import ast
         import subprocess
@@ -227,7 +226,8 @@ class Builder:
                             if (line.startswith("import ") or line.startswith("from "))  and not "PyInstaller.__main__" in line and not within_class:
                                 if not line.startswith("from classes."):
                                     imported_modules.append(line)
-                                    content = content.replace(unstriped_line, "")
+                                    print(content)
+                                    content = content.replace(unstriped_line, "",1)
                         class_contents.append(content)
 
         imported_modules = sorted(set(imported_modules),key=len)
