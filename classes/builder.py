@@ -226,7 +226,6 @@ class Builder:
                             if (line.startswith("import ") or line.startswith("from "))  and not "PyInstaller.__main__" in line and not within_class:
                                 if not line.startswith("from classes."):
                                     imported_modules.append(line)
-                                    print(content)
                                     content = content.replace(unstriped_line, "",1)
                         class_contents.append(content)
 
