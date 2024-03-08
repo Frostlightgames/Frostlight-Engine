@@ -171,5 +171,5 @@ class SaveManager():
 
         shutil.copyfile(
             self.path,
-            os.path.join(backup_path,f'{os.path.split(self.path)[-1]}-{datetime.datetime.now().strftime("%H-%M-%S")}')
+            os.path.join(backup_path,f'{os.path.split(self.path)[-1]}-{datetime.datetime.now().strftime("%d.%m.%y %H-%M-%S")}')
             )
