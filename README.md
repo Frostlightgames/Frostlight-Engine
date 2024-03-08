@@ -3,12 +3,13 @@
 ![python](https://img.shields.io/badge/python-blue) ![pygame](https://img.shields.io/badge/pygame-green) ![frostlightgames](https://img.shields.io/badge/frostlightgames-blue)
 
 Frostlight-Engine is an easy to use game framework for python that is based on pygame. We plan on making an entire game engine some day.
+You can fined the full documentation here: <https://frostlightgames.gitbook.io/frostlight-engine/>
 
 ## **Getting Started**
 
 1.  Install Python 3.9 or newer. <https://www.python.org/downloads/>
 2.  Install pygame/pygame-ce 2.x <https://pypi.org/project/pygame/>
-3.  Download the newest Frostlight-Engine version <https://github.com/Frostlightgames/Frostlight-Engine>
+3.  Download the newest Frostlight-Engine version <https://github.com/Frostlightgames/Frostlight-Engine/>
 
 ```
 pip install pygame | pip install pygame-ce
