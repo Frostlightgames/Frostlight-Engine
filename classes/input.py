@@ -783,6 +783,8 @@ class Input:
             self.buttons = [
                 [False,False,False],
                 [False,False,False],
+                [False,False,False],
+                [False,False,False],
                 [False,False,False]
             ]
 
