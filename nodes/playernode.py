@@ -2,7 +2,7 @@ import pygame
 import numpy
 
 class PlayerNode():
-    def __init__(self,engine,sprite:pygame.Surface,acc:int=400,dcc:int=370,max_speed:int=5000) -> None:
+    def __init__(self,engine,sprite:pygame.Surface,acc:int=400,dcc:int=370,max_speed:int=5000,stop=1) -> None:
         self.engine = engine
         self.sprite = sprite
         self.pos = pygame.Vector2(0,0)
@@ -10,6 +10,7 @@ class PlayerNode():
         self.acc = acc
         self.dcc = dcc
         self.max_speed = max_speed
+        self.stop = stop
 
     def update(self):
         pass
@@ -20,6 +21,9 @@ class PlayerNode():
 class PlayerNodeRPG(PlayerNode):
     def update(self):
         super().update()
+        self.vel.x = self.vel.x * int(not (self.vel.x < self.stop and self.vel.x > -self.stop and not self.engine.input.get("right") and not self.engine.input.get("left")))
+        self.vel.y = self.vel.y * int(not (self.vel.y < self.stop and self.vel.y > -self.stop and not self.engine.input.get("down") and not self.engine.input.get("up")))
+
         self.vel.x += (self.engine.input.get("right")-self.engine.input.get("left"))*self.acc*self.engine.delta_time
         self.vel.y += (self.engine.input.get("down")-self.engine.input.get("up"))*self.acc*self.engine.delta_time
         
@@ -36,11 +40,12 @@ class PlayerNodeRPG(PlayerNode):
         super().draw()
 
 class PlayerNodePlatformer(PlayerNode):
-    def __init__(self, engine, sprite: pygame.Surface, jump_input:str, acc: int = 200, dcc: int = 350, gravity:int=300, ground:int=500, max_speed: int = 1000, max_jump_height: int = 100, jump_strength: int = 200, coyote_time_duration: float = 0.2, jump_count: int = 1) -> None:
+    def __init__(self, engine, sprite: pygame.Surface, jump_input:str, acc: int = 200, dcc: int = 350, gravity:int=300, ground:int=500, max_speed: int = 1000, max_jump_height: int = 100, stop = 1, jump_strength: int = 200, coyote_time_duration: float = 0.2, jump_count: int = 1) -> None:
         super().__init__(engine, sprite, acc, dcc, max_speed)
         self.ground = ground
         self.on_ground = True
         self.gravity = gravity
+        self.stop = stop
         self.jump_strength = jump_strength
         self.is_jumping = False
         self.jumping_phase = False
@@ -56,6 +61,7 @@ class PlayerNodePlatformer(PlayerNode):
         self.available_jumps = jump_count
 
     def update(self):
+        self.vel.x = self.vel.x * int(not (self.vel.x < self.stop and self.vel.x > -self.stop and not self.engine.input.get("right") and not self.engine.input.get("left")))
         self.vel.x += (self.engine.input.get("right")-self.engine.input.get("left"))*self.acc*self.engine.delta_time
         self.vel.x += numpy.sign(self.vel.x) * -1 * self.dcc * self.engine.delta_time * int(not(numpy.sign(self.engine.input.get("right")-self.engine.input.get("left"))))
         self.vel.x = max(min(self.vel.x,self.max_speed),-self.max_speed)
