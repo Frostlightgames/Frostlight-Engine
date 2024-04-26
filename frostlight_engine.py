@@ -82,7 +82,6 @@ class Engine:
         self.input._update()
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
-                self.event_quit()
                 self.quit()
 
             # Window events
@@ -467,10 +466,12 @@ class Engine:
                 self.quit()
         ```
         """
-
-        # Quit game loop
-        self.run_game = False#
+        # trigger quit event
         self.event_quit()
+        
+        # Quit game loop
+        self.run_game = False
+        
 
 if __name__ == "__main__":
 
