@@ -469,7 +469,8 @@ class Engine:
         """
 
         # Quit game loop
-        self.run_game = False
+        self.run_game = False#
+        self.event_quit()
 
 if __name__ == "__main__":
 
