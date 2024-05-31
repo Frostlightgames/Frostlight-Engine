@@ -153,7 +153,10 @@ class SaveManager():
             try:
                 data = self._decrypt()
                 if data != False:
-                    return data[key]
+                    if key in data:
+                        return data[key]
+                    else:
+                        return default
             except Exception as e:
                 self.engine.logger.error(e)
         else:

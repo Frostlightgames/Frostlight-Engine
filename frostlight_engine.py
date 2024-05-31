@@ -45,7 +45,7 @@ class Engine:
         self.last_time = time.time()
 
         # String variables go here
-        self.engine_version = "1.1.0"
+        self.engine_version = "1.1.1 [DEV]"
         self.game_state = "intro"
         self.game_version = game_version
         self.language = language
@@ -70,6 +70,7 @@ class Engine:
                                   pygame.KEYUP,
                                   pygame.MOUSEBUTTONDOWN,
                                   pygame.MOUSEBUTTONUP, 
+                                  pygame.MOUSEMOTION,
                                   pygame.JOYBUTTONUP, 
                                   pygame.JOYBUTTONDOWN, 
                                   pygame.JOYAXISMOTION, 
@@ -82,7 +83,6 @@ class Engine:
         self.input._update()
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
-                self.event_quit()
                 self.quit()
 
             # Window events
@@ -90,6 +90,8 @@ class Engine:
                 self.last_time = time.time()
                 self.delta_time = 0
                 self.event_window_move([event.x,event.y])
+                self.event_window_changed(event)
+                self.event_event(event)
 
             elif event.type == pygame.VIDEORESIZE:
                 if not self.window.fullscreen:
@@ -97,51 +99,91 @@ class Engine:
                     self.delta_time = 0
                     self.window.resize([event.w,event.h])
                     self.event_window_resize([event.w,event.h])
+                    self.event_window_changed(event)
+                    self.event_event(event)
 
             # Keyboard events
             elif event.type == pygame.KEYDOWN:
                 self.input._handle_key_event(event)
                 if event.key == pygame.K_F11:
                     self.window.toggle_fullscreen()
+                    mode = "fullscreen"
+                    if not self.window.fullscreen:
+                        mode = "windowed"
+                    self.event_window_mode_changed(mode)
+                    self.event_window_changed(mode)
                 self.event_keydown(event.key,event.unicode)
+                self.event_event(event)
 
             elif event.type == pygame.KEYUP:
                 self.input._handle_key_event(event)
                 self.event_keyup(event.key,event.unicode)
+                self.event_event(event)
 
             # Mouse events
             elif event.type == pygame.MOUSEBUTTONDOWN:
                 self.input._handle_mouse_event(event)
                 self.event_mouse_buttondown(event.button,event.pos)
+                self.event_event(event)
 
             elif event.type == pygame.MOUSEBUTTONUP:
                 self.input._handle_mouse_event(event)
                 self.event_mouse_buttonup(event.button,event.pos)
+                self.event_event(event)
+
+            # Mouse events
+            elif event.type == pygame.MOUSEMOTION:
+                self.event_event(event)
 
             # Joystick events
             elif event.type == pygame.JOYBUTTONDOWN:
                 self.input._handle_joy_event(event)
                 self.event_joystick_buttondown(event.button,event.joy,event.instance_id)
+                self.event_event(event)
 
             elif event.type == pygame.JOYBUTTONUP:
                 self.input._handle_joy_event(event)
                 self.event_joystick_buttonup(event.button,event.joy,event.instance_id)
+                self.event_event(event)
 
             elif event.type == pygame.JOYAXISMOTION:
                 self.input._handle_joy_event(event)
                 self.event_joystick_axismotion(event.joy,event.instance_id,event.axis,event.value)
+                self.event_event(event)
 
             elif event.type == pygame.JOYHATMOTION:
                 self.input._handle_joy_event(event)
                 self.event_joystick_hatmotion(event.button)
+                self.event_event(event)
 
             elif event.type == pygame.JOYDEVICEADDED:
                 self.input._init_joysticks()
                 self.event_joystick_added(event.device_index,event.guid)
+                self.event_event(event)
 
             elif event.type == pygame.JOYDEVICEREMOVED:
                 self.input._init_joysticks()
                 self.event_joystick_removed(event.instance_id)
+                self.event_event(event)
+
+    def event_event(self,event):
+
+        # Event function to overwrite on event
+        """
+        This function can be overwritten to react to every engine event.
+        Event is called after the engine event.
+
+        Args:
+
+        - event: Data about the event.
+
+        Example:
+        ```
+        def event_event(self,event):
+            print(f"Engine event occurred: {event}")
+        ```
+        """
+
 
     def event_quit(self):
 
@@ -194,6 +236,42 @@ class Engine:
         ```
         def event_window_resize(self,size:list[int,int]):
             print(f"The window was resized to: {size}")
+        ```
+        """
+
+    def event_window_mode_changed(self,new_mode:str):
+
+        # Event function to overwrite on window mode changed
+        """
+        This function can be overwritten to react to the mode change of the window.
+        Event is called after the mode changed.
+
+        Args:
+
+        - new_mode (str): The window mode after the event
+
+        Example:
+        ```
+        def event_window_mode_changed(self,new_mode:str):
+            print(f"The window mode changed to: {new_mode}")
+        ```
+        """
+
+    def event_window_changed(self,event):
+
+        # Event function to overwrite on window changed
+        """
+        This function can be overwritten to react to a change of the window.
+        Event is called after the change.
+
+        Args:
+
+        - event: Data about the event.
+
+        Example:
+        ```
+        def event_window_changed(self,event):
+            print(f"The window changed: {event}")
         ```
         """
 
@@ -467,9 +545,13 @@ class Engine:
                 self.quit()
         ```
         """
-
+        # trigger quit event
+        self.event_quit()
+        self.event_event(pygame.QUIT)
+        
         # Quit game loop
         self.run_game = False
+        
 
 if __name__ == "__main__":
 
