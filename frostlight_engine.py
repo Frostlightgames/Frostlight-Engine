@@ -105,6 +105,10 @@ class Engine:
                 self.input._handle_key_event(event)
                 if event.key == pygame.K_F11:
                     self.window.toggle_fullscreen()
+                    mode = "fullscreen"
+                    if not self.window.fullscreen:
+                        mode = "windowed"
+                    self.event_window_mode_changed(mode)
                 self.event_keydown(event.key,event.unicode)
                 self.event_event(event)
 
@@ -229,6 +233,24 @@ class Engine:
         ```
         def event_window_resize(self,size:list[int,int]):
             print(f"The window was resized to: {size}")
+        ```
+        """
+
+    def event_window_mode_changed(self,new_mode:str):
+
+        # Event function to overwrite on window mode changed
+        """
+        This function can be overwritten to react to the mode change of the window.
+        Event is called after the mode changed.
+
+        Args:
+
+        - new_mode (str): The window mode after the event
+
+        Example:
+        ```
+        def event_window_mode_changed(self,new_mode:str):
+            print(f"The window mode changed to: {new_mode}")
         ```
         """
 
