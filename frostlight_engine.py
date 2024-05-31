@@ -90,6 +90,7 @@ class Engine:
                 self.last_time = time.time()
                 self.delta_time = 0
                 self.event_window_move([event.x,event.y])
+                self.event_window_changed(event)
                 self.event_event(event)
 
             elif event.type == pygame.VIDEORESIZE:
@@ -98,6 +99,7 @@ class Engine:
                     self.delta_time = 0
                     self.window.resize([event.w,event.h])
                     self.event_window_resize([event.w,event.h])
+                    self.event_window_changed(event)
                     self.event_event(event)
 
             # Keyboard events
@@ -109,6 +111,7 @@ class Engine:
                     if not self.window.fullscreen:
                         mode = "windowed"
                     self.event_window_mode_changed(mode)
+                    self.event_window_changed(mode)
                 self.event_keydown(event.key,event.unicode)
                 self.event_event(event)
 
@@ -251,6 +254,24 @@ class Engine:
         ```
         def event_window_mode_changed(self,new_mode:str):
             print(f"The window mode changed to: {new_mode}")
+        ```
+        """
+
+    def event_window_changed(self,event):
+
+        # Event function to overwrite on window changed
+        """
+        This function can be overwritten to react to a change of the window.
+        Event is called after the change.
+
+        Args:
+
+        - event: Data about the event.
+
+        Example:
+        ```
+        def event_window_changed(self,event):
+            print(f"The window changed: {event}")
         ```
         """
 
