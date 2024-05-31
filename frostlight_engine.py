@@ -45,7 +45,7 @@ class Engine:
         self.last_time = time.time()
 
         # String variables go here
-        self.engine_version = "1.1.0"
+        self.engine_version = "1.1.1 [DEV]"
         self.game_state = "intro"
         self.game_version = game_version
         self.language = language
