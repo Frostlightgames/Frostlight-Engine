@@ -70,6 +70,7 @@ class Engine:
                                   pygame.KEYUP,
                                   pygame.MOUSEBUTTONDOWN,
                                   pygame.MOUSEBUTTONUP, 
+                                  pygame.MOUSEMOTION,
                                   pygame.JOYBUTTONUP, 
                                   pygame.JOYBUTTONDOWN, 
                                   pygame.JOYAXISMOTION, 
@@ -121,6 +122,10 @@ class Engine:
             elif event.type == pygame.MOUSEBUTTONUP:
                 self.input._handle_mouse_event(event)
                 self.event_mouse_buttonup(event.button,event.pos)
+                self.event_event(event)
+
+            # Mouse events
+            elif event.type == pygame.MOUSEMOTION:
                 self.event_event(event)
 
             # Joystick events
