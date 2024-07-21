@@ -1,9 +1,10 @@
-class Core:
-    def __init__(self) -> None:
-        pass
+from __init__ import *
+
+import _core
+import _nodes
 
 class Engine:
-    def __init__(
+    def __init__(self,
             debug:bool=False,
             fps_limit:int=0,
             game_language:str="en",
@@ -20,4 +21,24 @@ class Engine:
             window_resizable:bool=True,
             window_size:list=None) -> None:
         
+        if ENV.engine == None:
+            ENV.engine = self
+        
+        self._core = _core.Core()
+        self.nodes = _nodes
+
+        self.game_state = ""
+
+    def update(self):
         pass
+
+    def draw(self):
+        pass
+
+    def test(self):
+        # TODO
+        # sys log mit infos über engine z.b. engine_version, game_version 
+        print("Test")
+
+    def run(self):
+        self._core.loop(self.update,self.draw)
