@@ -1,3 +1,6 @@
+from logger import *
+
+
 class Core:
     def __init__(self) -> None:
         pass
