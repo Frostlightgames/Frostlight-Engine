@@ -1,4 +1,4 @@
-from node import Node
+from _nodes.node import Node
 
 class TestNodeClass(Node):
     def __init__(self) -> None:
