@@ -1,7 +1,6 @@
 from __init__ import *
 
 import _core
-import _core.logger
 from _core import dispatch
 from _core.logger import _LogType
 import _nodes
