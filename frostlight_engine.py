@@ -13,36 +13,41 @@ class Engine:
             game_version:str="1.0",
             logging:bool=True,
             logging_only_once=True,
-            mouse_visible:bool=True,
-            vsync:bool=False,
-            window_centered:bool=True,
-            window_color_depth:int=16,
-            window_fullscreen:bool=False,
-            window_icon_path:str="",
-            window_name:str="New Game",
-            window_resizable:bool=True,
-            window_size:list=None,
+            window_mode=WINDOWED,
+            window_aspect_mode=KEEP,
+            window_size=None,
+            window_centered=True,
+            mouse_visible=True,
+            window_name="",
+            window_icon_path="",
+            window_position=[0,0],
+            window_color_depth=16,
+            vsync = True,
             save_manager_path="data/saves/save") -> None:
         
         if ENV.engine == None:
             ENV.engine = self
         
-
         self._core = _core.Core(
             debug,
             fps_limit,
+            game_language,
+            game_version,
             logging,
             logging_only_once,
-            mouse_visible,
-            vsync,
-            window_centered,
-            window_color_depth,
-            window_fullscreen,
-            window_icon_path,
-            window_name,
-            window_resizable,
+            window_mode,
+            window_aspect_mode,
             window_size,
+            window_centered,
+            mouse_visible,
+            window_name,
+            window_icon_path,
+            window_position,
+            window_color_depth,
+            vsync,
             save_manager_path)
+
+        self.window = self._core.window
 
         self.nodes = _nodes
 
