@@ -1,6 +1,7 @@
 import pygame
 
 from _core.logger import Logger
+from _core.builder import Builder
 from _core.save_manager import SaveManager
 from _core.window import Window,WINDOWED,KEEP
 class Core:
@@ -25,6 +26,7 @@ class Core:
         
         self.logger = Logger(logging,logging_only_once)
         self.save_manager = SaveManager(self.logger,save_manager_path)
+        self.builder = Builder(self.logger)
         
         self.window = Window(window_mode,aspect_mode,window_size,centered,mouse_visible,window_name,icon_path,position,color_depth,vsync)
 

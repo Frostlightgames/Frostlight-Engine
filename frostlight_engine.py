@@ -1,9 +1,11 @@
 from __init__ import *
 
+import os
 import _core
 from _core import dispatch
 from _core.logger import _LogType
 import _nodes
+import argparse
 
 class Engine:
     def __init__(self,
@@ -50,6 +52,7 @@ class Engine:
         self.window = self._core.window
 
         self.nodes = _nodes
+        self.game_version = game_version
 
         self.game_state = ""
 
@@ -83,8 +86,11 @@ class Engine:
     def load(self,key,default=None) -> any:
         self._core.save_manager.load(key,default)
 
-    def backup(self,backup_path:str="data/saves/backup"):
-        self._core.save_manager.backup(backup_path)
+    def backup(self,backup_path:str="default",backup_info:dict={}):
+            info = {"Game Version":self.game_version,
+                    "Window Name":self.window.name}
+            info.update(backup_info)
+            self._core.save_manager.backup(backup_path,info)
 
     def update(self):
         pass
@@ -99,3 +105,30 @@ class Engine:
 
     def run(self):
         self._core.loop(self.update,self.draw)
+
+if __name__ == "__main__":
+
+    # Parser arguments
+    parser = argparse.ArgumentParser()
+    parser.add_argument("-p", "--pack", action="store_true")
+    parser.add_argument("-b", "--build", action="store_true")
+    args = parser.parse_args()
+
+    if args.pack:
+
+        # Pack Engine for release
+        engine = Engine(window_mode=HIDDEN)
+        engine._core.builder.pack_release()
+
+    elif args.build:
+
+        # Build game to EXE
+        engine = Engine(window_mode=HIDDEN)
+        engine._core.builder.setup_game()
+        engine._core.builder.create_exe()
+
+    else:
+
+        # Setup new no name Project
+        engine = Engine(window_mode=HIDDEN)
+        engine._core.builder.setup_game()

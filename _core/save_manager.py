@@ -4,8 +4,6 @@ import shutil
 import datetime
 from cryptography.fernet import Fernet
 
-from __init__ import ENV
-
 class SaveManager():
 
     """A class for managing encrypted storage data."""
@@ -164,17 +162,36 @@ class SaveManager():
         else:
             return default
 
-    def backup(self,backup_path:str="data/saves/backup"):
+    def backup(self,backup_path,info_data:dict = {}):
 
         """
         Create a backup of the current save file.
 
         Args:
 
-        - backup_path (str): Path to store the backup file. Defaults to "data/saves/backup".
+        - backup_path (str): Path to store the backup file. Defaults to "%appdata%/frostlight-engine/backup/".
         """
+        try:
+            if backup_path == "default":
+                if os.name == "nt":
+                    backup_path = os.getenv('APPDATA')+"/frostlight-engine/backup/"
 
-        shutil.copyfile(
-            self.path,
-            os.path.join(backup_path,f'{os.path.split(self.path)[-1]}-{datetime.datetime.now().strftime("%d.%m.%y %H-%M-%S")}')
-            )
+            backup_path = os.path.join(backup_path,f'{os.path.split(self.path)[-1]}-{datetime.datetime.now().strftime("%d.%m.%y %H-%M-%S")}/')
+
+            backup_data = {'Datum' : f'{datetime.datetime.now().strftime("%d.%m.%y %H-%M-%S")}',
+                        'Path' : f'{os.path.split(os.path.abspath(__file__))[0][:-5]}',}
+
+            backup_data.update(info_data)
+
+            os.makedirs(backup_path)
+
+            shutil.copyfile(
+                self.path,
+                os.path.join(backup_path,os.path.split(self.path)[-1])
+                )
+
+            with open(os.path.join(backup_path,"backup.info"), "w") as file:
+                for key, value in backup_data.items():
+                    file.write(f"{key} : {value}\n")
+        except:
+            self._logger.log()

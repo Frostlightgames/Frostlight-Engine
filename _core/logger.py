@@ -46,6 +46,9 @@ class Logger:
         self.max_prefix_length = 7
         self.file_size = 0
         self.time_format = "%d.%m.%y %H:%M:%S:%f"
+        self.INFO = _LogType(0)
+        self.WARNING = _LogType(1)
+        self.ERROR = _LogType(2)
 
         if self.logging:
             # Trying to create logfile
