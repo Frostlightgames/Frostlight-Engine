@@ -20,6 +20,10 @@ class _LogType():
             self.prefix = "Error"
             self.color = "\x1b[1;31;40m"
 
+INFO = _LogType(0)
+WARNING = _LogType(1)
+ERROR = _LogType(2)
+
 class Logger:
     def __init__(self,logging:bool=True,logging_only_once:bool=True) -> None:
         """

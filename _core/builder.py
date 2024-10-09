@@ -152,18 +152,38 @@ class Builder:
         !!!This is only used internally by the engine and should not be called in a game!!!
         """
         # Relevent paths
-        includes = ["_core", "_nodes", "data/classes"]
+        includes = ["_core", "_nodes","__init__", "data/classes"]
         excludes = ["pack_release"]
         export_file = "engine_export.py"
         main_file = "frostlight_engine.py"
+        init_file = "__init__.py"
         imported_modules = []
         class_contents = []
         within_class = False
         exclude = False
 
         # Read class folder
+
+        with open(init_file, "r", encoding="utf-8") as f:
+            content = f.read()
+            inc_content = ""
+            for line in content.split("\n"):
+                unstriped_line = line
+                line = line.strip()
+                if (line.startswith("import ") or line.startswith("from ")):
+                    imported_modules.append(line)
+                elif not exclude:
+                    inc_content += unstriped_line + "\n"
+
+            class_contents.append(inc_content)
+
+        class_contents.append("\n")
+
         for inc in includes:
             for pathname, _, files in os.walk("./"+inc):
+                result = [x for x in files if x != "core.py"]
+                result.extend(["core.py"] * files.count("core.py"))
+                files = result
                 for file in files:
                     if file.endswith(".py"):
                         file_path = os.path.join(pathname, file)

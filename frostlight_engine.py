@@ -1,10 +1,8 @@
-from __init__ import *
-
-import os
 import _core
+import argparse
+from __init__ import *
 from _core import dispatch
 from _core.logger import _LogType
-import argparse
 
 class Engine:
     def __init__(self,
@@ -25,10 +23,10 @@ class Engine:
             window_color_depth=16,
             vsync = True,
             save_manager_path="data/saves/save") -> None:
-        
+
         if ENV.engine == None:
             ENV.engine = self
-        
+
         self._core = _core.Core(
             debug,
             fps_limit,
