@@ -151,17 +151,17 @@ class Builder:
 
         !!!This is only used internally by the engine and should not be called in a game!!!
         """
-
         # Relevent paths
         includes = ["_core", "_nodes", "data/classes"]
-        additions = ["_core = Core","_nodes = Node"]
+        excludes = ["pack_release"]
         export_file = "engine_export.py"
         main_file = "frostlight_engine.py"
         imported_modules = []
         class_contents = []
         within_class = False
+        exclude = False
 
-        # Read class folder 
+        # Read class folder
         for inc in includes:
             for pathname, _, files in os.walk("./"+inc):
                 for file in files:
@@ -169,6 +169,7 @@ class Builder:
                         file_path = os.path.join(pathname, file)
                         with open(file_path, "r", encoding="utf-8") as f:
                             content = f.read()
+                            inc_content = ""
                             for line in content.split("\n"):
                                 unstriped_line = line
                                 line = line.strip()
@@ -176,10 +177,18 @@ class Builder:
                                     within_class = True
                                 elif unstriped_line and not unstriped_line.startswith(" ") and within_class:
                                     within_class = False
+                                if any(unstriped_line.startswith("    def "+excluded) for excluded in excludes):
+                                    exclude = True
+                                elif unstriped_line and unstriped_line.startswith("    ") and not unstriped_line.startswith("     ") and exclude:
+                                    exclude = False
                                 if (line.startswith("import ") or line.startswith("from "))  and not "PyInstaller.__main__" in line and not within_class:
                                     imported_modules.append(line)
-                                    content = content.replace(unstriped_line, "",1)
-                            class_contents.append(content)
+                                elif not exclude:
+                                    inc_content += unstriped_line + "\n"
+                            exclude = False
+                            inc_content = inc_content.replace(" _core."," ")
+                            inc_content = inc_content.replace("_nodes.","")
+                            class_contents.append(inc_content)
 
         imported_modules = sorted(set(imported_modules),key=len)
 
@@ -205,12 +214,10 @@ class Builder:
             for content in class_contents:
                 content = "\n".join(line for line in content.split("\n") if not line.strip().startswith("from classes."))
                 f.write(content.strip())
-                f.write("\n\n")
-            
-            for addition in additions:
-                f.write(addition+"\n")
-            f.write("\n")
+                f.write("\n")
 
             # Write main content
-            main_content = "\n".join(line for line in main_content.split("\n") if not line.strip().startswith("from classes.") and not line.strip().startswith("import "))
+            main_content = "".join(line+"\n" for line in main_content.split("\n") if not line.strip().startswith("from ") and not line.strip().startswith("import "))
+            main_content = main_content.replace(" _core."," ")
+            main_content = main_content.replace("_nodes.","")
             f.write(main_content)

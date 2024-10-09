@@ -4,7 +4,6 @@ import os
 import _core
 from _core import dispatch
 from _core.logger import _LogType
-import _nodes
 import argparse
 
 class Engine:
@@ -51,7 +50,6 @@ class Engine:
 
         self.window = self._core.window
 
-        self.nodes = _nodes
         self.game_version = game_version
 
         self.game_state = ""
@@ -61,11 +59,11 @@ class Engine:
         self._core.logger.log(message)
 
     @dispatch(_LogType,Exception)
-    def log(self,LogType:_core.logger._LogType,message:Exception):
+    def log(self,LogType:_LogType,message:Exception):
         self._core.logger.log(LogType,message)
 
     @dispatch(_LogType,str)
-    def log(self,LogType:_core.logger._LogType,message:str):
+    def log(self,LogType:_LogType,message:str):
         self._core.logger.log(LogType,message)
 
     @dispatch()
@@ -118,17 +116,28 @@ if __name__ == "__main__":
 
         # Pack Engine for release
         engine = Engine(window_mode=HIDDEN)
-        engine._core.builder.pack_release()
+
+        try:
+            engine._core.builder.pack_release()
+        except:
+            engine.log()
 
     elif args.build:
 
         # Build game to EXE
         engine = Engine(window_mode=HIDDEN)
-        engine._core.builder.setup_game()
-        engine._core.builder.create_exe()
+        try:
+            engine._core.builder.setup_game()
+            engine._core.builder.create_exe()
+        except:
+            engine.log()
 
     else:
 
         # Setup new no name Project
         engine = Engine(window_mode=HIDDEN)
-        engine._core.builder.setup_game()
+        try:
+            engine._core.builder.setup_game()
+        except:
+            engine.log()
+        
