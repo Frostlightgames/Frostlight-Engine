@@ -1,7 +1,6 @@
 import _core
 import argparse
 from __init__ import *
-from _core import dispatch
 from _core.logger import _LogType
 
 class Engine:
@@ -52,29 +51,6 @@ class Engine:
 
         self.game_state = ""
 
-    @dispatch(str)
-    def log(self,message:str):
-        self._core.logger.log(message)
-
-    @dispatch(_LogType,Exception)
-    def log(self,LogType:_LogType,message:Exception):
-        self._core.logger.log(LogType,message)
-
-    @dispatch(_LogType,str)
-    def log(self,LogType:_LogType,message:str):
-        self._core.logger.log(LogType,message)
-
-    @dispatch()
-    def log(self):
-        self._core.logger.log()
-    
-    @dispatch()
-    def swich_logging(self):
-        self._core.logger.swich_logging()
-    
-    @dispatch(bool)
-    def swich_logging(self,logging:bool):
-        self._core.logger.swich_logging(logging)
 
     def save(self,key,value) -> bool:
         self._core.save_manager.save(key,value)

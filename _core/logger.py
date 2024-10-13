@@ -3,7 +3,7 @@ import sys
 import glob
 import datetime
 import traceback
-from multipledispatch import dispatch
+from typing import overload, Union
 
 class _LogType():
     def __init__(self,typ:int,prefix="",color = "\x1b[0m") -> None:
@@ -72,8 +72,7 @@ class Logger:
                 # Creating logfile failed, printing instead
                 print(f"[Engine {datetime.datetime.now().strftime(self.time_format)[:-4]}]: Could not create logfile ({e})")
 
-    @dispatch()
-    def swich_logging(self):
+    def switch_logging(self):
         """
         The logging status of the Logger is swiched.
 
@@ -83,8 +82,7 @@ class Logger:
         """
         self.logging = not self.logging
 
-    @dispatch(bool)
-    def swich_logging(self,logging:bool):
+    def switch_logging(self,logging:bool):
         """
         The logging status of the Logger will be set to the value of the logging variable.
 
@@ -98,7 +96,7 @@ class Logger:
         """
         self.logging = logging
 
-    @dispatch(str)
+    @overload
     def log(self,message:str):
         """
         Logs a message.
@@ -112,9 +110,9 @@ class Logger:
         self.log("Programm is working fine!")
         ```
         """
-        self._log("Log",message,"\x1b[1;34;40m")
+        ...
 
-    @dispatch(_LogType,str)
+    @overload
     def log(self,LogType:_LogType,message:str):
         """
         Logs a message with a Prefix.
@@ -131,9 +129,8 @@ class Logger:
         self.log(ERROR,"XY not found!")
         ```
         """
-        self._log(LogType.prefix,message,LogType.color)
-    
-    @dispatch()
+        ...
+    @overload
     def log(self):
         """
         Logs an Exeption.
@@ -151,13 +148,22 @@ class Logger:
             self.log()
         ```
         """
-        t = traceback.format_exc().split("\n")
-        msg = t[-2]
-        tb = ""
-        for i in range(1,len(t)-2):
-            tb += t[i]+"\n"
-        tb[:-1]
-        self._log("Error",msg,"\x1b[1;31;40m",tb)
+        ...
+
+    def log(self, *args: Union[str, _LogType]) -> None:
+        if len(args) == 1 and isinstance(args[0], str):
+            message = args[0]
+            self._log("Log", message, "\x1b[1;34;40m")
+        elif len(args) == 2 and isinstance(args[0], _LogType) and isinstance(args[1], str):
+            log_type, message = args
+            self._log(log_type.prefix, message, log_type.color)
+        elif len(args) == 0:
+            t = traceback.format_exc().split("\n")
+            msg = t[-2]
+            tb = "\n".join(t[1:-2])
+            self._log("Error", msg, "\x1b[1;31;40m", tb)
+        else:
+            raise TypeError("Invalid arguments for log method.")
 
     def _log(self,prefix:str,message:str,prefix_color="",tb=""):
 
