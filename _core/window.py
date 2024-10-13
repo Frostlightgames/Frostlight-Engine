@@ -58,7 +58,10 @@ class Window:
             os.environ['SDL_VIDEO_CENTERED'] = '0'
 
         if type(self.window_mode) != WindowMode:
-            self.window_mode = WindowMode(-1)
+            self.window_mode = WindowMode(0)
+
+        if type(self.aspect_mode) != AspectRatioMode:
+            self.aspect_mode = AspectRatioMode(-1)
 
         if self.size == None:
             self.size = [int(pygame.display.Info().current_w),int(pygame.display.Info().current_h)]
