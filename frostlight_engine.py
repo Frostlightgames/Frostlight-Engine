@@ -1,7 +1,5 @@
-import _core
 import argparse
 from __init__ import *
-from _core.logger import _LogType
 
 class Engine:
     def __init__(self,
@@ -11,8 +9,8 @@ class Engine:
             game_version:str="1.0",
             logging:bool=True,
             logging_only_once=True,
-            window_mode=WINDOWED,
-            window_aspect_mode=KEEP,
+            window_mode=None,
+            window_aspect_mode=None,
             window_size=None,
             window_centered=True,
             mouse_visible=True,
@@ -24,45 +22,18 @@ class Engine:
             save_manager_path="data/saves/save") -> None:
 
         if ENV.engine == None:
+            frame = inspect.currentframe()
             ENV.engine = self
+            ENV.values = inspect.getargvalues(frame)[3]
+        import _core
 
-        self._core = _core.Core(
-            debug,
-            fps_limit,
-            game_language,
-            game_version,
-            logging,
-            logging_only_once,
-            window_mode,
-            window_aspect_mode,
-            window_size,
-            window_centered,
-            mouse_visible,
-            window_name,
-            window_icon_path,
-            window_position,
-            window_color_depth,
-            vsync,
-            save_manager_path)
-
-        self.window = self._core.window
+        self.builder = _core.core.builder
+        self.logger = _core.core.logger
+        self.save_manager = _core.core.save_manager
+        self.window = _core.core.window
 
         self.game_version = game_version
-
         self.game_state = ""
-
-
-    def save(self,key,value) -> bool:
-        self._core.save_manager.save(key,value)
-
-    def load(self,key,default=None) -> any:
-        self._core.save_manager.load(key,default)
-
-    def backup(self,backup_path:str="default",backup_info:dict={}):
-            info = {"Game Version":self.game_version,
-                    "Window Name":self.window.name}
-            info.update(backup_info)
-            self._core.save_manager.backup(backup_path,info)
 
     def update(self):
         pass
@@ -76,7 +47,8 @@ class Engine:
         print("Test")
 
     def run(self):
-        self._core.loop(self.update,self.draw)
+        import _core
+        _core.core.loop(self.update,self.draw)
 
 if __name__ == "__main__":
 
@@ -89,7 +61,7 @@ if __name__ == "__main__":
     if args.pack:
 
         # Pack Engine for release
-        engine = Engine(window_mode=HIDDEN)
+        engine = Engine(window_mode=None)
 
         try:
             engine._core.builder.pack_release()
@@ -99,19 +71,19 @@ if __name__ == "__main__":
     elif args.build:
 
         # Build game to EXE
-        engine = Engine(window_mode=HIDDEN)
+        engine = Engine(window_mode=None)
         try:
-            engine._core.builder.setup_game()
-            engine._core.builder.create_exe()
-        except:
-            engine.log()
+            engine.builder.setup_game()
+            engine.builder.create_exe()
+        except Exception as e:
+            engine.logger.log(e)
 
     else:
 
         # Setup new no name Project
-        engine = Engine(window_mode=HIDDEN)
+        engine = Engine(window_mode=None)
         try:
-            engine._core.builder.setup_game()
-        except:
-            engine.log()
+            engine.builder.setup_game()
+        except Exception as e:
+            engine.logger.log(e)
         
