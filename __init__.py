@@ -1,3 +1,8 @@
+import os
+import time
+import pygame
+import random
+
 class Env:
     def __init__(self) -> None:
         self.engine = None
