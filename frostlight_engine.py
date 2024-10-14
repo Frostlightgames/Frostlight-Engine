@@ -1,3 +1,4 @@
+import _core
 import argparse
 from __init__ import *
 
@@ -25,8 +26,9 @@ class Engine:
             frame = inspect.currentframe()
             ENV.engine = self
             ENV.values = inspect.getargvalues(frame)[3]
-        import _core
-
+        
+        _core.core.init_core()
+        
         self.builder = _core.core.builder
         self.logger = _core.core.logger
         self.save_manager = _core.core.save_manager
@@ -47,7 +49,6 @@ class Engine:
         print("Test")
 
     def run(self):
-        import _core
         _core.core.loop(self.update,self.draw)
 
 if __name__ == "__main__":
@@ -86,4 +87,3 @@ if __name__ == "__main__":
             engine.builder.setup_game()
         except Exception as e:
             engine.logger.log(e)
-        
