@@ -28,7 +28,7 @@ class Engine:
             ENV.values = inspect.getargvalues(frame)[3]
         
         _core.core.init_core()
-        
+
         self.builder = _core.core.builder
         self.logger = _core.core.logger
         self.save_manager = _core.core.save_manager
@@ -47,6 +47,9 @@ class Engine:
         # TODO
         # sys log mit infos über engine z.b. engine_version, game_version 
         print("Test")
+
+    def get_fps(self):
+        return int(min(_core.core.clock.get_fps(),99999999))
 
     def run(self):
         _core.core.loop(self.update,self.draw)
