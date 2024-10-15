@@ -152,7 +152,7 @@ class Window:
         self.create()
 
     def set_name(self,name:str):
-        pygame.display.set_caption(name)
+        pygame.display.set_caption(str(name))
 
     def set_position(self,position:list[int,int]):
         pygame.display.set_window_position(position)
