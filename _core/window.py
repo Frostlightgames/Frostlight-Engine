@@ -109,7 +109,7 @@ class Window:
         pygame.display.update()
 
     def fill(self,color:list[int,int,int]):
-        self.display.fill(color)
+        self.surface.fill(color)
 
     def render(self,sprite:pygame.Surface,pos:list[int,int],flags=0,area:pygame.Rect=None):
         self.surface.blit(sprite,pos,special_flags=flags,area=area)
