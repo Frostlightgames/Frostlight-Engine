@@ -8,17 +8,17 @@ You can fined the full documentation here: <https://frostlightgames.gitbook.io/f
 ## **Getting Started**
 
 1.  Install Python 3.9 or newer. <https://www.python.org/downloads/>
-2.  Install pygame/pygame-ce 2.x <https://pypi.org/project/pygame/>
+2.  Install pygame/pygame-ce 2.5 or newer <https://pypi.org/project/pygame/>
 3.  Download the newest Frostlight-Engine version <https://github.com/Frostlightgames/Frostlight-Engine/>
 
 ```
-pip install pygame | pip install pygame-ce
+pip install pygame-ce
 ```
 
 ## **Dependencies**
 
 - python 3.9 or newer
-- pygame 2.0 or newer
+- pygame-ce 2.5 or newer
 - cryptography
 
 ## **Making a game**
