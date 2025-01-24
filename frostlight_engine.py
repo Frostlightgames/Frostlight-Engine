@@ -30,6 +30,7 @@ class Engine:
         _core.core.init_core()
 
         self.builder = _core.core.builder
+        self.event_manager = _core.core.event_manager
         self.logger = _core.core.logger
         self.save_manager = _core.core.save_manager
         self.window = _core.core.window
