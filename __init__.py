@@ -11,4 +11,4 @@ from pathlib import Path
 
 pygame.init()
 
-DATE_TIME_FORMAT = "%d.%m.%y %H:%M:%S:%f"
+DATE_TIME_FORMAT = "%d.%m.%y %H-%M-%S"
