@@ -47,7 +47,7 @@ class Window:
         Example:
             >>> self.window.clear()
         """
-        self.ctx.clear(0.5, 0.0, 0.0)
+        self.ctx.clear(0.0, 0.0, 0.0)
         self.render_queue.clear()
 
     def render(self, sprite, position=[0, 0], scale=None):
