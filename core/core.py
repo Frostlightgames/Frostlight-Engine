@@ -1,6 +1,7 @@
 from __init__ import *
 
 from core.log_manager import *
+from core.window import *
 
 class Core:
     def __init__(self,args={},*loop_functions):
@@ -36,7 +37,8 @@ class Core:
                 self.clock.tick(self.fps_limit)
                 for event in pygame.event.get():
                     if event.type == pygame.QUIT:
-                        exit(0)
+                        self.main_loop_running = False
+                        self.logger.info("Closed window, stopping game.")
 
                 self.delta_time = time.time() - self.last_time
                 self.last_time = time.time()
