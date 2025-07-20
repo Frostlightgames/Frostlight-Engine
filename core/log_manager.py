@@ -1,7 +1,6 @@
 from __init__ import *
 
 LOG_PATH = Path("data/logs")
-LOG_FORMAT = '%d.%m.%y %H-%M-%S'
 
 class COLOR:
     """
@@ -42,14 +41,14 @@ class Logger:
                 try:
                     latest_log.rename(rotated_name)
                 except Exception:
-                    timestamp = datetime.datetime.now().strftime(LOG_FORMAT)
+                    timestamp = datetime.datetime.now().strftime(DATE_TIME_FORMAT)
                     ex_type, ex_value, _ = sys.exc_info()
                     if ex_type is not None:
                         print(f"{COLOR.CRITICAL} [{timestamp}] [CRITICAL] Could not rotate log file: {ex_type.__name__}: {ex_value}{COLOR.RESET}")
 
         # Create a new latest.log file
         with latest_log.open("w+") as file:
-            file.write(f"[LOG START] {datetime.datetime.now().strftime(LOG_FORMAT)}\n")
+            file.write(f"[LOG START] {datetime.datetime.now().strftime(DATE_TIME_FORMAT)}\n")
 
     def _log(self, level: str, message: str):
         """
@@ -60,7 +59,7 @@ class Logger:
             message (str): The log message.
         """
 
-        timestamp = datetime.datetime.now().strftime(LOG_FORMAT)
+        timestamp = datetime.datetime.now().strftime(DATE_TIME_FORMAT)
         log_line = f"[{timestamp}] [{level.upper()}] {message}\n"
 
         # Write to log file
