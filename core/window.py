@@ -26,7 +26,7 @@ class Window:
             height (int): Height of the window in pixels. Defaults to 1080.
             title (str): Title of the window. Defaults to "New game".
         """
-        pygame.display.set_mode((width, height), pygame.DOUBLEBUF | pygame.OPENGL)
+        pygame.display.set_mode((width, height), pygame.DOUBLEBUF | pygame.OPENGL | pygame.RESIZABLE)
         pygame.display.set_caption(title)
         self.clock = pygame.time.Clock()
 
