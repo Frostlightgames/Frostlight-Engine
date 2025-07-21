@@ -9,9 +9,12 @@ class FrostlightEngine:
             args = inspect.getargvalues(frame)[3]
         else:
             args = {}
-        self.__core = _Core(args, self.update, self.draw)
+        self.__core = _Core(args, self.__engine_update, self.update, self.draw, self.__engine_draw)
 
         self.window = Window()
+
+    def __engine_update(self):
+        pass
 
     def update(self):
         pass
@@ -19,6 +22,10 @@ class FrostlightEngine:
     def draw(self):
         pass
     
+    def __engine_draw(self):
+        self.window.update()
+        self.window.clear()
+
     def run(self):
         self.__core.start_main_loop()
 
