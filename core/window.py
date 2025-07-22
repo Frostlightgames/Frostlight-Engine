@@ -30,7 +30,7 @@ class Window:
         pygame.display.set_caption(title)
         self.clock = pygame.time.Clock()
 
-        self.ctx = moderngl.create_context(require=430)
+        self.ctx = moderngl.create_context(require=330)
         self.ctx.viewport = (0, 0, width, height)
         self.ctx.enable(moderngl.BLEND)
         self.ctx.blend_func = (moderngl.SRC_ALPHA, moderngl.ONE_MINUS_SRC_ALPHA)
