@@ -50,7 +50,7 @@ class Window:
         self.ctx.clear(0.0, 0.0, 0.0)
         self.render_queue.clear()
 
-    def render(self, sprite, position=[0, 0], scale=None):
+    def render(self, sprite, position=[0, 0], scale=None, rotation=0):
         """
         Queue a sprite to be rendered.
 
@@ -62,7 +62,7 @@ class Window:
         Example:
             >>> self.window.render(player, [100, 200], [1.5, 1.5])
         """
-        self.render_queue.append((sprite, position, scale))
+        self.render_queue.append((sprite, position, scale,rotation))
 
     def set_size(self, width, height):
         """
@@ -89,17 +89,17 @@ class Window:
         sprite_batches = {}
 
         # Group render instances by sprite to reduce state changes
-        for sprite, pos, scale in self.render_queue:
+        for sprite, pos, scale, rotation in self.render_queue:
             if sprite not in sprite_batches:
                 sprite_batches[sprite] = []
-            sprite_batches[sprite].append((pos, scale))
+            sprite_batches[sprite].append((pos, scale, rotation))
 
         # Render all sprite instances
         for sprite, instances in sprite_batches.items():
             sprite.texture.use()
 
-            for pos, scale in instances:
-                sprite.set_uniforms(pos, self.size, scale)
+            for pos, scale, rotation in instances:
+                sprite.set_uniforms(pos, self.size, scale, rotation)
                 sprite.vao.render(moderngl.TRIANGLE_STRIP)
 
         pygame.display.flip()
