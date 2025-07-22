@@ -1,6 +1,8 @@
 from __init__ import *
+import __init__ as init
 from core.core import Core as _Core
 from core.window import *
+from core.sprite import *
 
 class FrostlightEngine:
     def __init__(self, fps_limit=0):
@@ -12,6 +14,7 @@ class FrostlightEngine:
         self.__core = _Core(args, self.__engine_update, self.update, self.draw, self.__engine_draw)
 
         self.window = Window()
+        init.WINDOW_CONTEXT = self.window.ctx
 
     def __engine_update(self):
         pass
