@@ -19,7 +19,7 @@ class Core:
         self.logger = Logger()
         self.save_manager = None
 
-        self.logger.info("Started Frostlightengine version 2.0.0")
+        self.logger.info("Started Frostlightengine version 2.0.0 [DEV]")
 
     def get_fps(self) -> int:
         return int(min(self.clock.get_fps(),99999999))
