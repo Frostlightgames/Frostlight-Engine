@@ -5,7 +5,12 @@ from core.window import *
 from core.sprite import *
 
 class FrostlightEngine:
-    def __init__(self, fps_limit=0):
+    def __init__(self, 
+            fps_limit = 0,
+            catch_errors = True,
+            logging = True,
+            one_log_file = False,
+            window_mode = None):
         frame = inspect.currentframe()
         if frame is not None:
             args = inspect.getargvalues(frame)[3]
