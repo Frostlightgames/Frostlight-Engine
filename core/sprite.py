@@ -28,12 +28,12 @@ class Sprite:
         """
 
         self.ctx = init.WINDOW_CONTEXT
-        self.texture = self.load_texture(image_path)
-        self.program = self.create_program()
-        self.vbo = self.create_quad()
+        self.texture = self.__load_texture(image_path)
+        self.program = self.__create_program()
+        self.vbo = self.__create_quad()
         self.vao = self.ctx.vertex_array(self.program,[(self.vbo, '2f 2f', 'in_vert', 'in_tex')])
 
-    def create_program(self):
+    def __create_program(self):
         """
         Compiles and links the vertex and fragment shaders into a ModernGL program.
 
@@ -75,7 +75,7 @@ class Sprite:
             """
         )
 
-    def create_quad(self):
+    def __create_quad(self):
         """
         Creates a quad with position and texture coordinates.
 
@@ -86,14 +86,14 @@ class Sprite:
         """
 
         vertices = numpy.array([
-            -0.5, -0.5, 0.0, 0.0,
-             0.5, -0.5, 1.0, 0.0,
-            -0.5,  0.5, 0.0, 1.0,
-             0.5,  0.5, 1.0, 1.0,
+            -0.5, -0.5, 0.0, 1.0,
+             0.5, -0.5, 1.0, 1.0,
+            -0.5,  0.5, 0.0, 0.0,
+             0.5,  0.5, 1.0, 0.0,
         ], dtype='f4')
         return self.ctx.buffer(vertices.tobytes())
 
-    def load_texture(self, path):
+    def __load_texture(self, path):
         """
         Loads an image and creates an OpenGL texture.
 
@@ -113,7 +113,7 @@ class Sprite:
         texture.use()
         return texture
     
-    def set_uniforms(self, pos, screen_size, scale=None, rotation=0):
+    def _set_uniforms(self, pos, screen_size, scale=None, rotation=0, centered=True):
         """
         Sets shader uniforms for rendering the sprite on screen.
 
@@ -125,6 +125,11 @@ class Sprite:
         """
 
         # Convert screen position to normalized device coordinates (NDC)
+
+        if not centered:
+            pos[0] = pos[0] + scale[0]/4
+            pos[1] = pos[1] + scale[1]/4
+            
         normal_x = (pos[0] / screen_size[0]) * 2.0 - 1.0
         normal_y = 1.0 - (pos[1] / screen_size[1]) * 2.0
 
