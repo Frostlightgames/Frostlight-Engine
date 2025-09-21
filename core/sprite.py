@@ -32,6 +32,10 @@ class Sprite:
         self.program = self.__create_program()
         self.vbo = self.__create_quad()
         self.vao = self.ctx.vertex_array(self.program,[(self.vbo, '2f 2f', 'in_vert', 'in_tex')])
+        self.alpha = 1.0
+        self.rotation = 0
+        self.size = [1.0,1.0]
+        self.pivot_point = [0.5,0.5]
 
     def __create_program(self):
         """
@@ -47,6 +51,7 @@ class Sprite:
                 uniform vec2 offset;
                 uniform vec2 scale;
                 uniform float rotation;
+                uniform float alpha;
 
                 in vec2 in_vert;
                 in vec2 in_tex;
@@ -66,11 +71,13 @@ class Sprite:
             fragment_shader="""
                 #version 330
                 uniform sampler2D Texture;
+                uniform float alpha;
                 in vec2 v_tex;
                 out vec4 fragColor;
 
                 void main() {
-                    fragColor = texture(Texture, v_tex);
+                    vec4 texColor = texture(Texture, v_tex);
+                    fragColor = vec4(texColor.rgb, texColor.a * alpha);
                 }
             """
         )
@@ -113,7 +120,7 @@ class Sprite:
         texture.use()
         return texture
     
-    def _set_uniforms(self, pos, screen_size, scale=None, rotation=0, centered=True):
+    def _set_uniforms(self, pos, screen_size):
         """
         Sets shader uniforms for rendering the sprite on screen.
 
@@ -125,21 +132,16 @@ class Sprite:
         """
 
         # Convert screen position to normalized device coordinates (NDC)
-
-        if not centered:
-            pos[0] = pos[0] + scale[0]/4
-            pos[1] = pos[1] + scale[1]/4
-            
         normal_x = (pos[0] / screen_size[0]) * 2.0 - 1.0
         normal_y = 1.0 - (pos[1] / screen_size[1]) * 2.0
 
         # Determine scale in NDC
-        if scale is None:
-            scale_x = self.width
-            scale_y = self.height
+        if self.size is [1.0,1.0]:
+            scale_x = self.width*-2
+            scale_y = self.height*-2
         else:
-            scale_x = scale[0]
-            scale_y = scale[1]
+            scale_x = self.size[0]*-2
+            scale_y = self.size[1]*-2
 
         normal_scale_x = scale_x / screen_size[0]
         normal_scale_y = scale_y / screen_size[1]
@@ -147,5 +149,6 @@ class Sprite:
         # Set shader uniforms
         self.program['offset'].value = (normal_x, normal_y)
         self.program['scale'].value = (normal_scale_x, normal_scale_y)
-        self.program['rotation'].value = float(rotation)
+        self.program['rotation'].value = float(self.rotation+3.14159)
+        self.program['alpha'].value = self.alpha
         self.texture.use()
