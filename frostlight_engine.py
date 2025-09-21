@@ -1,16 +1,11 @@
-from __init__ import *
-import __init__ as init
+from init import *
+import init as init
 from core.core import Core as _Core
 from core.window import *
 from core.sprite import *
 
 class FrostlightEngine:
-    def __init__(self, 
-            fps_limit = 0,
-            catch_errors = True,
-            logging = True,
-            one_log_file = False,
-            window_mode = None):
+    def __init__(self, fps_limit=0):
         frame = inspect.currentframe()
         if frame is not None:
             args = inspect.getargvalues(frame)[3]
@@ -18,12 +13,13 @@ class FrostlightEngine:
             args = {}
         self.__core = _Core(args, self.__engine_update, self.update, self.draw, self.__engine_draw)
 
-        self.window = Window()
+        self.window = Window(1920,1080)
         init.WINDOW_CONTEXT = self.window.ctx
 
-    def __engine_update(self):
-        pass
+        self.delta_time = self.__core.delta_time
 
+    def __engine_update(self):
+        self.delta_time = self.__core.delta_time
     def update(self):
         pass
 

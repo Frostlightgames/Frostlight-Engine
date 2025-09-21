@@ -1,4 +1,4 @@
-from __init__ import *
+from init import *
 
 LOG_PATH = Path("data/logs")
 

@@ -1,4 +1,4 @@
-from __init__ import *
+from init import *
 
 from core.log_manager import *
 from core.window import *

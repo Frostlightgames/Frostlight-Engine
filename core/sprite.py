@@ -1,5 +1,5 @@
-from __init__ import *
-import __init__ as init
+from init import *
+import init as init
 
 class Sprite:
     """

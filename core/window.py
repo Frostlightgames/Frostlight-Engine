@@ -1,4 +1,4 @@
-from __init__ import *
+from init import *
 
 class Window:
     """
