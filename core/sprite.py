@@ -18,7 +18,7 @@ class Sprite:
         height: Height of the loaded texture in pixels.
     """
 
-    def __init__(self, image_path):
+    def __init__(self, image_path, size:list=None):
         """
         Initializes the Sprite by loading the texture, compiling shaders,
         and setting up buffers for rendering.
@@ -27,15 +27,54 @@ class Sprite:
             image_path (str): Path to the image file used as the sprite's texture.
         """
 
-        self.ctx = init.WINDOW_CONTEXT
-        self.texture = self.__load_texture(image_path)
-        self.program = self.__create_program()
-        self.vbo = self.__create_quad()
-        self.vao = self.ctx.vertex_array(self.program,[(self.vbo, '2f 2f', 'in_vert', 'in_tex')])
-        self.alpha = 1.0
-        self.rotation = 0
-        self.size = [1.0,1.0]
-        self.pivot_point = [0.5,0.5]
+        self.__ctx = init.WINDOW_CONTEXT
+        self.__size = [1.0,1.0]
+        self._texture = self.__load_texture(image_path)
+        self.__program = self.__create_program()
+        self.__vbo = self.__create_quad()
+        self._vao = self.__ctx.vertex_array(self.__program,[(self.__vbo, '2f 2f', 'in_vert', 'in_tex')])
+        self.__alpha = 1.0
+        self.__rotation = 0
+        self.__pivot_point = [0.0,0.0]
+
+        if size != None:
+            self.set_size(size)
+
+    def set_alpha(self, alpha:float=1.0):
+        if alpha > 1.0 or alpha < 0.0:
+            raise ValueError("Alpha value must be between 0.0 and 1.0")
+        
+        self.__alpha = alpha
+
+    def get_alpha(self):
+        return self.__alpha
+
+    def set_rotation(self, rotation:float=0.0):
+        self.__rotation = rotation
+
+    def get_rotation(self):
+        return self.__rotation
+    
+    def set_size(self, size:list=[1.0,1.0]):
+        if size[0] < 0 or size[1] < 0:
+            raise ValueError("Any size parameter must be larger than 0")
+        
+        self.__size = size
+
+    def get_size(self):
+        return self.__size
+    
+    def scale_by(self, factor:float=1.0):
+        if factor < 0.0:
+            raise ValueError("Sizing factor must be larger than 0")
+        
+        self.set_size([self.__size[0]*factor,self.__size[1]*factor])
+
+    def set_pivot_point(self, pivot_point:list=[0.0,0.0]):
+        self.__pivot_point = pivot_point
+
+    def get_pivot_point(self):
+        return self.__pivot_point
 
     def __create_program(self):
         """
@@ -45,13 +84,15 @@ class Sprite:
             moderngl.Program: The compiled shader program.
         """
          
-        return self.ctx.program(
+        return self.__ctx.program(
             vertex_shader="""
                 #version 330
                 uniform vec2 offset;
-                uniform vec2 scale;
+                uniform vec2 scale_pixels;
+                uniform vec2 screen_size;
                 uniform float rotation;
                 uniform float alpha;
+                uniform vec2 pivot;
 
                 in vec2 in_vert;
                 in vec2 in_tex;
@@ -60,11 +101,21 @@ class Sprite:
                 void main() {
                     float c = cos(rotation);
                     float s = sin(rotation);
+
+                    vec2 local = in_vert - pivot;
+                    vec2 scaled = local * scale_pixels;
                     vec2 rotated = vec2(
-                        in_vert.x * c - in_vert.y * s,
-                        in_vert.x * s + in_vert.y * c
+                        scaled.x * c - scaled.y * s,
+                        scaled.x * s + scaled.y * c
                     );
-                    gl_Position = vec4(offset + rotated * scale, 0.0, 1.0);
+
+                    vec2 transformed = rotated + pivot * scale_pixels;
+                    vec2 ndc = vec2(
+                        transformed.x * 2.0 / screen_size.x,
+                        transformed.y * 2.0 / screen_size.y
+                    );
+
+                    gl_Position = vec4(offset + ndc, 0.0, 1.0);
                     v_tex = in_tex;
                 }
             """,
@@ -98,7 +149,7 @@ class Sprite:
             -0.5,  0.5, 0.0, 0.0,
              0.5,  0.5, 1.0, 0.0,
         ], dtype='f4')
-        return self.ctx.buffer(vertices.tobytes())
+        return self.__ctx.buffer(vertices.tobytes())
 
     def __load_texture(self, path):
         """
@@ -112,43 +163,32 @@ class Sprite:
         """
 
         img = Image.open(path).convert('RGBA')
-        self.width, self.height = img.size
-        texture = self.ctx.texture((self.width, self.height), 4, img.tobytes())
+        self.__width, self.__height = img.size
+        self.__size = [self.__width,self.__height]
+        texture = self.__ctx.texture((self.__width, self.__height), 4, img.tobytes())
 
         texture.filter = (moderngl.NEAREST, moderngl.NEAREST)
 
         texture.use()
         return texture
     
-    def _set_uniforms(self, pos, screen_size):
-        """
-        Sets shader uniforms for rendering the sprite on screen.
-
-        Args:
-            pos (list): (x, y) position in pixels on the screen.
-            screen_size (list): (width, height) of the window or framebuffer.
-            scale (list or None): Optional (width, height) scale in pixels. Defaults to texture size.
-            rotation (float): Rotation in radians.
-        """
-
-        # Convert screen position to normalized device coordinates (NDC)
-        normal_x = (pos[0] / screen_size[0]) * 2.0 - 1.0
-        normal_y = 1.0 - (pos[1] / screen_size[1]) * 2.0
-
-        # Determine scale in NDC
-        if self.size is [1.0,1.0]:
-            scale_x = self.width*-2
-            scale_y = self.height*-2
+    def _set_uniforms(self, pos, screen_size, centered):
+        if centered:
+            normal_x = (pos[0] / screen_size[0]) * 2.0 - 1.0
+            normal_y = 1.0 - (pos[1] / screen_size[1]) * 2.0
         else:
-            scale_x = self.size[0]*-2
-            scale_y = self.size[1]*-2
+            normal_x = ((pos[0] + self.__size[0] / 2.0) / screen_size[0]) * 2.0 - 1.0
+            normal_y = 1.0 - ((pos[1] + self.__size[1] / 2.0) / screen_size[1]) * 2.0
 
-        normal_scale_x = scale_x / screen_size[0]
-        normal_scale_y = scale_y / screen_size[1]
+        size_x = float(self.__size[0])
+        size_y = float(self.__size[1])
 
-        # Set shader uniforms
-        self.program['offset'].value = (normal_x, normal_y)
-        self.program['scale'].value = (normal_scale_x, normal_scale_y)
-        self.program['rotation'].value = float(self.rotation+3.14159)
-        self.program['alpha'].value = self.alpha
-        self.texture.use()
+        self.__program['offset'].value = (normal_x, normal_y)
+        self.__program['scale_pixels'].value = (size_x, size_y)
+        self.__program['screen_size'].value = (float(screen_size[0]), float(screen_size[1]))
+        self.__program['rotation'].value = math.radians(-self.__rotation)
+        self.__program['alpha'].value = self.__alpha
+        self.__program['pivot'].value = self.__pivot_point
+        self._texture.use()
+
+
