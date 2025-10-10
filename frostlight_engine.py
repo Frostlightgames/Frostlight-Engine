@@ -15,11 +15,14 @@ class FrostlightEngine:
 
         self.window = Window(1920,1080)
         init.WINDOW_CONTEXT = self.window.ctx
-
+        
+        self.logger = self.__core.logger
+        
         self.delta_time = self.__core.delta_time
 
     def __engine_update(self):
         self.delta_time = self.__core.delta_time
+
     def update(self):
         pass
 
