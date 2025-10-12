@@ -76,8 +76,8 @@ class Window:
         """
         self.size = [width, height]
 
-    def fill(self, red=0.0, green=0.0, blue=0.0):
-        self.ctx.clear(red, green, blue)
+    def fill(self, red=0, green=0, blue=0):
+        self.ctx.clear(red/255, green/255, blue/255)
 
     def update(self):
         """
