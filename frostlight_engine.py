@@ -17,7 +17,7 @@ class FrostlightEngine:
         self.__core.event_window_resize = self.__window_resize
 
         self.window = Window(1920,1080)
-        init.WINDOW_CONTEXT = self.window.ctx
+        GLOBAL_ENVIRONMENT.MODERNGL_CONTEXT = self.window._ctx
         
         self.logger = self.__core.logger
         
