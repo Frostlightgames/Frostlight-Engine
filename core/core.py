@@ -1,5 +1,6 @@
 from init import *
 
+from core.builder import *
 from core.log_manager import *
 from core.window import *
 
@@ -13,7 +14,7 @@ class Core:
 
         self.loop_functions = loop_functions
 
-        self.build_manager = None
+        self.build_manager = Builder()
         self.event_manager = None
         self.input_manager = None
         self.logger = Logger()
