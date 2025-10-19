@@ -25,6 +25,7 @@ class FrostlightEngine:
 
     def __engine_update(self):
         self.delta_time = self.__core.delta_time
+        pygame.display.set_caption(str(self.__core.get_fps()))
 
     def update(self):
         pass
