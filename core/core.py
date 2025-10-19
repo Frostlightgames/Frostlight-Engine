@@ -19,6 +19,8 @@ class Core:
         self.logger = Logger()
         self.save_manager = None
 
+        self.event_window_resize = None
+
         self.logger.info("Started Frostlightengine version 2.0.0 [DEV]")
 
     def get_fps(self) -> int:
@@ -39,6 +41,10 @@ class Core:
                     if event.type == pygame.QUIT:
                         self.main_loop_running = False
                         self.logger.info("Closed window, stopping game.")
+
+                    if event.type == pygame.WINDOWRESIZED:
+                        if self.event_window_resize != None:
+                            self.event_window_resize([event.x,event.y])
 
                 self.delta_time = time.time() - self.last_time
                 self.last_time = time.time()

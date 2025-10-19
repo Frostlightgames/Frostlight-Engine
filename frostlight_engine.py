@@ -7,13 +7,14 @@ from core.window import Window
 from core.sprite import Sprite
 
 class FrostlightEngine:
-    def __init__(self, fps_limit=0):
+    def __init__(self, window_size=[1920,1080], canvas_size=[1920,1080], window_mode=pygame.RESIZABLE, title="New Game", fps_limit=0):
         frame = inspect.currentframe()
         if frame is not None:
             args = inspect.getargvalues(frame)[3]
         else:
             args = {}
         self.__core = _Core(args, self.__engine_update, self.update, self.draw, self.__engine_draw)
+        self.__core.event_window_resize = self.__window_resize
 
         self.window = Window(1920,1080)
         init.WINDOW_CONTEXT = self.window.ctx
@@ -33,7 +34,9 @@ class FrostlightEngine:
     
     def __engine_draw(self):
         self.window.update()
-        self.window.clear()
+
+    def __window_resize(self,window_size):
+        pass
 
     def run(self):
         self.__core.start_main_loop()
