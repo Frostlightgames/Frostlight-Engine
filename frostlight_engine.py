@@ -1,8 +1,10 @@
+import inspect
+
 from init import *
-import init as init
+
 from core.core import Core as _Core
-from core.window import *
-from core.sprite import *
+from core.window import Window
+from core.sprite import Sprite
 
 class FrostlightEngine:
     def __init__(self, fps_limit=0):
