@@ -1,107 +1,49 @@
 from init import *
-
+from utils.load_shader import load_shader
 class Window:
-    """
-    The window to render sprites on.
-
-    Attributes:
-        size (list[int]): Window dimensions [width, height].
-        ctx (moderngl.Context): The ModernGL context.
-        clock (pygame.time.Clock): Clock for framerate control.
-        render_queue (list): A queue of sprites to render.
-
-    Example:
-        >>> self.window = Window(1280, 720, "My Game")
-        >>> self.window.clear()
-        >>> self.window.render(player, [100, 150], [2.0, 2.0])
-        >>> self.window.update()
-    """
-    
-    def __init__(self, width=1920, height=1080, title="New game"):
-        """
-        Initialize the rendering window.
-
-        Args:
-            width (int): Width of the window in pixels. Defaults to 1920.
-            height (int): Height of the window in pixels. Defaults to 1080.
-            title (str): Title of the window. Defaults to "New game".
-        """
-        pygame.display.set_mode((width, height), pygame.DOUBLEBUF | pygame.OPENGL | pygame.RESIZABLE)
+    def __init__(self, window_size:list = [1920,1080], canvas_size:list=[1920,1080], mode=pygame.RESIZABLE, title="New game"):
+        pygame.display.set_mode(window_size, pygame.DOUBLEBUF | pygame.OPENGL | mode)
         pygame.display.set_caption(title)
-        self.clock = pygame.time.Clock()
 
-        self.ctx = moderngl.create_context(require=330)
-        self.ctx.viewport = (0, 0, width, height)
-        self.ctx.enable(moderngl.BLEND)
-        self.ctx.blend_func = (moderngl.SRC_ALPHA, moderngl.ONE_MINUS_SRC_ALPHA)
+        self.window_size = window_size
+        self.canvas_size = canvas_size
 
-        self.size = [width, height]
-        self.render_queue = []
+        self._render_queue = []
+
+        self._ctx = moderngl.create_context(require=330)
+        self._ctx.enable(moderngl.BLEND)
+        self._ctx.blend_func = (moderngl.SRC_ALPHA, moderngl.ONE_MINUS_SRC_ALPHA)
+        
+        self._texture = self._ctx.texture(self.canvas_size, 4)
+        self._canvas_tex = self._ctx.texture(self.canvas_size, 4)
+        self._canvas_fbo = self._ctx.framebuffer([self._canvas_tex])
+
+        self.program = self._ctx.program(load_shader("window.vert"),load_shader("window.frag"))
+
+        self._vbo = self._ctx.buffer(numpy.array([-1.0, -1.0, 0.0, 0.0, 1.0, -1.0, 1.0, 0.0, -1.0,  1.0, 0.0, 1.0, 1.0,  1.0, 1.0, 1.0,], dtype="f4"))
+        self._vao = self._ctx.vertex_array(self.program, [(self._vbo, "2f 2f", "in_vert", "in_uv")])
 
     def clear(self):
-        """
-        Clear the screen and reset the render queue.
-
-        This should be called before rendering a new frame.
-
-        Example:
-            >>> self.window.clear()
-        """
-        self.ctx.clear(0.0, 0.0, 0.0)
-        self.render_queue.clear()
+        self._ctx.clear(0.0, 0.0, 0.0)
+        self._render_queue.clear()
 
     def render(self, sprite, position=[0, 0], centered=False):
-        """
-        Queue a sprite to be rendered.
-
-        Args:
-            sprite: (Sprite): The sprite object that should be drawn.
-            position (list[int]): Screen position [x, y] to render the sprite.
-
-        Example:
-            >>> self.window.render(player, [100, 200], [1.5, 1.5])
-        """
-        self.render_queue.append((sprite, position, centered))
-
-    def set_size(self, width, height):
-        """
-        Set a new window size.
-
-        Args:
-            width (int): New width.
-            height (int): New height.
-
-        Example:
-            >>> win.set_size(800, 600)
-        """
-        self.size = [width, height]
+        self._render_queue.append((sprite, position, centered))
 
     def fill(self, red=0, green=0, blue=0):
-        self.ctx.clear(red/255, green/255, blue/255)
+        self._canvas_fbo.use()
+        self._ctx.clear(red / 255.0, green / 255.0, blue / 255.0, 1.0)
 
     def update(self):
-        """
-        Process the render queue and draw sprites to the screen.
+        self._canvas_fbo.use()
+        for sprite, pos, centered in self._render_queue:
+            sprite._render(pos, self.canvas_size, centered)
 
-        This should be called once per frame after.
+        self._ctx.screen.use()
+        self._ctx.clear(0.0, 0.0, 0.0, 1.0)
 
-        Example:
-            >>> self.window.update()
-        """
-        sprite_batches = {}
-
-        # Group render instances by sprite to reduce state changes
-        for sprite, pos, centered in self.render_queue:
-            if sprite not in sprite_batches:
-                sprite_batches[sprite] = []
-            sprite_batches[sprite].append((pos, centered))
-
-        # Render all sprite instances
-        for sprite, instances in sprite_batches.items():
-            sprite._texture.use()
-
-            for pos, centered in instances:
-                sprite._set_uniforms(pos, self.size, centered)
-                sprite._vao.render(moderngl.TRIANGLE_STRIP)
+        self._canvas_tex.use()
+        self._vao.render(moderngl.TRIANGLE_STRIP)
 
         pygame.display.flip()
+        self.clear()
