@@ -2,6 +2,7 @@ import os
 import sys
 import time
 import math
+import json
 import numpy
 import pygame
 import moderngl
@@ -10,6 +11,7 @@ import traceback
 
 from PIL import Image
 from pathlib import Path
+from cryptography.fernet import Fernet
 
 pygame.init()
 

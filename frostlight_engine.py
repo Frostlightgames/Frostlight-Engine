@@ -20,6 +20,7 @@ class FrostlightEngine:
         GLOBAL_ENVIRONMENT.MODERNGL_CONTEXT = self.window._ctx
         
         self.logger = self.__core.logger
+        self.save_manager = self.__core.save_manager
         
         self.delta_time = self.__core.delta_time
 

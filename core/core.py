@@ -3,6 +3,7 @@ from init import *
 from core.builder import *
 from core.log_manager import *
 from core.window import *
+from core.save_manager import *
 
 class Core:
     def __init__(self,args={},*loop_functions):
@@ -18,7 +19,7 @@ class Core:
         self.event_manager = None
         self.input_manager = None
         self.logger = Logger()
-        self.save_manager = None
+        self.save_manager = SaveManager(self.logger)
 
         self.event_window_resize = None
 
