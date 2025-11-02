@@ -1,4 +1,5 @@
 from init import *
+
 class SaveManager:
     """A class for managing (optionally encrypted) save-slots as JSON storage."""
 
@@ -14,6 +15,7 @@ class SaveManager:
         self.directory = "data/saves/"
         self.slotfile = "slots.dat"
         self.slots: dict[str, bytes] = {}
+        self._slotkey = b"OCqZTMHYWLh1DoCrXUDoI1hU6G9PwS03apyMKMCGBx4="
         self._setup()
 
     def set_directory(self, path: str) -> None:
@@ -47,23 +49,54 @@ class SaveManager:
         - bool: True on success, False on failure.
         """
         try:
-            # ensure slot exists
+            # Sichere den alten Schlüssel
+            old_key = self.slots.get(slot, b"")
+            old_path = self._get_slot_path(slot)
+            
+            # Stelle sicher dass der Slot existiert
             if slot not in self.slots:
                 if self.logger: self.logger.warning(f"Slot '{slot}' missing, auto-created")
                 self._create_slot(slot)
+                data = {}
+            else:
+                # Lade mit altem Schlüssel
+                if os.path.exists(old_path):
+                    with open(old_path, "rb") as f:
+                        raw_data = f.read()
+                    try:
+                        if old_key == b"":
+                            # War unverschlüsselt (JSON)
+                            data = json.loads(raw_data.decode('utf-8'))
+                        else:
+                            # War verschlüsselt
+                            data = json.loads(Fernet(old_key).decrypt(raw_data).decode())
+                    except Exception as e:
+                        if self.logger: self.logger.error(f"Could not decrypt old data: {e}")
+                        return False
+                else:
+                    data = {}
 
-            # load with old key
-            data = self._load_raw(slot)
-
-            # set new key and persist slotfile
+            # Setze neuen Schlüssel und speichere Slot-Informationen
             self.slots[slot] = encryption_key
             self._save_slotfile()
 
-            # write back to re-encrypt with new key
+            # Lösche alte Datei
+            if os.path.exists(old_path):
+                try:
+                    os.remove(old_path)
+                except Exception as e:
+                    if self.logger: self.logger.warning(f"Could not remove old save file: {e}")
+
+            # Schreibe mit neuem Schlüssel
             self._write_raw(slot, data)
 
-            if self.logger: self.logger.info(f"Encryption key set for slot '{slot}'")
+            if self.logger: 
+                if encryption_key == b"":
+                    self.logger.info(f"Encryption disabled for slot '{slot}', saved as JSON")
+                else:
+                    self.logger.info(f"New encryption key set for slot '{slot}'")
             return True
+            
         except Exception as e:
             if self.logger: self.logger.error(f"set_encryption_key failed: {e}")
             return False
@@ -81,7 +114,7 @@ class SaveManager:
         - bool: True on success.
         """
         if slot not in self.slots:
-            if self.logger: self.logger.warning(f"Slot '{slot}' missing, auto-created")
+            if self.logger: self.logger.info(f"Slot '{slot}' missing, auto-created")
             self._create_slot(slot)
 
         data = self._load_raw(slot)
@@ -89,7 +122,7 @@ class SaveManager:
         self._write_raw(slot, data)
         return True
 
-    def load(self, key: str, default=None, slot: str = "save"):
+    def load(self, key: str, slot: str = "save", default=None):
         """
         Load a value from a slot.
 
@@ -102,8 +135,8 @@ class SaveManager:
         - any: Stored value or default.
         """
         if slot not in self.slots:
-            if self.logger: self.logger.warning(f"Slot '{slot}' missing, auto-created")
-            self._create_slot(slot)
+            if self.logger: self.logger.warning(f"Slot '{slot}' missing.")
+            return default
 
         data = self._load_raw(slot)
         return data.get(key, default)
@@ -130,11 +163,20 @@ class SaveManager:
         if self.logger: self.logger.warning(f"Delete failed, slot not found: {slot}")
         return False
     
+    def get_slots(self) -> list[str]:
+        """
+        Get a list of all existing slot names.
+
+        Returns:
+        - list[str]: List of slot names.
+        """
+        return list(self.slots.keys())
+    
     def _setup(self) -> None:
         try:
             os.makedirs(self.directory, exist_ok=True)
             if not os.path.exists(self.directory + self.slotfile):
-                self._create_slot("save", Fernet.generate_key())
+                self._create_slot("save", b"")
                 self._save_slotfile()
                 if self.logger: self.logger.info("Slotfile created with default slot")
             else:
@@ -148,8 +190,10 @@ class SaveManager:
 
     def _encrypt(self, data: dict, key: bytes) -> bytes:
         try:
+            if key == b"":
+                return json.dumps(data, indent=4, ensure_ascii=False).encode("utf-8")
+            
             encoded = json.dumps(data).encode()
-            if key == b"": return encoded
             return Fernet(key).encrypt(encoded)
         except Exception as e:
             if self.logger: self.logger.error(f"Encrypt failed: {e}")
@@ -158,26 +202,47 @@ class SaveManager:
     def _decrypt(self, data: bytes, key: bytes) -> dict:
         try:
             if data == b"": return {}
-            if key == b"": return json.loads(data.decode())
+            if key == b"": 
+                return json.loads(data.decode("utf-8"))
+            
             return json.loads(Fernet(key).decrypt(data).decode())
-        except Exception:
+        except Exception as e:
             if self.logger: self.logger.error("Decrypt failed (wrong key/corrupt data)")
             return {}
 
+    def _get_slot_path(self, slot: str) -> str:
+        is_encrypted = self.slots.get(slot, b"") != b""
+        extension = ".dat" if is_encrypted else ".json"
+        return self.directory + slot + extension
+
     def _load_raw(self, slot: str) -> dict:
-        path = self.directory + slot + ".dat"
-        try:
-            if not os.path.exists(path):
+        path = self._get_slot_path(slot)
+        if not os.path.exists(path):
+            alt_ext = ".dat" if path.endswith(".json") else ".json"
+            alt_path = self.directory + slot + alt_ext
+            if os.path.exists(alt_path):
+                path = alt_path
+            else:
                 return {}
-            with open(path, "rb") as f:
-                raw = f.read()
+        
+        try:
+            with open(path, "rb") as file:
+                raw = file.read()
             return self._decrypt(raw, self.slots.get(slot, b""))
         except Exception as e:
             if self.logger: self.logger.error(f"Load failed: {e}")
             return {}
 
     def _write_raw(self, slot: str, data: dict) -> None:
-        path = self.directory + slot + ".dat"
+        path = self._get_slot_path(slot)
+        alt_ext = ".dat" if path.endswith(".json") else ".json"
+        alt_path = self.directory + slot + alt_ext
+        if os.path.exists(alt_path):
+            try:
+                os.remove(alt_path)
+            except Exception:
+                if self.logger: self.logger.warning(f"Could not remove old save file: {alt_path}")
+        
         try:
             raw = self._encrypt(data, self.slots.get(slot, b""))
             with open(path, "wb") as f:
@@ -187,15 +252,23 @@ class SaveManager:
 
     def _save_slotfile(self) -> None:
         try:
-            with open(self.directory + self.slotfile, "w") as f:
-                json.dump({n: k.decode() for n, k in self.slots.items()}, f)
+            payload = {n: k.decode() for n, k in self.slots.items()}
+            fullpath = self.directory + self.slotfile
+            raw = self._encrypt(payload, self._slotkey)
+            with open(fullpath, "wb") as f:
+                f.write(raw)
         except Exception as e:
             if self.logger: self.logger.error(f"Save slotfile failed: {e}")
 
     def _load_slotfile(self) -> None:
         try:
-            with open(self.directory + self.slotfile, "r") as f:
-                j = json.load(f)
-                self.slots = {n: (k.encode() if k else b"") for n, k in j.items()}
+            fullpath = self.directory + self.slotfile
+            if not os.path.exists(fullpath):
+                self.slots = {}
+                return
+            with open(fullpath, "rb") as f:
+                raw = f.read()
+            j = self._decrypt(raw, self._slotkey) if raw else {}
+            self.slots = {n: (k.encode() if k else b"") for n, k in j.items()}
         except Exception as e:
             if self.logger: self.logger.error(f"Load slotfile failed: {e}")
