@@ -24,6 +24,8 @@ class Sprite:
         self._vao = self._ctx.vertex_array(self._program,[(self._vbo,"2f 2f", "vert", "tex")])
         self._custom_program: moderngl.Program = None
 
+        self.custom_uniforms = {}
+
     @property
     def alpha(self):
         return self._alpha
@@ -104,6 +106,9 @@ class Sprite:
 
         return texture
     
+    def set_custom_uniforms(self, uniform, value):
+        self.custom_uniforms[uniform] = value
+    
     def _render(self, pos, canvas_size, centered):
         if centered:
             normal_x = (pos[0] / canvas_size[0]) * 2.0 - 1.0
@@ -125,6 +130,11 @@ class Sprite:
             self._program["rotation"].value = math.radians(-self.rotation)
         if "alpha" in self._program:
             self._program["alpha"].value = self.alpha
+
+        for uniform in self.custom_uniforms:
+            self._program[uniform].value = self.custom_uniforms[uniform]
+
+        self.custom_uniforms.clear()
         
         self._texture.use()
         self._vao.render(moderngl.TRIANGLE_STRIP)
