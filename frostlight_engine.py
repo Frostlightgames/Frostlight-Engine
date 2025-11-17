@@ -15,6 +15,7 @@ class FrostlightEngine:
             args = {}
         self.__core = _Core(args, self.__engine_update, self.update, self.draw, self.__engine_draw)
         self.__core.event_window_resize = self.__window_resize
+        self.__core.event_quit = self.event_quit
 
         self.window = Window(window_size,canvas_size)
         GLOBAL_ENVIRONMENT.MODERNGL_CONTEXT = self.window._ctx
@@ -36,6 +37,9 @@ class FrostlightEngine:
     
     def __engine_draw(self):
         self.window.update()
+
+    def event_quit(self):
+        ...
 
     def __window_resize(self,window_size):
         pass
