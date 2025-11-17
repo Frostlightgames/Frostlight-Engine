@@ -15,7 +15,9 @@ class Window:
         self._ctx.blend_func = (moderngl.SRC_ALPHA, moderngl.ONE_MINUS_SRC_ALPHA)
         
         self._texture = self._ctx.texture(self.canvas_size, 4)
+        self._texture.filter = (moderngl.NEAREST, moderngl.NEAREST)
         self._canvas_tex = self._ctx.texture(self.canvas_size, 4)
+        self._canvas_tex.filter = (moderngl.NEAREST, moderngl.NEAREST)
         self._canvas_fbo = self._ctx.framebuffer([self._canvas_tex])
 
         self.program = self._ctx.program(load_shader("window.vert"),load_shader("window.frag"))
