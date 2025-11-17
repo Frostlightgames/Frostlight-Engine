@@ -2,6 +2,7 @@ import os
 import sys
 import time
 import math
+import glfw
 import json
 import numpy
 import pygame

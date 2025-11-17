@@ -29,32 +29,10 @@ class Core:
     def get_fps(self) -> int:
         return int(min(self.clock.get_fps(),99999999))
 
-    def start_main_loop(self) -> None:
-        pygame.event.set_allowed([pygame.QUIT,
-                                  pygame.WINDOWMOVED, pygame.VIDEORESIZE,
-                                  pygame.KEYDOWN, pygame.KEYUP,
-                                  pygame.MOUSEBUTTONDOWN, pygame.MOUSEBUTTONUP, pygame.MOUSEMOTION,
-                                  pygame.JOYBUTTONUP, pygame.JOYBUTTONDOWN, pygame.JOYAXISMOTION, pygame.JOYHATMOTION,
-                                  pygame.JOYDEVICEADDED, pygame.JOYDEVICEREMOVED])
-        
+    def start_main_loop(self) -> None:        
         while self.main_loop_running:
             try:
                 self.clock.tick(self.fps_limit)
-                for event in pygame.event.get():
-                    if event.type == pygame.QUIT:
-                        self.main_loop_running = False
-                        if self.event_quit != None:
-                            self.event_quit()
-                        self.logger.info("Closed window, stopping game.")
-
-                    # Window events
-                    if event.type == pygame.WINDOWRESIZED:
-                        if self.event_window_resize != None:
-                            self.event_window_resize([event.x,event.y])
-
-                    elif event.type == pygame.WINDOWMOVED:
-                        self.last_time = time.time()
-                        self.delta_time = 0
 
                 self.delta_time = time.time() - self.last_time
                 self.last_time = time.time()

@@ -1,9 +1,24 @@
 from init import *
 from utils.load_shader import load_shader
 class Window:
-    def __init__(self, window_size:list = [1920,1080], canvas_size:list=[1920,1080], mode=pygame.RESIZABLE, title="New game"):
-        pygame.display.set_mode(window_size, pygame.DOUBLEBUF | pygame.OPENGL | mode)
-        pygame.display.set_caption(title)
+    def __init__(self, window_size:list = [1920,1080], canvas_size:list=[1920,1080], mode=glfw.RESIZABLE, title="New game"):
+        glfw.init()
+
+        glfw.window_hint(glfw.CONTEXT_VERSION_MAJOR, 3)
+        glfw.window_hint(glfw.CONTEXT_VERSION_MINOR, 3)
+        glfw.window_hint(glfw.OPENGL_PROFILE, glfw.OPENGL_CORE_PROFILE)
+
+        glfw.window_hint(mode, glfw.FALSE)
+
+        self.window = glfw.create_window(
+            window_size[0], window_size[1],
+            title, None, None
+        )
+        if not self.window:
+            glfw.terminate()
+
+        glfw.make_context_current(self.window)
+
 
         self.window_size = window_size
         self.canvas_size = canvas_size
@@ -51,5 +66,14 @@ class Window:
         self._canvas_tex.use()
         self._vao.render(moderngl.TRIANGLE_STRIP)
 
-        pygame.display.flip()
+        glfw.swap_buffers(self.window)
         self.clear()
+
+    def should_close(self):
+        return glfw.window_should_close(self.window)
+
+    def poll_events(self):
+        glfw.poll_events()
+
+    def close(self):
+        glfw.terminate()
