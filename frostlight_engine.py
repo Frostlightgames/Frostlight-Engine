@@ -30,10 +30,10 @@ class FrostlightEngine:
         pygame.display.set_caption(str(self.__core.get_fps()))
 
     def update(self):
-        pass
+        ...
 
     def draw(self):
-        pass
+        ...
     
     def __engine_draw(self):
         self.window.update()
@@ -42,7 +42,7 @@ class FrostlightEngine:
         ...
 
     def __window_resize(self,window_size):
-        pass
+        self.window.resize(window_size)
 
     def run(self):
         self.__core.start_main_loop()
