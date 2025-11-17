@@ -85,11 +85,12 @@ class Sprite:
         
         self.size = [int(self.size[0]*factor),int(self.size[1]*factor)]
 
-    def set_custom_shader(self, fragment_shader:str):
-        self._program.release()
+    def set_custom_shader(self, fragment_shader_path:str):
+        new_program = self._ctx.program(load_shader("default.vert"), load_shader(fragment_shader_path))
         self._vao.release()
-        self._program = self._ctx.program(load_shader("default.vert"),fragment_shader)
-        self._vao = self._ctx.vertex_array(self._program,[(self._vbo,"2f 2f", "vert", "tex")])
+        self._program.release()
+        self._program = new_program
+        self._vao = self._ctx.vertex_array(self._program, [(self._vbo, "2f 2f", "vert", "tex")])
 
     def _load_texture(self,path,texture_filter,preferred_size):
         img = Image.open(path).convert('RGBA')
