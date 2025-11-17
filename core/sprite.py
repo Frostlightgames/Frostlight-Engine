@@ -130,6 +130,8 @@ class Sprite:
             self._program["rotation"].value = math.radians(-self.rotation)
         if "alpha" in self._program:
             self._program["alpha"].value = self.alpha
+        if "flipped" in self._program:
+            self._program["flipped"].value = self.flipped
 
         for uniform in self.custom_uniforms:
             self._program[uniform].value = self.custom_uniforms[uniform]
