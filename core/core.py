@@ -22,6 +22,7 @@ class Core:
         self.save_manager = SaveManager(self.logger)
 
         self.event_window_resize = None
+        self.event_quit = None
 
         self.logger.info("Started Frostlightengine version 2.0.0 [DEV]")
 
@@ -42,6 +43,8 @@ class Core:
                 for event in pygame.event.get():
                     if event.type == pygame.QUIT:
                         self.main_loop_running = False
+                        if self.event_quit != None:
+                            self.event_quit()
                         self.logger.info("Closed window, stopping game.")
 
                     if event.type == pygame.WINDOWRESIZED:
