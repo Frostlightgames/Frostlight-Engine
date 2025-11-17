@@ -36,6 +36,10 @@ class Window:
         self._canvas_fbo.use()
         self._ctx.clear(red / 255.0, green / 255.0, blue / 255.0, 1.0)
 
+    def resize(self, new_size):
+        self.window_size = new_size
+        self._ctx.viewport = (0, 0, *self.window_size)
+
     def update(self):
         self._canvas_fbo.use()
         for sprite, pos, centered in self._render_queue:
