@@ -2,7 +2,7 @@ from init import *
 from utils.load_shader import load_shader
 
 class Sprite:
-    def __init__(self, image_path="", size:list=None, texture_filter=moderngl.NEAREST, direct_image_path=None):
+    def __init__(self, image_path=None, size:list=None, texture_filter=moderngl.NEAREST, direct_image_path=None):
         self.alpha = 1.0
         self.flipped = False
         self.pivot_point = [0,0]
@@ -13,7 +13,8 @@ class Sprite:
             self.size = size
 
         if direct_image_path == None:
-            image_path = os.path.join("data","sprites",image_path)
+            if image_path != None:
+                image_path = os.path.join("data","sprites",image_path)
         else:
             image_path = direct_image_path
 
@@ -95,11 +96,17 @@ class Sprite:
         self._vao = self._ctx.vertex_array(self._program, [(self._vbo, "2f 2f", "vert", "tex")])
 
     def _load_texture(self,path,texture_filter,preferred_size):
-        img = Image.open(path).convert('RGBA')
-        self.size = [img.size[0],img.size[1]]
-        
-        texture = self._ctx.texture(self.size, 4, img.tobytes())
+        texture = None
+        self.size = [1,1]
+        if path != None:
+            img = Image.open(path).convert('RGBA')
+            self.size = [img.size[0],img.size[1]]
+            texture = self._ctx.texture(self.size, 4, img.tobytes())
+        else:
+            texture = self._ctx.texture(self.size, 4)
         texture.filter = (texture_filter, moderngl.NEAREST)
+        texture.repeat_x = False
+        texture.repeat_y = False
 
         if preferred_size != None:
             self.size = preferred_size
