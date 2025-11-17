@@ -56,5 +56,9 @@ class Core:
 
                 for function in self.loop_functions:
                     function()
-            except:
-                self.logger.error("Error while running main loop.")
+            except Exception as e:
+                if type(Exception) == KeyboardInterrupt:
+                    self.main_loop_running = False
+                    self.event_quit()
+                else:
+                    self.logger.error("Error while running main loop.")
