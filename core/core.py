@@ -47,9 +47,14 @@ class Core:
                             self.event_quit()
                         self.logger.info("Closed window, stopping game.")
 
+                    # Window events
                     if event.type == pygame.WINDOWRESIZED:
                         if self.event_window_resize != None:
                             self.event_window_resize([event.x,event.y])
+
+                    elif event.type == pygame.WINDOWMOVED:
+                        self.last_time = time.time()
+                        self.delta_time = 0
 
                 self.delta_time = time.time() - self.last_time
                 self.last_time = time.time()
