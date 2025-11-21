@@ -1,29 +1,38 @@
 # Frostlight-Engine
 
-![python](https://img.shields.io/badge/python-blue) ![pygame](https://img.shields.io/badge/pygame-green) ![frostlightgames](https://img.shields.io/badge/frostlightgames-blue)
+![python](https://img.shields.io/badge/python-blue) 
+![pygame](https://img.shields.io/badge/moderngl-blue) 
+![frostlightgames](https://img.shields.io/badge/frostlightgames-blue)
 
-Frostlight-Engine is an easy to use game framework for python that is based on pygame. We plan on making an entire game engine some day.
+<img src="https://img.shields.io/github/stars/franz-starke/SE-Volleyball-Turnier-Belegprojekt?style=social" alt="GitHub Stars">
+<img src="https://img.shields.io/badge/python-3.14%2B-blue.svg" alt="Python Version">
+<img src="https://img.shields.io/github/license/Frostlightgames/Frostlight-Engine" alt="License">
+<img src="https://img.shields.io/github/last-commit/Frostlightgames/Frostlight-Engine" alt="Last Commit">
+<img src="https://img.shields.io/github/repo-size/Frostlightgames/Frostlight-Engine" alt="Repo Size">
+<img src="https://img.shields.io/github/issues/Frostlightgames/Frostlight-Engine" alt="Open Issues">
+<img src="https://img.shields.io/github/contributors/Frostlightgames/Frostlight-Engine" alt="Contributors">
+
+Frostlight-Engine is an easy to use game framework for python that is based on opengl. We plan on making this framework to an entire game engine some day.
 You can fined the full documentation here: <https://frostlightgames.gitbook.io/frostlight-engine/>
 
 ## **Getting Started**
 
-1.  Install Python 3.9 or newer. <https://www.python.org/downloads/>
-2.  Install pygame/pygame-ce 2.5 or newer <https://pypi.org/project/pygame/>
-3.  Download the newest Frostlight-Engine version <https://github.com/Frostlightgames/Frostlight-Engine/>
-
-```
-pip install pygame-ce
-```
+1.  Install Python 3.14 or newer. <https://www.python.org/downloads/>
+2.  Download the newest Frostlight-Engine version <https://github.com/Frostlightgames/Frostlight-Engine/>
+3.  Run the `frostlight_engine.py` file.
 
 ## **Dependencies**
 
-- python 3.9 or newer
-- pygame-ce 2.5 or newer
-- cryptography
+- python 3.14 or newer
+- moderngl 5.12 or newer
+- numpy 2.3.3 or newer
+- pillow 11.3.0 or newer
+- glfw 2.10.0 or newer
+- cryptography 46.0.3 or newer
 
 ## **Making a game**
 
-Frostlight-Engine is a single-file framework, that helps you create games very fast and efficient. The game logic will be written in python. You can use any text editor you want. Frostlight-Engine provides some tool like window or input management to simplify the game making process.
+Frostlight-Engine is a single-file framework, that helps you create games very fast and efficient. The game logic will be written in python. You can use any text editor or IDE you want. Frostlight-Engine provides some tool like window or input management to simplify the game making process.
 
 1.  Create an empty directory and paste the `frostlight_engine.py` file in it
 2.  Run `frostlight_engine.py` in your terminal, it will setup your project structure
