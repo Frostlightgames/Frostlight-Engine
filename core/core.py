@@ -4,6 +4,7 @@ from core.builder import *
 from core.log_manager import *
 from core.window import *
 from core.save_manager import *
+from core.input_manager import *
 
 class Core:
     def __init__(self,args={},*loop_functions):
@@ -17,7 +18,7 @@ class Core:
 
         self.build_manager = Builder()
         self.event_manager = None
-        self.input_manager = None
+        self.input_manager = InputManager()
         self.logger = Logger()
         self.save_manager = SaveManager(self.logger)
 
