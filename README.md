@@ -4,13 +4,13 @@
 ![pygame](https://img.shields.io/badge/moderngl-blue) 
 ![frostlightgames](https://img.shields.io/badge/frostlightgames-blue)
 
-<img src="https://img.shields.io/github/stars/franz-starke/SE-Volleyball-Turnier-Belegprojekt?style=social" alt="GitHub Stars">
-<img src="https://img.shields.io/badge/python-3.14%2B-blue.svg" alt="Python Version">
-<img src="https://img.shields.io/github/license/Frostlightgames/Frostlight-Engine" alt="License">
-<img src="https://img.shields.io/github/last-commit/Frostlightgames/Frostlight-Engine" alt="Last Commit">
-<img src="https://img.shields.io/github/repo-size/Frostlightgames/Frostlight-Engine" alt="Repo Size">
-<img src="https://img.shields.io/github/issues/Frostlightgames/Frostlight-Engine" alt="Open Issues">
-<img src="https://img.shields.io/github/contributors/Frostlightgames/Frostlight-Engine" alt="Contributors">
+![GitHub Stars](https://img.shields.io/github/stars/Frostlightgames/Frostlight-Engine?style=social)
+![Python Version](https://img.shields.io/badge/python-3.14%2B-blue.svg)
+![License](https://img.shields.io/github/license/Frostlightgames/Frostlight-Engine)
+![Last Commit](https://img.shields.io/github/last-commit/Frostlightgames/Frostlight-Engine)
+![Repo Size](https://img.shields.io/github/repo-size/Frostlightgames/Frostlight-Engine)
+![Open Issues](https://img.shields.io/github/issues/Frostlightgames/Frostlight-Engine)
+![Contributors](https://img.shields.io/github/contributors/Frostlightgames/Frostlight-Engine)
 
 Frostlight-Engine is an easy to use game framework for python that is based on opengl. We plan on making this framework to an entire game engine some day.
 You can fined the full documentation here: <https://frostlightgames.gitbook.io/frostlight-engine/>
